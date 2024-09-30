@@ -15,19 +15,25 @@
             "id": "5ECFC871-5D82-43F1-9C54-59685E82318D",
             "name": "LS Central",
             "publisher": "LS Retail",
-            "version": "23.1.0.87"
+            "version": "24.0.0.286"
         },
         {
             "id": "70912191-3C4C-49FC-A1DE-BC6EA1AC9DA6",
             "name": "Intrastat Core",
             "publisher": "Microsoft",
-            "version": "23.2.14098.14562"
+            "version": "24.0.16410.18056"
         },
         {
             "id": "2A0547FA-F60F-401D-B1FE-C7C4BE8FB230",
             "name": "LS Central System App",
             "publisher": "LS Retail",
             "version": "23.1.0.87"
+        },
+        {
+            "id": "8b43c3ff-6c7b-4693-8e75-71b253e729ec",
+            "name": "ALPractice",
+            "publisher": "Default Publisher",
+            "version": "1.0.0.0"
         }
     ],
     "screenshots": [],
@@ -42,7 +48,8 @@
     "resourceExposurePolicy": {
         "allowDebugging": true,
         "allowDownloadingSource": true,
-        "includeSourceInSymbolFile": true
+        "includeSourceInSymbolFile": true,
+        "applyToDevExtension": true
     },
     "runtime": "13.0",
     "features": [
