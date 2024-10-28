@@ -154,11 +154,8 @@ codeunit 50100 "APIV2 - Send Sales Document"
 
     local procedure SendCreditMemoCancelationEmail(SalesCrMemoHeader: Record "Sales Cr.Memo Header")
     var
-
-        ReportSelections: Record "Report Selections";
         TempSalesHeader: Record "Sales Header" temporary;
         DocumentMailing: Codeunit "Document-Mailing";
-        ReportSelectionUsage: Enum "Report Selection Usage";
         EmptyInStream: InStream;
         EmailBodyTxt: Text;
         EmailAddress: Text[250];

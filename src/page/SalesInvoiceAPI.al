@@ -55,14 +55,14 @@ page 50103 "APIV2 - Sales Invoices"
                         RegisterFieldSet(Rec.FieldNo("No."));
                     end;
                 }
-                field("locationCode"; Rec."Location Code")
-                {
-                    Caption = 'Location Code';
-                    trigger OnValidate()
-                    begin
-                        RegisterFieldSet(Rec.FieldNo("Location Code"));
-                    end;
-                }
+                // field("locationCode"; Rec."Location Code")
+                // {
+                //     Caption = 'Location Code';
+                //     trigger OnValidate()
+                //     begin
+                //         RegisterFieldSet(Rec.FieldNo("Location Code"));
+                //     end;
+                // }
                 field(externalDocumentNumber; Rec."External Document No.")
                 {
                     Caption = 'External Document No.';
@@ -690,18 +690,15 @@ page 50103 "APIV2 - Sales Invoices"
 
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     var
-        SalesHdrAPISubscriber: Codeunit SalesHdrAPISubscriber;
+
         SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
     begin
         CheckSellToCustomerSpecified();
-        SalesHdrAPISubscriber.SetSalesHdrInvoiceHdrAggregate(Rec);
-        BindSubscription(SalesHdrAPISubscriber);
-        UnbindSubscription(SalesHdrAPISubscriber);
         SalesInvoiceAggregator.PropagateOnInsert(Rec, TempFieldBuffer);
         SetDates();
 
         UpdateDiscount();
-        SetCustomFields();
+        //SetCustomFields();
 
 
         exit(false);
@@ -709,22 +706,16 @@ page 50103 "APIV2 - Sales Invoices"
 
     trigger OnModifyRecord(): Boolean
     var
-        SalesHdrAPISubscriber: Codeunit SalesHdrAPISubscriber;
         SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
     begin
         if xRec.Id <> Rec.Id then
             Error(CannotChangeIDErr);
 
-        SalesHdrAPISubscriber.SetSalesHdrInvoiceHdrAggregate(Rec);
-        BindSubscription(SalesHdrAPISubscriber);
-        UnbindSubscription(SalesHdrAPISubscriber);
-
-
         SalesInvoiceAggregator.PropagateOnModify(Rec, TempFieldBuffer);
         UpdateDiscount();
 
         SetCalculatedFields();
-        SetCustomFields();
+        //SetCustomFields();
         exit(false);
     end;
 
@@ -1089,14 +1080,14 @@ page 50103 "APIV2 - Sales Invoices"
         CurrencyCodeTxt := GraphMgtGeneralTools.TranslateNAVCurrencyCodeToCurrencyCode(LCYCurrencyCode, Rec."Currency Code");
     end;
 
-    local procedure SetCustomFields()
-    var
-        SalesHdr: Record "Sales Header";
-    begin
-        SalesHdr.Get(Rec."Document Type"::Invoice, Rec."No.");
-        Rec."Location Code" := SalesHdr."Location Code";
-        Rec.Modify(true);
-    end;
+    // local procedure SetCustomFields()
+    // var
+    //     SalesHdr: Record "Sales Header";
+    // begin
+    //     SalesHdr.Get(Rec."Document Type"::Invoice, Rec."No.");
+    //     Rec."Location Code" := SalesHdr."Location Code";
+    //     Rec.Modify(true);
+    // end;
 
     local procedure SetDates()
     var
@@ -1174,7 +1165,7 @@ page 50103 "APIV2 - Sales Invoices"
         end;
 
         SalesHeader.Get(Rec."Document Type"::Invoice, Rec."No.");
-        SalesHeader."Location Code" := Rec."Location Code";
+        //SalesHeader."Location Code" := Rec."Location Code";
         SalesCalcDiscountByType.ApplyInvDiscBasedOnAmt(InvoiceDiscountAmount, SalesHeader);
     end;
 }
