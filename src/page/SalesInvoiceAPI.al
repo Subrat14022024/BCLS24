@@ -55,14 +55,14 @@ page 50103 "APIV2 - Sales Invoices"
                         RegisterFieldSet(Rec.FieldNo("No."));
                     end;
                 }
-                // field("locationCode"; Rec."Location Code")
-                // {
-                //     Caption = 'Location Code';
-                //     trigger OnValidate()
-                //     begin
-                //         RegisterFieldSet(Rec.FieldNo("Location Code"));
-                //     end;
-                // }
+                field("postednoseries"; Rec."Posting No.")
+                {
+                    Caption = 'Location Code';
+                    trigger OnValidate()
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Posting No."));
+                    end;
+                }
                 field(externalDocumentNumber; Rec."External Document No.")
                 {
                     Caption = 'External Document No.';
