@@ -7,6 +7,7 @@ table 50101 "Shop Payment Entries"
     {
         field(1; "Entry No."; Integer)
         {
+            AutoIncrement = true;
             CaptionML = ENU = 'Entry No.', FRA = 'N° séquence';
         }
         field(5; "Type"; Option)
