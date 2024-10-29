@@ -6,24 +6,40 @@ reportextension 50100 FixedAssetBookValue01Extn extends "Fixed Asset - Book Valu
         {
             column("AcquisitionCostAccount"; "AcquisitionCostAccount")
             {
-                Caption = 'Acquisition Cost Account';
             }
             column("DepreciationStartingDate"; DepreciationStartingDate)
             {
-                Caption = 'Depreciation Starting Date';
             }
             column("GlobalDimension1"; "Global Dimension 1 Code")
             {
-                Caption = 'Global Dimension 1 Code';
             }
             column("NoofDepreciationYears"; "NoofDepreciationYears")
             {
-                Caption = 'No. of Depreciation Years';
             }
             column("StraightLine"; "StraightLine")
             {
-                Caption = 'Straight-Line %';
             }
+            column(DepreciationStartingDateCaption_Lbl; DepreciationStartingDate_Lbl)
+            {
+
+            }
+            column(GlobalDimension1Caption_Lbl; GlobalDimension1)
+            {
+
+            }
+            column(NoofDepreciationYearsCaption_Lbl; NoofDepreciationYears_Lbl)
+            {
+
+            }
+            column(NoofDepreciCaption_Lbl; NoofDepreciationYears_Lbl)
+            {
+
+            }
+            column(StraightLineCaption_Lbl; StraightLine_Lbl)
+            {
+
+            }
+
         }
 
     }
@@ -37,7 +53,7 @@ reportextension 50100 FixedAssetBookValue01Extn extends "Fixed Asset - Book Valu
     {
         layout(LayoutName)
         {
-            LayoutFile = '.vscode\Report Layouts\FixedAssetBookValue01Extn.rdl';
+            LayoutFile = 'src\report\layout\FixedAssetBookValue01Extn.rdl';
             Type = RDLC;
         }
     }
@@ -49,15 +65,22 @@ reportextension 50100 FixedAssetBookValue01Extn extends "Fixed Asset - Book Valu
         StraightLine := FADeprBook."Straight-Line %";
 
         if FAPostingGroup.GET(FADeprBook."FA Posting Group") then
-            AcquisitionCostAccount := FAPostingGroup.GetAcquisitionCostAccount()
+            AcquisitionCostAccount := FAPostingGroup.GetAcquisitionCostAccount();
 
+        GL_Setup.Get();
+        GlobalDimension1 := GL_Setup.FieldCaption("Shortcut Dimension 1 Code")
     end;
 
     var
         FAPostingGroup: Record "FA Posting Group";
+        GL_Setup: Record "General Ledger Setup";
         AcquisitionCostAccount: Code[20];
         DepreciationStartingDate: Date;
         StraightLine: Decimal;
         NoofDepreciationYears: Integer;
-
+        AcquisitionCostAccount_Lbl: Label 'Acquisition Cost Account';
+        DepreciationStartingDate_Lbl: label 'Depreciation Starting Date';
+        NoofDepreciationYears_Lbl: Label 'No. of Depreciation Years';
+        StraightLine_Lbl: Label 'Straight-Line %';
+        GlobalDimension1: Text;
 }

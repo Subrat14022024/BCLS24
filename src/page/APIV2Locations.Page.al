@@ -72,10 +72,6 @@ page 50106 "APIV2 - Locations"
                 {
                     Caption = 'Email';
                 }
-                field(website; Rec."Home Page")
-                {
-                    Caption = 'Website';
-                }
                 field(lastModifiedDateTime; Rec.SystemModifiedAt)
                 {
                     Caption = 'Last Modified Date';
