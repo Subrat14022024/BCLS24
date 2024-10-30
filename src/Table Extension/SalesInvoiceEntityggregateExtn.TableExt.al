@@ -8,7 +8,7 @@ tableextension 50101 SalesInvoiceEntityggregateExtn extends "Sales Invoice Entit
 {
     fields
     {
-        field(63; "Posting No."; Code[20])
+        field(50001; "Posting No."; Code[20])
         {
             Caption = 'Posting No.';
         }

@@ -1,5 +1,6 @@
 table 50101 "Shop Payment Entries"
 {
+    Permissions = tabledata "Shop Payment Entries" = RMID; 
     Caption = 'Shop Payment Entries';
     DataClassification = CustomerContent;
 
