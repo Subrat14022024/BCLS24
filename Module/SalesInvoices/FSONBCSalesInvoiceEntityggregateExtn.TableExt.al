@@ -11,6 +11,7 @@ tableextension 50101 SalesInvoiceEntityggregateExtn extends "Sales Invoice Entit
         field(50001; "Posting No."; Code[20])
         {
             Caption = 'Posting No.';
+            DataClassification = CustomerContent;
         }
 
     }

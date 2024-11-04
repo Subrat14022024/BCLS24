@@ -8,6 +8,7 @@ using Microsoft.Foundation.PaymentTerms;
 using Microsoft.Foundation.Shipping;
 using Microsoft.Integration.Graph;
 using Microsoft.Sales.History;
+using System.Reflection;
 using Microsoft.Sales.Document;
 using System.Threading;
 using Microsoft.Sales.Posting;
@@ -15,7 +16,7 @@ using System.Email;
 using Microsoft.Utilities;
 using Microsoft.API.V2;
 
-page 50100 "FSONBC_APIV2 - Sales Invoices"
+page 50110 "FSONBC_APIV2 - Sales Invoices"
 {
     APIGroup = 'salesInvoice';
     APIPublisher = 'fSO';
@@ -655,6 +656,7 @@ page 50100 "FSONBC_APIV2 - Sales Invoices"
                     EntitySetName = 'documentAttachments';
                     SubPageLink = "Document Id" = field(Id), "Document Type" = const("Sales Invoice");
                 }
+                //added
                 field(postingNo; Rec."Posting No.")
                 {
                     Caption = 'Posting No.';
@@ -662,8 +664,10 @@ page 50100 "FSONBC_APIV2 - Sales Invoices"
                     var
                     begin
                         RegisterFieldSet(Rec.FieldNo("Posting No."));
+                        CustomFieldSet(Rec.FieldNo("Posting No."));
                     end;
                 }
+                //added
             }
         }
     }
@@ -671,7 +675,6 @@ page 50100 "FSONBC_APIV2 - Sales Invoices"
     actions
     {
     }
-
     trigger OnAfterGetRecord()
     var
         SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
@@ -680,6 +683,8 @@ page 50100 "FSONBC_APIV2 - Sales Invoices"
             if HasWritePermissionForDraft then
                 SalesInvoiceAggregator.RedistributeInvoiceDiscounts(Rec);
         SetCalculatedFields();
+        SetCustomFields(); //Added
+
     end;
 
     trigger OnDeleteRecord(): Boolean
@@ -693,11 +698,15 @@ page 50100 "FSONBC_APIV2 - Sales Invoices"
 
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     var
+        CU_SalesheaderApiSubscriber: Codeunit "SalesHeaderAPISubscriber";
         SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
     begin
         CheckSellToCustomerSpecified();
-
+        CU_SalesheaderApiSubscriber.SetSalesInvAggregate(Rec); //Added
+        BindSubscription(CU_SalesheaderApiSubscriber); //Added
         SalesInvoiceAggregator.PropagateOnInsert(Rec, TempFieldBuffer);
+        UnbindSubscription(CU_SalesheaderApiSubscriber); //Added
+        SetCustomFields(); //Added
         SetDates();
 
         UpdateDiscount();
@@ -738,6 +747,7 @@ page 50100 "FSONBC_APIV2 - Sales Invoices"
         BillToCustomer: Record "Customer";
         SellToCustomer: Record "Customer";
         DisputeStatus: Record "Dispute Status";
+        FieldSet: Record Field;
         PaymentTerms: Record "Payment Terms";
         ShipmentMethod: Record "Shipment Method";
         APIV2SendSalesDocument: Codeunit "APIV2 - Send Sales Document";
@@ -926,6 +936,13 @@ page 50100 "FSONBC_APIV2 - Sales Invoices"
         TempFieldBuffer.DeleteAll();
     end;
 
+    local procedure CustomFieldSet(FieldNo: Integer)
+    begin
+        FieldSet.Init();
+        FieldSet.TableNo := Database::"Sales Invoice Entity Aggregate";
+        FieldSet."No." := FieldNo;
+    end;
+
     local procedure GetCustomerEmailAddress(): Text[250]
     var
         Customer: Record Customer;
@@ -1083,6 +1100,15 @@ page 50100 "FSONBC_APIV2 - Sales Invoices"
         CurrencyCodeTxt := GraphMgtGeneralTools.TranslateNAVCurrencyCodeToCurrencyCode(LCYCurrencyCode, Rec."Currency Code");
     end;
 
+    //Added
+    local procedure SetCustomFields()
+    var
+        SalesLine: Record "Sales Header";
+    begin
+        SalesLine.get("Sales Document Type"::"Invoice", Rec."No.");
+        Rec."Posting No." := SalesLine."Posting No.";
+    end;
+    //Added
     local procedure SetDates()
     var
         SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";

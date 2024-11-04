@@ -1,8 +1,8 @@
 table 50101 "Shop Payment Entries"
 {
-    Permissions = tabledata "Shop Payment Entries" = RMID; 
     Caption = 'Shop Payment Entries';
     DataClassification = CustomerContent;
+    Permissions = tabledata "Shop Payment Entries" = RMID;
 
     fields
     {
@@ -117,5 +117,18 @@ table 50101 "Shop Payment Entries"
         {
             Clustered = true;
         }
+        key(Key1; Type, Date, "Location Code", "Subsidiary Code", "Tender Type", "Tender Subtype")
+        {
+
+        }
+        key(Key2; Type, Date, "Location Code", "Subsidiary Code", "G/L Account No.")
+        {
+
+        }
+        key(key3; Processed, Date, "Location Code", "Subsidiary Code")
+        {
+
+        }
+
     }
 }
