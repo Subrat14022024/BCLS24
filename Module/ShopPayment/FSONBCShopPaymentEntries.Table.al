@@ -2,7 +2,7 @@ table 50101 "Shop Payment Entries"
 {
     Caption = 'Shop Payment Entries';
     DataClassification = CustomerContent;
-    Permissions = tabledata "Shop Payment Entries" = RMID;
+    Permissions = tabledata "Shop Payment Entries" = rmid;
 
     fields
     {
@@ -11,10 +11,9 @@ table 50101 "Shop Payment Entries"
             AutoIncrement = true;
             CaptionML = ENU = 'Entry No.', FRA = 'N° séquence';
         }
-        field(5; "Type"; Option)
+        field(5; "Type"; Enum ShopPaymentType)
         {
-            OptionCaptionML = ENU = 'Payment, G/L Account', FRA = 'Payement,Compte Général';
-            OptionMembers = "Payment","G/L Account";
+            CaptionML = ENU = 'Type', FRA = 'Type';
         }
         field(6; "Date"; Date)
         {
@@ -25,11 +24,11 @@ table 50101 "Shop Payment Entries"
             CaptionML = ENU = 'Location Code', FRA = 'Code magasin';
             TableRelation = Location.Code;
         }
-        field(8; "Subsidiary Code"; Code[10])
-        {
-            CaptionML = ENU = 'Subsidiary code', FRA = 'Code filiale';
-            //TableRelation = PFSubsidiary.Code;
-        }
+        // field(8; "Subsidiary Code"; Code[10])
+        // {
+        //     CaptionML = ENU = 'Subsidiary code', FRA = 'Code filiale';
+        //     //TableRelation = PFSubsidiary.Code;
+        // }
         field(10; "Tender Type"; Code[10])
         {
             CaptionML = ENU = 'Tender type', FRA = 'Type de payement';
@@ -78,7 +77,7 @@ table 50101 "Shop Payment Entries"
         field(31; "Gen. Journal Batch"; Code[10])
         {
             CaptionML = ENU = 'Gen. journal batch', FRA = 'Nom feuille comptabilité';
-            TableRelation = "Gen. Journal Batch".Name WHERE("Journal Template Name" = field("Gen. Journal Template"));
+            TableRelation = "Gen. Journal Batch".Name where("Journal Template Name" = field("Gen. Journal Template"));
         }
         field(32; "Gen. Journal Line No."; Integer)
         {
@@ -104,11 +103,11 @@ table 50101 "Shop Payment Entries"
         {
             Caption = 'Description';
         }
-        field(61; "Type of Posting"; Option)
+        field(61; "Type of Posting"; Enum ShopPmtTypeofPosting)
         {
             Caption = 'Type of Posting';
-            OptionCaptionML = ENU = 'DagAfsluiting,Kluis';
-            OptionMembers = DagAfsluiting,Kluis;
+            // OptionCaptionML = ENU = 'DagAfsluiting,Kluis';
+            // OptionMembers = DagAfsluiting,Kluis;
         }
     }
     keys
@@ -117,15 +116,15 @@ table 50101 "Shop Payment Entries"
         {
             Clustered = true;
         }
-        key(Key1; Type, Date, "Location Code", "Subsidiary Code", "Tender Type", "Tender Subtype")
+        key(Key1; Type, Date, "Location Code", "Tender Type", "Tender Subtype")
         {
 
         }
-        key(Key2; Type, Date, "Location Code", "Subsidiary Code", "G/L Account No.")
+        key(Key2; Type, Date, "Location Code", "G/L Account No.")
         {
 
         }
-        key(key3; Processed, Date, "Location Code", "Subsidiary Code")
+        key(key3; Processed, Date, "Location Code")
         {
 
         }

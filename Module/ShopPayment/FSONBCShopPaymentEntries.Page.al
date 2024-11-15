@@ -3,7 +3,7 @@ namespace BCLS.BCLS;
 page 50112 "Shop Payment Entries"
 {
     APIGroup = 'sales';
-    APIPublisher = 'hansamukh';
+    APIPublisher = 'fso';
     APIVersion = 'v2.0';
     ApplicationArea = All;
     Caption = 'shopPaymentEntries';
@@ -72,10 +72,10 @@ page 50112 "Shop Payment Entries"
                 {
                     Caption = 'Processed';
                 }
-                field(subsidiaryCode; Rec."Subsidiary Code")
-                {
-                    Caption = 'Subsidiary Code';
-                }
+                // field(subsidiaryCode; Rec."Subsidiary Code")
+                // {
+                //     Caption = 'Subsidiary Code';
+                // }
                 field(synchronizationDateExport; Rec."Synchronization Date Export")
                 {
                     Caption = 'Synchronization Date Export';
