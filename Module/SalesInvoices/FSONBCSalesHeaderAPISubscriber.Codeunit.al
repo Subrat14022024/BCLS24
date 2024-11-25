@@ -19,7 +19,7 @@ codeunit 50100 SalesHeaderAPISubscriber
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeInsertEvent', '', false, false)]
-    local procedure OnBeforeInsertHdrLine(var Rec: Record "Sales Header")
+    local procedure OnBeforeInsertHdr(var Rec: Record "Sales Header")
     begin
         if Rec.IsTemporary then
             exit;
@@ -27,7 +27,7 @@ codeunit 50100 SalesHeaderAPISubscriber
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Sales Header", 'OnBeforeModifyEvent', '', false, false)]
-    local procedure OnBeforeModifySalesLine(var Rec: Record "Sales Header")
+    local procedure OnBeforeModifySalesHdr(var Rec: Record "Sales Header")
     begin
         if Rec.IsTemporary then
             exit;

@@ -45,15 +45,15 @@ report 50100 "Process shop payment entries"
                                 else
                                     Gcod_GenJnlBatch1 := Location.Code;
 
-                                // if not GenJournalBatch.get(GLSetup."Gen. Jnl. Template Safe Jrnl.", Gcod_GenJnlBatch1) then begin
-                                //     CLEAR(GenJournalBatch);
-                                //     GenJournalBatch."Journal Template Name" := GLSetup."Gen. Jnl. Template Safe Jrnl.";
-                                //     GenJournalBatch.Name := Gcod_GenJnlBatch1;
-                                //     GenJournalBatch.SetupNewBatch();
-                                //     GenJournalBatch.Insert(true);
-                                //     Gcod_GenJnlTemplate1 := GenJournalBatch."Journal Template Name";
-                                //     Gcod_GenJnlBatch1 := GenJournalBatch.Name;
-                                // end;
+                                if not GenJournalBatch.get(GLSetup."Gen. Jnl. Template Safe Jrnl.", Gcod_GenJnlBatch1) then begin
+                                    CLEAR(GenJournalBatch);
+                                    GenJournalBatch."Journal Template Name" := GLSetup."Gen. Jnl. Template Safe Jrnl.";
+                                    GenJournalBatch.Name := Gcod_GenJnlBatch1;
+                                    GenJournalBatch.SetupNewBatch();
+                                    GenJournalBatch.Insert(true);
+                                    Gcod_GenJnlTemplate1 := GenJournalBatch."Journal Template Name";
+                                    Gcod_GenJnlBatch1 := GenJournalBatch.Name;
+                                end;
 
                                 // if Location."PFS Consumer Customer No." <> '' then begin
                                 //     if DefaultDimension.get(DATABASE::Customer, Location."PFS Consumer Customer No.", GLSetup."Shortcut Dimension 1 Code") then
@@ -132,22 +132,13 @@ report 50100 "Process shop payment entries"
                 begin
                     CLEAR(StartDate);
                     CLEAR(endDate);
-                    // if ICSetup.Cr_ShopInv_StartDate_DateForm <> EmptyDateFormula then begin
-                    //     StartDate := CALCDATE(ICSetup.Cr_ShopInv_StartDate_DateForm);
-                    //     case ICSetup.Cr_ShopInv_PeriodLength of
-                    //         ICSetup.Cr_ShopInv_PeriodLength::Day:
-                    //             endDate := CALCDATE('<1D>', StartDate);
-                    //         ICSetup.Cr_ShopInv_PeriodLength::Week:
-                    //             endDate := CALCDATE('<1W>', StartDate);
-                    //         ICSetup.Cr_ShopInv_PeriodLength::Month:
-                    //             endDate := CALCDATE('<1M>', StartDate);
-                    //         else
-                    StartDate := CalcDate(EmptyDateFormula);
-                    endDate := StartDate;
-                    //     end;
-                    // end else
-                    //     endDate := WorkDate();
-
+                    if GLSetup."Create Shop Inv DateFilter" <> EmptyDateFormula then
+                        StartDate := CALCDATE(GLSetup."Create Shop Inv DateFilter")
+                    else begin
+                        StartDate := CalcDate(EmptyDateFormula);
+                        endDate := StartDate;
+                    end;
+                    endDate := WorkDate();
                     SETFILTER(Date, STRSUBSTNO('%1..%2', StartDate, endDate));
                 end;
             }
@@ -476,11 +467,13 @@ report 50100 "Process shop payment entries"
                 Gcod_GenJnlDocNo := LCdu_NoSeriesMgt.getnextNo(LRec_GenJnlBatch."No. Series", Pdate_Posting, false);
     end;
 
-    local procedure GetShopPaymentBatch(VAR GenJournalBatch: Record "Gen. Journal Batch"; LocationCode: Code[10])
+    local procedure GetShopPaymentBatch(var GenJournalBatch: Record "Gen. Journal Batch"; LocationCode: Code[10])
     var
+        lrecGlsetup: Record "General Ledger Setup";
         BatchName: Text[10];
+
     begin
-        //TESTFIELD(DefShopPaymentJournal);
+        lrecGlsetup.TESTFIELD("Default Shop Payment Journal");
         Location.GET(LocationCode);
 
         if not (Location.Name = '') then
@@ -488,11 +481,11 @@ report 50100 "Process shop payment entries"
         else
             BatchName := Location.Code;
 
-        // if GenJournalBatch.GET(DefShopPaymentJournal, BatchName) then
-        //     exit;
+        if GenJournalBatch.GET(lrecGlsetup."Default Shop Payment Journal", BatchName) then
+            exit;
 
         CLEAR(GenJournalBatch);
-        //GenJournalBatch."Journal Template Name" := DefShopPaymentJournal;
+        GenJournalBatch."Journal Template Name" := lrecGlsetup."Default Shop Payment Journal";
         GenJournalBatch.Name := BatchName;
         GenJournalBatch.SetupNewBatch();
         GenJournalBatch.INSERT(true);

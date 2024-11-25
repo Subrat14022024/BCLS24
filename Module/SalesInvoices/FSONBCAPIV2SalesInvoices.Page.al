@@ -27,7 +27,7 @@ page 50110 "FSONBC_APIV2 - Sales Invoices"
     EntityName = 'salesInvoice';
     EntitySetCaption = 'Sales Invoices';
     EntitySetName = 'salesInvoices';
-    Extensible = false;
+    Extensible = true;
     ODataKeyFields = Id;
     PageType = API;
     SourceTable = "Sales Invoice Entity Aggregate";

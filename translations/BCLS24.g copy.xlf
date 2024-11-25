@@ -3,6 +3,13 @@
   <file datatype="xml" source-language="en-US" target-language="fr-BE" original="BCLS24.g.xlf">
     <body>
       <group id="body">
+        <trans-unit id="Page 837114191 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>FSONBC_APIV2 - Purch Invoices</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 837114191 - Property 3446740159" size-unit="char" translate="yes" xml:space="preserve">
           <source>purch Invoice</source>
           <target state="needs-translation"></target>
@@ -74,9 +81,8 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - NamedType 4291081697" size-unit="char" translate="yes" xml:space="preserve">
           <source>The action can be applied to a draft invoice only.</source>
-          <target state="translated" state-qualifier="exact-match">L’action peut uniquement être appliquée à une facture provisoire.</target>
+          <target state="translated">L’action peut uniquement être appliquée à une facture provisoire.</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - NamedType DraftInvoiceActionErr</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - NamedType 2196097617" size-unit="char" translate="yes" xml:space="preserve">
@@ -88,10 +94,9 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 8604086 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Attachments</source>
-          <target state="translated" state-qualifier="exact-match">Pièces jointes</target>
+          <target state="translated">Pièces jointes</target>
           <target>[NAB: SUGGESTION]Documents joints</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control attachments - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 883773547 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -110,23 +115,20 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 477206273 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Buy-from City</source>
-          <target state="translated" state-qualifier="exact-match">Ville fournisseur</target>
+          <target state="translated">Ville fournisseur</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control buyFromCity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 1323057276 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Buy-from Country/Region Code</source>
-          <target state="translated" state-qualifier="exact-match">Code pays/région fournisseur</target>
+          <target state="translated">Code pays/région fournisseur</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control buyFromCountry - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 426882759 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Buy-from Post Code</source>
-          <target state="translated" state-qualifier="exact-match">Code postal fournisseur</target>
+          <target state="translated">Code postal fournisseur</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control buyFromPostCode - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 2163249473 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -138,17 +140,15 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 1808640270 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Currency Code</source>
-          <target state="translated" state-qualifier="exact-match">Code devise</target>
+          <target state="translated">Code devise</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control currencyCode - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 416025006 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Currency Id</source>
-          <target state="translated" state-qualifier="exact-match">ID Devise</target>
+          <target state="translated">ID Devise</target>
           <target>[NAB: SUGGESTION]ID devise</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control currencyId - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 252685889 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -160,16 +160,14 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 2286581531 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Discount Amount</source>
-          <target state="translated" state-qualifier="exact-match">Montant remise</target>
+          <target state="translated">Montant remise</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control discountAmount - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 1312831416 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Discount Applied Before Tax</source>
-          <target state="translated" state-qualifier="exact-match">Remise appliquée avant impôts</target>
+          <target state="translated">Remise appliquée avant impôts</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control discountAppliedBeforeTax - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 750067815 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -181,55 +179,48 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 2763176388 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Due Date</source>
-          <target state="translated" state-qualifier="exact-match">Délai</target>
+          <target state="translated">Délai</target>
           <target>[NAB: SUGGESTION]Date d'échéance</target>
           <target>[NAB: SUGGESTION]Date d’échéance</target>
           <target>[NAB: SUGGESTION]Date besoin</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control dueDate - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 2686962215 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Id</source>
-          <target state="translated" state-qualifier="exact-match">ID</target>
+          <target state="translated">ID</target>
           <target>[NAB: SUGGESTION]Id</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control id - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 304051935 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Invoice Date</source>
-          <target state="translated" state-qualifier="exact-match">Date facture</target>
+          <target state="translated">Date facture</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control invoiceDate - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 2245436958 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Last Modified Date</source>
-          <target state="translated" state-qualifier="exact-match">Date dernière modification</target>
+          <target state="translated">Date dernière modification</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control lastModifiedDateTime - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 2757394829 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>No.</source>
-          <target state="translated" state-qualifier="exact-match">N°</target>
+          <target state="translated">N°</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control number - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 1719523317 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Order Id</source>
-          <target state="translated" state-qualifier="exact-match">ID commande</target>
+          <target state="translated">ID commande</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control orderId - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 3577402367 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Order No.</source>
-          <target state="translated" state-qualifier="exact-match">N° commande</target>
+          <target state="translated">N° commande</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control orderNumber - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 2839400550 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -311,18 +302,16 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 1260828904 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting Date</source>
-          <target state="translated" state-qualifier="exact-match">Date comptabilisation</target>
+          <target state="translated">Date comptabilisation</target>
           <target>[NAB: SUGGESTION]Date de validation</target>
           <target>[NAB: SUGGESTION]Date de comptabilisation</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control postingDate - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 983303763 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting No.</source>
-          <target state="translated" state-qualifier="exact-match">N° validation</target>
+          <target state="translated">N° validation</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control postingNo - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 3690097785 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -334,16 +323,14 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 150980025 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lines</source>
-          <target state="translated" state-qualifier="exact-match">Lignes</target>
+          <target state="translated">Lignes</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control purchaseInvoiceLines - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 1313438251 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Purchaser</source>
-          <target state="translated" state-qualifier="exact-match">Acheteur</target>
+          <target state="translated">Acheteur</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control purchaser - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 354324300 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -362,9 +349,8 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 1336190306 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship-to City</source>
-          <target state="translated" state-qualifier="exact-match">Ville destinataire</target>
+          <target state="translated">Ville destinataire</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control shipToCity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 1979445219 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -376,9 +362,8 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 3828400819 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship-to Country/Region Code</source>
-          <target state="translated" state-qualifier="exact-match">Code pays/région destinataire</target>
+          <target state="translated">Code pays/région destinataire</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control shipToCountry - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 1889388274 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -390,9 +375,8 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 2895959832 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship-to Post Code</source>
-          <target state="translated" state-qualifier="exact-match">Code postal destinataire</target>
+          <target state="translated">Code postal destinataire</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control shipToPostCode - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 2719673386 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -404,25 +388,22 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 667097208 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Shortcut Dimension 1 Code</source>
-          <target state="translated" state-qualifier="exact-match">Code raccourci axe 1</target>
+          <target state="translated">Code raccourci axe 1</target>
           <target>[NAB: SUGGESTION]Code raccourci axe 1</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control shortcutDimension1Code - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 3389845713 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Shortcut Dimension 2 Code</source>
-          <target state="translated" state-qualifier="exact-match">Code raccourci axe 2</target>
+          <target state="translated">Code raccourci axe 2</target>
           <target>[NAB: SUGGESTION]Code raccourci axe 2</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control shortcutDimension2Code - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 998393528 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Status</source>
-          <target state="translated" state-qualifier="exact-match">Statut</target>
+          <target state="translated">Statut</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control status - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 3762354732 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -441,60 +422,59 @@
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 4101803605 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Total Tax Amount</source>
-          <target state="translated" state-qualifier="exact-match">Montant total de la taxe</target>
+          <target state="translated">Montant total de la taxe</target>
           <target>[NAB: SUGGESTION]Montant total TVA</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control totalTaxAmount - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 149332515 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Vendor Id</source>
-          <target state="translated" state-qualifier="exact-match">ID fournisseur</target>
+          <target state="translated">ID fournisseur</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control vendorId - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 2713072690 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Vendor Invoice No.</source>
-          <target state="translated" state-qualifier="exact-match">N° facture fournisseur</target>
+          <target state="translated">N° facture fournisseur</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control vendorInvoiceNumber - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 2483398189 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Vendor Name</source>
-          <target state="translated" state-qualifier="exact-match">Nom fournisseur</target>
+          <target state="translated">Nom fournisseur</target>
           <target>[NAB: SUGGESTION]Nom du fournisseur</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control vendorName - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 837114191 - Control 712552689 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Vendor No.</source>
-          <target state="translated" state-qualifier="exact-match">N° fournisseur</target>
+          <target state="translated">N° fournisseur</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Purch Invoices - Control vendorNumber - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2248712803 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>FSONBC_APIV2 - Sales Invoices</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Property 3446740159" size-unit="char" translate="yes" xml:space="preserve">
           <source>Sales Invoice</source>
-          <target state="translated" state-qualifier="exact-match">Facture vente</target>
+          <target state="translated">Facture vente</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Property EntityCaption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Property 631549417" size-unit="char" translate="yes" xml:space="preserve">
           <source>Sales Invoices</source>
-          <target state="translated" state-qualifier="exact-match">Factures vente</target>
+          <target state="translated">Factures vente</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Property EntitySetCaption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 2460998664" size-unit="char" translate="yes" xml:space="preserve">
           <source>The invoice cannot be canceled because it has already been canceled.</source>
-          <target state="translated" state-qualifier="exact-match">La facture ne peut pas être annulée, car elle a déjà été annulée.</target>
+          <target state="translated">La facture ne peut pas être annulée, car elle a déjà été annulée.</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - NamedType AlreadyCanceledErr</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 4220305845" size-unit="char" translate="yes" xml:space="preserve">
@@ -506,37 +486,32 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 3395541992" size-unit="char" translate="yes" xml:space="preserve">
           <source>Canceling the invoice failed because of the following error: \\%1\\A credit memo is posted.</source>
-          <target state="translated" state-qualifier="exact-match">L'annulation de la facture a échoué en raison de l'erreur suivante : \\%1\\Un avoir est validé.</target>
+          <target state="translated">L'annulation de la facture a échoué en raison de l'erreur suivante : \\%1\\Un avoir est validé.</target>
           <note from="Developer" annotates="general" priority="2">%1 - arbitrary text (an error message)</note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - NamedType CancelingInvoiceFailedCreditMemoCreatedAndPostedErr</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 554130235" size-unit="char" translate="yes" xml:space="preserve">
           <source>Canceling the invoice failed because of the following error: \\%1\\A credit memo is created but not posted.</source>
-          <target state="translated" state-qualifier="exact-match">L'annulation de la facture a échoué en raison de l'erreur suivante : \\%1\\Un avoir est créé mais non validé.</target>
+          <target state="translated">L'annulation de la facture a échoué en raison de l'erreur suivante : \\%1\\Un avoir est créé mais non validé.</target>
           <note from="Developer" annotates="general" priority="2">%1 - arbitrary text (an error message)</note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - NamedType CancelingInvoiceFailedCreditMemoCreatedButNotPostedErr</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 31512856" size-unit="char" translate="yes" xml:space="preserve">
           <source>Canceling the invoice failed because of the following error: \\%1.</source>
-          <target state="translated" state-qualifier="exact-match">L'annulation de la facture a échoué en raison de l'erreur suivante : \\%1.</target>
+          <target state="translated">L'annulation de la facture a échoué en raison de l'erreur suivante : \\%1.</target>
           <note from="Developer" annotates="general" priority="2">%1 - arbitrary text (an error message)</note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - NamedType CancelingInvoiceFailedNothingCreatedErr</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 3210053793" size-unit="char" translate="yes" xml:space="preserve">
           <source>The id cannot be changed.</source>
-          <target state="translated" state-qualifier="exact-match">L’ID ne peut pas être modifié.</target>
+          <target state="translated">L’ID ne peut pas être modifié.</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - NamedType CannotChangeIDErr</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 3399721204" size-unit="char" translate="yes" xml:space="preserve">
           <source>The invoice cannot be found.</source>
-          <target state="translated" state-qualifier="exact-match">Impossible de trouver la facture.</target>
+          <target state="translated">Impossible de trouver la facture.</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - NamedType CannotFindInvoiceErr</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 1515454780" size-unit="char" translate="yes" xml:space="preserve">
@@ -590,16 +565,14 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 4291081697" size-unit="char" translate="yes" xml:space="preserve">
           <source>The action can be applied to a draft invoice only.</source>
-          <target state="translated" state-qualifier="exact-match">L’action peut uniquement être appliquée à une facture provisoire.</target>
+          <target state="translated">L’action peut uniquement être appliquée à une facture provisoire.</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - NamedType DraftInvoiceActionErr</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 709463224" size-unit="char" translate="yes" xml:space="preserve">
           <source>The send-to email is empty. Specify email either for the customer or for the invoice in email preview.</source>
-          <target state="translated" state-qualifier="exact-match">L’e-mail destinataire est vide. Spécifiez l’e-mail pour le client ou pour la facture dans l’aperçu de l’e-mail.</target>
+          <target state="translated">L’e-mail destinataire est vide. Spécifiez l’e-mail pour le client ou pour la facture dans l’aperçu de l’e-mail.</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - NamedType EmptyEmailErr</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 1145065570" size-unit="char" translate="yes" xml:space="preserve">
@@ -625,9 +598,8 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 288789381" size-unit="char" translate="yes" xml:space="preserve">
           <source>The action can be applied to a posted invoice only.</source>
-          <target state="translated" state-qualifier="exact-match">L’action peut uniquement être appliquée à une facture validée.</target>
+          <target state="translated">L’action peut uniquement être appliquée à une facture validée.</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - NamedType PostedInvoiceActionErr</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - NamedType 335169170" size-unit="char" translate="yes" xml:space="preserve">
@@ -653,10 +625,9 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 8604086 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Attachments</source>
-          <target state="translated" state-qualifier="exact-match">Pièces jointes</target>
+          <target state="translated">Pièces jointes</target>
           <target>[NAB: SUGGESTION]Documents joints</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control attachments - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3948026507 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -675,17 +646,15 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2880519393 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Bill-to City</source>
-          <target state="translated" state-qualifier="exact-match">Ville facturation</target>
+          <target state="translated">Ville facturation</target>
           <target>[NAB: SUGGESTION]Ville</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control billToCity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 683811484 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Bill-to Country/Region Code</source>
-          <target state="translated" state-qualifier="exact-match">Code pays/région facturation</target>
+          <target state="translated">Code pays/région facturation</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control billToCountry - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2913482491 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -697,9 +666,8 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3592631193 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Bill-To Customer No.</source>
-          <target state="translated" state-qualifier="exact-match">N° client facturé</target>
+          <target state="translated">N° client facturé</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control billToCustomerNumber - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3276161585 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -711,10 +679,9 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3070315367 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Bill-to Post Code</source>
-          <target state="translated" state-qualifier="exact-match">Code postal facturation</target>
+          <target state="translated">Code postal facturation</target>
           <target>[NAB: SUGGESTION]Code postal</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control billToPostCode - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2700905313 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -726,41 +693,36 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 1808640270 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Currency Code</source>
-          <target state="translated" state-qualifier="exact-match">Code devise</target>
+          <target state="translated">Code devise</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control currencyCode - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 416025006 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Currency Id</source>
-          <target state="translated" state-qualifier="exact-match">ID Devise</target>
+          <target state="translated">ID Devise</target>
           <target>[NAB: SUGGESTION]ID devise</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control currencyId - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 38468747 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Customer Id</source>
-          <target state="translated" state-qualifier="exact-match">ID client</target>
+          <target state="translated">ID client</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control customerId - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3234347301 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Customer Name</source>
-          <target state="translated" state-qualifier="exact-match">Nom du client</target>
+          <target state="translated">Nom du client</target>
           <target>[NAB: SUGGESTION]Nom du débiteur</target>
           <target>[NAB: SUGGESTION]Nom client</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control customerName - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3226897001 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Customer No.</source>
-          <target state="translated" state-qualifier="exact-match">N° client</target>
+          <target state="translated">N° client</target>
           <target>[NAB: SUGGESTION]N° de client</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control customerNumber - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 4139490446 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -779,16 +741,14 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2286581531 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Discount Amount</source>
-          <target state="translated" state-qualifier="exact-match">Montant remise</target>
+          <target state="translated">Montant remise</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control discountAmount - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 1312831416 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Discount Applied Before Tax</source>
-          <target state="translated" state-qualifier="exact-match">Remise appliquée avant impôts</target>
+          <target state="translated">Remise appliquée avant impôts</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control discountAppliedBeforeTax - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3532448994 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -814,80 +774,70 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2763176388 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Due Date</source>
-          <target state="translated" state-qualifier="exact-match">Délai</target>
+          <target state="translated">Délai</target>
           <target>[NAB: SUGGESTION]Date d'échéance</target>
           <target>[NAB: SUGGESTION]Date d’échéance</target>
           <target>[NAB: SUGGESTION]Date besoin</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control dueDate - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3163706192 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Email</source>
-          <target state="translated" state-qualifier="exact-match">Adresse e-mail</target>
+          <target state="translated">Adresse e-mail</target>
           <target>[NAB: SUGGESTION]E-mail</target>
           <target>[NAB: SUGGESTION]Adresse de messagerie</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control email - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 138905291 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>External Document No.</source>
-          <target state="translated" state-qualifier="exact-match">N° doc. externe</target>
+          <target state="translated">N° doc. externe</target>
           <target>[NAB: SUGGESTION]N° document externe</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control externalDocumentNumber - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2686962215 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Id</source>
-          <target state="translated" state-qualifier="exact-match">ID</target>
+          <target state="translated">ID</target>
           <target>[NAB: SUGGESTION]Id</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control id - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 304051935 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Invoice Date</source>
-          <target state="translated" state-qualifier="exact-match">Date facture</target>
+          <target state="translated">Date facture</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control invoiceDate - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2245436958 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Last Modified Date</source>
-          <target state="translated" state-qualifier="exact-match">Date dernière modification</target>
+          <target state="translated">Date dernière modification</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control lastModifiedDateTime - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2757394829 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>No.</source>
-          <target state="translated" state-qualifier="exact-match">N°</target>
+          <target state="translated">N°</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control number - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 1719523317 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Order Id</source>
-          <target state="translated" state-qualifier="exact-match">ID commande</target>
+          <target state="translated">ID commande</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control orderId - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3577402367 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Order No.</source>
-          <target state="translated" state-qualifier="exact-match">N° commande</target>
+          <target state="translated">N° commande</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control orderNumber - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3603481462 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Payment Terms Id</source>
-          <target state="translated" state-qualifier="exact-match">ID Conditions de paiement</target>
+          <target state="translated">ID Conditions de paiement</target>
           <target>[NAB: SUGGESTION]ID conditions de paiement</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control paymentTermsId - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3310713783 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -899,26 +849,23 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 1842080825 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Phone No.</source>
-          <target state="translated" state-qualifier="exact-match">N° téléphone</target>
+          <target state="translated">N° téléphone</target>
           <target>[NAB: SUGGESTION] N° téléphone</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control phoneNumber - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 1260828904 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting Date</source>
-          <target state="translated" state-qualifier="exact-match">Date comptabilisation</target>
+          <target state="translated">Date comptabilisation</target>
           <target>[NAB: SUGGESTION]Date de validation</target>
           <target>[NAB: SUGGESTION]Date de comptabilisation</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control postingDate - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 983303763 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posting No.</source>
-          <target state="translated" state-qualifier="exact-match">N° validation</target>
+          <target state="translated">N° validation</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control postingNo - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3690097785 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -937,24 +884,21 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2641327068 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Remaining Amount</source>
-          <target state="translated" state-qualifier="exact-match">Montant ouvert</target>
+          <target state="translated">Montant ouvert</target>
           <target>[NAB: SUGGESTION]Montant restant</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control remainingAmount - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 834764016 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lines</source>
-          <target state="translated" state-qualifier="exact-match">Lignes</target>
+          <target state="translated">Lignes</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control salesInvoiceLines - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 4171677711 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Salesperson</source>
-          <target state="translated" state-qualifier="exact-match">Vendeur</target>
+          <target state="translated">Vendeur</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control salesperson - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 1534408368 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -973,26 +917,23 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 639928126 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Sell-to City</source>
-          <target state="translated" state-qualifier="exact-match">Ville donneur d’ordre</target>
+          <target state="translated">Ville donneur d’ordre</target>
           <target>[NAB: SUGGESTION]Ville donneur d'ordre</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control sellToCity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 1038432503 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Sell-to Country/Region Code</source>
-          <target state="translated" state-qualifier="exact-match">Code pays/région donneur d’ordre</target>
+          <target state="translated">Code pays/région donneur d’ordre</target>
           <target>[NAB: SUGGESTION]Code pays/région donneur d'ordre</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control sellToCountry - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2043020436 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Sell-to Post Code</source>
-          <target state="translated" state-qualifier="exact-match">Code postal donneur d’ordre</target>
+          <target state="translated">Code postal donneur d’ordre</target>
           <target>[NAB: SUGGESTION]Code postal donneur d'ordre</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control sellToPostCode - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 270403302 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -1004,11 +945,10 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 419055430 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Shipment Method Id</source>
-          <target state="translated" state-qualifier="exact-match">ID Conditions de livraison</target>
+          <target state="translated">ID Conditions de livraison</target>
           <target>[NAB: SUGGESTION]ID conditions de livraison</target>
           <target>[NAB: SUGGESTION]ID condition de livraison</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control shipmentMethodId - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 354324300 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -1027,37 +967,32 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 1336190306 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship-to City</source>
-          <target state="translated" state-qualifier="exact-match">Ville destinataire</target>
+          <target state="translated">Ville destinataire</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control shipToCity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 1979445219 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship-to Contact</source>
-          <target state="translated" state-qualifier="exact-match">Contact destinataire</target>
+          <target state="translated">Contact destinataire</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control shipToContact - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3828400819 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship-to Country/Region Code</source>
-          <target state="translated" state-qualifier="exact-match">Code pays/région destinataire</target>
+          <target state="translated">Code pays/région destinataire</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control shipToCountry - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 1889388274 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship-to Name</source>
-          <target state="translated" state-qualifier="exact-match">Nom du destinataire</target>
+          <target state="translated">Nom du destinataire</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control shipToName - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2895959832 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship-to Post Code</source>
-          <target state="translated" state-qualifier="exact-match">Code postal destinataire</target>
+          <target state="translated">Code postal destinataire</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control shipToPostCode - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 2719673386 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -1069,25 +1004,22 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 667097208 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Shortcut Dimension 1 Code</source>
-          <target state="translated" state-qualifier="exact-match">Code raccourci axe 1</target>
+          <target state="translated">Code raccourci axe 1</target>
           <target>[NAB: SUGGESTION]Code raccourci axe 1</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control shortcutDimension1Code - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3389845713 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Shortcut Dimension 2 Code</source>
-          <target state="translated" state-qualifier="exact-match">Code raccourci axe 2</target>
+          <target state="translated">Code raccourci axe 2</target>
           <target>[NAB: SUGGESTION]Code raccourci axe 2</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control shortcutDimension2Code - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 998393528 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Status</source>
-          <target state="translated" state-qualifier="exact-match">Statut</target>
+          <target state="translated">Statut</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control status - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 3762354732 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -1106,10 +1038,9 @@
         </trans-unit>
         <trans-unit id="Page 2248712803 - Control 4101803605 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Total Tax Amount</source>
-          <target state="translated" state-qualifier="exact-match">Montant total de la taxe</target>
+          <target state="translated">Montant total de la taxe</target>
           <target>[NAB: SUGGESTION]Montant total TVA</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FSONBC_APIV2 - Sales Invoices - Control totalTaxAmount - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -1121,26 +1052,23 @@
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 895206272 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Date</source>
-          <target state="translated" state-qualifier="exact-match">Date</target>
+          <target state="translated">Date</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control date - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 4232699882 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Description</source>
-          <target state="translated" state-qualifier="exact-match">Description</target>
+          <target state="translated">Description</target>
           <target>[NAB: SUGGESTION]Désignation</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control description - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 2683860767 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Entry No.</source>
-          <target state="translated" state-qualifier="exact-match">N° séquence</target>
+          <target state="translated">N° séquence</target>
           <target>[NAB: SUGGESTION]N° écriture</target>
           <target>[NAB: SUGGESTION]N° séquence </target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control entryNo - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 2859358283 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -1159,9 +1087,8 @@
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 321522643 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Gen. Journal Batch</source>
-          <target state="translated" state-qualifier="exact-match">Nom feuille comptabilité</target>
+          <target state="translated">Nom feuille comptabilité</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control genJournalBatch - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 1702173054 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -1173,45 +1100,39 @@
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 3042379311 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Gen. Journal Template</source>
-          <target state="translated" state-qualifier="exact-match">Modèle feuille comptabilité</target>
+          <target state="translated">Modèle feuille comptabilité</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control genJournalTemplate - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 887478125 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>G/L Account No.</source>
-          <target state="translated" state-qualifier="exact-match">N° compte général</target>
+          <target state="translated">N° compte général</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control gLAccountNo - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 1108393212 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Invoice No.</source>
-          <target state="translated" state-qualifier="exact-match">N° facture</target>
+          <target state="translated">N° facture</target>
           <target>[NAB: SUGGESTION]N° de facture</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control invoiceNo - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 2626499740 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Location Code</source>
-          <target state="translated" state-qualifier="exact-match">Code magasin</target>
+          <target state="translated">Code magasin</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control locationCode - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 520504499 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posted</source>
-          <target state="translated" state-qualifier="exact-match">Validé</target>
+          <target state="translated">Validé</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control posted - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 3339143102 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Processed</source>
-          <target state="translated" state-qualifier="exact-match">Traité</target>
+          <target state="translated">Traité</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control processed - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 4180850766 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -1265,9 +1186,8 @@
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 3175374588 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Type</source>
-          <target state="translated" state-qualifier="exact-match">Type</target>
+          <target state="translated">Type</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control type - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 734912064 - Control 725550403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -1277,12 +1197,26 @@
           <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Shop Payment Entries - Control typeOfPosting - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Report 107962697 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Process shop payment entries</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Process shop payment entries - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Report 107962697 - Control 3151925852 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Fill the general journal template</source>
           <target state="needs-translation"></target>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Report Process shop payment entries - Control Gcod_GenJnlBatch - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Report 107962697 - Control 3151925852 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gen. journal batch</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Process shop payment entries - Control Gcod_GenJnlBatch - Property Caption</note>
         </trans-unit>
         <trans-unit id="Report 107962697 - Control 320230880 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Fill the general journal template</source>
@@ -1291,32 +1225,41 @@
           <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Report Process shop payment entries - Control Gcod_GenJnlTemplate - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="Report 107962697 - Control 320230880 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gen. journal template</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Process shop payment entries - Control Gcod_GenJnlTemplate - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Report 107962697 - Control 2346885236 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Options</source>
+          <target state="translated" state-qualifier="exact-match">Options</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report Process shop payment entries - Control Options - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 3096881441 - Field 514695969 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1208986161">
           <source>Posting No.</source>
-          <target state="translated" state-qualifier="exact-match">N° validation</target>
+          <target state="translated">N° validation</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FSONBCPurchInvEntityAggrExtn - Field Posting No. - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 3563565959 - Field 514695969 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2718907901">
           <source>Posting No.</source>
-          <target state="translated" state-qualifier="exact-match">N° validation</target>
+          <target state="translated">N° validation</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SalesInvoiceEntityggregateExtn - Field Posting No. - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 964241482 - EnumValue 4274826855 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>G/L Account</source>
-          <target state="translated" state-qualifier="exact-match">Compte général</target>
+          <target state="translated">Compte général</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum ShopPaymentType - EnumValue G/L Account - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 964241482 - EnumValue 3346365350 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Payment</source>
-          <target state="translated" state-qualifier="exact-match">Paiement</target>
+          <target state="translated">Paiement</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum ShopPaymentType - EnumValue Payment - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 3559861752 - EnumValue 220377390 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -1340,13 +1283,142 @@
           <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 734912064 - Field 3192175264 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Date</source>
+          <target state="translated" state-qualifier="exact-match">Date</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Date - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 734912064 - Field 3461834954 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Description</source>
-          <target state="translated" state-qualifier="exact-match">Description</target>
+          <target state="translated">Désignation</target>
           <target>[NAB: SUGGESTION]Désignation</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 883711285 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Entry No.</source>
+          <target state="translated" state-qualifier="exact-match">N° séquence</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Entry No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 4062932017 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Exported to sales subsidiary</source>
+          <target state="translated" state-qualifier="exact-match">Exporté aux ventes filiale</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Exported to Sales Subs. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 3852983238 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>G/L account no.</source>
+          <target state="translated" state-qualifier="exact-match">N° compte général</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field G/L Account No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 2426123433 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gen. journal amount</source>
+          <target state="translated" state-qualifier="exact-match">Montant feuille comptabilité</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Gen. Journal Amount - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 3690479385 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gen. journal batch</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Gen. Journal Batch - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 1545675766 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gen. journal line no.</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Gen. Journal Line No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 3016508349 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gen. journal template</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Gen. Journal Template - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 166038250 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Invoice No.</source>
+          <target state="translated" state-qualifier="exact-match">N° facture</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Invoice No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 2161572060 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Location Code</source>
+          <target state="translated" state-qualifier="exact-match">Code magasin</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Location Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 35450067 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted</source>
+          <target state="translated" state-qualifier="exact-match">Validé</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Posted - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 3208180638 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Processed</source>
+          <target state="translated" state-qualifier="exact-match">Traité</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Processed - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 3298046590 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Synchronization date export</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Synchronization Date Export - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 2124534061 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Synchronization date import</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Synchronization Date Import - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 197911861 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Synchronization time export</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Synchronization Time Export - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 1529152710 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Synchronization time import</source>
+          <target state="needs-translation"></target>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="0">New translation.</note>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Synchronization Time Import - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 586451620 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Tender subtype</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Tender Subtype - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 386268496 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Tender type</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Tender Type - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 439102171 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total amount transactions</source>
+          <target state="needs-translation"></target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">New translation.</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Total Amount Transactions - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 734912064 - Field 1878130204 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Type</source>
+          <target state="translated" state-qualifier="exact-match">Type</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Shop Payment Entries - Field Type - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 734912064 - Field 374361643 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Type of Posting</source>
@@ -1357,30 +1429,26 @@
         </trans-unit>
         <trans-unit id="ReportExtension 2966262326 - NamedType 2813869426" size-unit="char" translate="yes" xml:space="preserve" al-object-target="ReportExtension 2966262326">
           <source>Acquisition Cost Account</source>
-          <target state="translated" state-qualifier="exact-match">Compte coût acquisition</target>
+          <target state="translated">Compte coût acquisition</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">ReportExtension FixedAssetBookValue01Extn - NamedType AcquisitionCostAccount_Lbl</note>
         </trans-unit>
         <trans-unit id="ReportExtension 2966262326 - NamedType 3535091772" size-unit="char" translate="yes" xml:space="preserve" al-object-target="ReportExtension 2966262326">
           <source>Depreciation Starting Date</source>
-          <target state="translated" state-qualifier="exact-match">Date début amortissement</target>
+          <target state="translated">Date début amortissement</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">ReportExtension FixedAssetBookValue01Extn - NamedType DepreciationStartingDate_Lbl</note>
         </trans-unit>
         <trans-unit id="ReportExtension 2966262326 - NamedType 98939820" size-unit="char" translate="yes" xml:space="preserve" al-object-target="ReportExtension 2966262326">
           <source>No. of Depreciation Years</source>
-          <target state="translated" state-qualifier="exact-match">Nombre années amortissement</target>
+          <target state="translated">Nombre années amortissement</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">ReportExtension FixedAssetBookValue01Extn - NamedType NoofDepreciationYears_Lbl</note>
         </trans-unit>
         <trans-unit id="ReportExtension 2966262326 - NamedType 3088679807" size-unit="char" translate="yes" xml:space="preserve" al-object-target="ReportExtension 2966262326">
           <source>Straight-Line %</source>
-          <target state="translated" state-qualifier="exact-match">% linéaire</target>
+          <target state="translated">% linéaire</target>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="NAB AL Tool Refresh Xlf" annotates="general" priority="3">Suggested translation inserted.</note>
           <note from="Xliff Generator" annotates="general" priority="3">ReportExtension FixedAssetBookValue01Extn - NamedType StraightLine_Lbl</note>
         </trans-unit>
       </group>
