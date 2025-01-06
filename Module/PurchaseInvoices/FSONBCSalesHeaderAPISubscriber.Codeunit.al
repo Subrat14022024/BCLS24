@@ -1,7 +1,8 @@
-namespace BCLS.BCLS;
+namespace FSO_NAVBCConnector.PurchaseInv;
+
 using Microsoft.Integration.Entity;
 using Microsoft.Purchases.Document;
-codeunit 50101 PurchHeaderAPISubscriber
+codeunit 50101 FSONBCPurchHeaderAPISubscriber
 {
     EventSubscriberInstance = Manual;
 
@@ -15,11 +16,14 @@ codeunit 50101 PurchHeaderAPISubscriber
 
     local procedure UpdatePurchHdr(var PurchHdr: Record "Purchase Header")
     begin
-        PurchHdr.Validate("Posting No.", PurchInvoiceEntityAggregate."Posting No.");
+        PurchHdr.Validate("Payment Discount %", PurchInvoiceEntityAggregate."FSONBCPayment Discount");
+        PurchHdr.Validate("Posting No.", PurchInvoiceEntityAggregate."FSONBCPosting No.");
+        PurchHdr.Validate("VAT Base Discount %", PurchInvoiceEntityAggregate."FSONBCVAT Base Discount");
+        PurchHdr.Validate("Payment Terms Code", PurchInvoiceEntityAggregate."Payment Terms Code");
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnBeforeModifyEvent', '', false, false)]
-    local procedure OnBeforeModifyPurchaseHdr(var Rec: Record "Purchase Header")
+    local procedure PurchaseHeaderOnBeforeModify(var Rec: Record "Purchase Header")
     begin
         if Rec.IsTemporary then
             exit;
@@ -27,7 +31,7 @@ codeunit 50101 PurchHeaderAPISubscriber
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnBeforeInsertEvent', '', false, false)]
-    local procedure OnBeforePurchaseHdr(var Rec: Record "Purchase Header")
+    local procedure PurchaseHeaderOnBeforeInsert(var Rec: Record "Purchase Header")
     begin
         if Rec.IsTemporary then
             exit;

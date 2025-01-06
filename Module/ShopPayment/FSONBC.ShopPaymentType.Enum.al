@@ -1,6 +1,6 @@
-namespace BCLS.BCLS;
+namespace FSO_NAVBCConnector.Shoppayment;
 
-enum 50100 ShopPaymentType
+enum 50100 FSONBCShopPaymentType
 {
     Extensible = true;
 

@@ -1,5 +1,5 @@
 //#Saved from page 30012 "APIV2 - Sales Invoices" due to Extensible property is false#
-namespace BCLS.BCLS;
+namespace FSO_NAVBCConnector.SalesInv;
 
 using Microsoft.Integration.Entity;
 using Microsoft.Sales.Customer;
@@ -16,7 +16,7 @@ using System.Email;
 using Microsoft.Utilities;
 using Microsoft.API.V2;
 
-page 50110 "FSONBC_APIV2 - Sales Invoices"
+page 50110 "FSONBC APIV2 - Sales Invoices"
 {
     APIGroup = 'salesInvoice';
     APIPublisher = 'fSO';
@@ -656,18 +656,18 @@ page 50110 "FSONBC_APIV2 - Sales Invoices"
                     EntitySetName = 'documentAttachments';
                     SubPageLink = "Document Id" = field(Id), "Document Type" = const("Sales Invoice");
                 }
-                //added
-                field(postingNo; Rec."Posting No.")
+                #region
+                field(postingNo; Rec."FSONBCPosting No.")
                 {
                     Caption = 'Posting No.';
                     trigger OnValidate()
                     var
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Posting No."));
-                        CustomFieldSet(Rec.FieldNo("Posting No."));
+                        RegisterFieldSet(Rec.FieldNo("FSONBCPosting No."));
+                        CustomFieldSet(Rec.FieldNo("FSONBCPosting No."));
                     end;
                 }
-                //added
+                #endregion
             }
         }
     }
@@ -677,14 +677,18 @@ page 50110 "FSONBC_APIV2 - Sales Invoices"
     }
     trigger OnAfterGetRecord()
     var
+        SalesHeader: Record "Sales Header";
         SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
     begin
         if not Rec.Posted then
             if HasWritePermissionForDraft then
                 SalesInvoiceAggregator.RedistributeInvoiceDiscounts(Rec);
         SetCalculatedFields();
-        SetCustomFields(); //Added
-
+        #region
+        SetCustomFields();
+        if SalesHeader.get("Sales Document Type"::Invoice, Rec."No.") then
+            SalesHeader.SetStatus(1);
+        #endregion
     end;
 
     trigger OnDeleteRecord(): Boolean
@@ -698,15 +702,17 @@ page 50110 "FSONBC_APIV2 - Sales Invoices"
 
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     var
-        CU_SalesheaderApiSubscriber: Codeunit "SalesHeaderAPISubscriber";
+        CU_SalesheaderApiSubscriber: Codeunit "FSONBCSalesHeaderAPISubscriber";
         SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";
     begin
         CheckSellToCustomerSpecified();
-        CU_SalesheaderApiSubscriber.SetSalesInvAggregate(Rec); //Added
-        BindSubscription(CU_SalesheaderApiSubscriber); //Added
+        #region
+        CU_SalesheaderApiSubscriber.SetSalesInvAggregate(Rec);
+        BindSubscription(CU_SalesheaderApiSubscriber);
         SalesInvoiceAggregator.PropagateOnInsert(Rec, TempFieldBuffer);
-        UnbindSubscription(CU_SalesheaderApiSubscriber); //Added
-        SetCustomFields(); //Added
+        UnbindSubscription(CU_SalesheaderApiSubscriber);
+        SetCustomFields();
+        #endregion
         SetDates();
 
         UpdateDiscount();
@@ -1100,15 +1106,15 @@ page 50110 "FSONBC_APIV2 - Sales Invoices"
         CurrencyCodeTxt := GraphMgtGeneralTools.TranslateNAVCurrencyCodeToCurrencyCode(LCYCurrencyCode, Rec."Currency Code");
     end;
 
-    //Added
+    #region
     local procedure SetCustomFields()
     var
         SalesLine: Record "Sales Header";
     begin
         SalesLine.get("Sales Document Type"::"Invoice", Rec."No.");
-        Rec."Posting No." := SalesLine."Posting No.";
+        Rec."FSONBCPosting No." := SalesLine."Posting No.";
     end;
-    //Added
+    #endregion
     local procedure SetDates()
     var
         SalesInvoiceAggregator: Codeunit "Sales Invoice Aggregator";

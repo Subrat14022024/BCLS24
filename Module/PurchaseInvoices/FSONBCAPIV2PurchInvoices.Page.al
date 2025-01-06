@@ -1,5 +1,5 @@
-//#Saved from page 30012 "APIV2 - Sales Invoices" due to Extensible property is false#
-namespace BCLS.BCLS;
+//#Saved from page 30042 "APIV2 - Purchase Invoices" due to Extensible property is false#
+namespace FSO_NAVBCConnector.PurchaseInv;
 
 using Microsoft.Integration.Entity;
 using Microsoft.Purchases.Vendor;
@@ -12,7 +12,7 @@ using Microsoft.Utilities;
 using System.Reflection;
 using Microsoft.API.V2;
 
-page 50111 "FSONBC_APIV2 - Purch Invoices"
+page 50111 "FSONBC APIV2 - Purch Invoices"
 {
     APIGroup = 'purchInvoice';
     APIPublisher = 'fSO';
@@ -531,17 +531,44 @@ page 50111 "FSONBC_APIV2 - Purch Invoices"
                     EntitySetName = 'documentAttachments';
                     SubPageLink = "Document Id" = field(Id), "Document Type" = const("Purchase Invoice");
                 }
-                //added
-                field("postingNo"; Rec."Posting No.")
+                #region FSO
+                field("postingNo"; Rec."FSONBCPosting No.")
                 {
                     Caption = 'Posting No.';
                     trigger OnValidate()
                     var
                     begin
-                        RegisterFieldSet(Rec.FieldNo("Posting No."));
+                        RegisterFieldSet(Rec.FieldNo("FSONBCPosting No."));
                     end;
                 }
-                //added
+                field("vatBaseDiscount"; Rec."FSONBCVAT Base Discount")
+                {
+                    Caption = 'VAT Base Discount';
+                    trigger OnValidate()
+                    var
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("FSONBCVAT Base Discount"));
+                    end;
+                }
+                field("paymentTermsCode"; Rec."Payment Terms Code")
+                {
+                    Caption = 'Payment Terms Code';
+                    trigger OnValidate()
+                    var
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("Payment Terms Code"));
+                    end;
+                }
+                field("paymentDiscount"; Rec."FSONBCPayment Discount")
+                {
+                    Caption = 'Payment Discount';
+                    trigger OnValidate()
+                    var
+                    begin
+                        RegisterFieldSet(Rec.FieldNo("FSONBCPayment Discount"));
+                    end;
+                }
+                #endregion FSO
             }
         }
     }
@@ -552,12 +579,17 @@ page 50111 "FSONBC_APIV2 - Purch Invoices"
 
     trigger OnAfterGetRecord()
     var
+        PurchaseHeader: Record "Purchase Header";
         PurchInvAggregator: Codeunit "Purch. Inv. Aggregator";
     begin
         SetCalculatedFields();
         if HasWritePermission then
             PurchInvAggregator.RedistributeInvoiceDiscounts(Rec);
-        SetCustomFields(); //Added
+        #region
+        SetCustomFields();
+        if PurchaseHeader.get("Purchase Document Type"::Invoice, Rec."No.") then
+            PurchaseHeader.SetStatus(1);
+        #endregion
     end;
 
     trigger OnDeleteRecord(): Boolean
@@ -572,14 +604,16 @@ page 50111 "FSONBC_APIV2 - Purch Invoices"
     trigger OnInsertRecord(BelowxRec: Boolean): Boolean
     var
         PurchInvAggregator: Codeunit "Purch. Inv. Aggregator";
-        CU_PurchasehrdApiSubscriber: Codeunit "PurchHeaderAPISubscriber";
+        CU_PurchasehrdApiSubscriber: Codeunit "FSONBCPurchHeaderAPISubscriber";
     begin
         CheckBuyFromVendor();
-        CU_PurchasehrdApiSubscriber.SetpurchInvAggregate(Rec); //Added
-        BindSubscription(CU_PurchasehrdApiSubscriber); //Added
+        #region
+        CU_PurchasehrdApiSubscriber.SetpurchInvAggregate(Rec);
+        BindSubscription(CU_PurchasehrdApiSubscriber);
         PurchInvAggregator.PropagateOnInsert(Rec, TempFieldBuffer);
-        UnbindSubscription(CU_PurchasehrdApiSubscriber); //Added
-        SetCustomFields(); //Added
+        UnbindSubscription(CU_PurchasehrdApiSubscriber);
+        SetCustomFields();
+        #endregion
         UpdateDiscount();
 
         SetCalculatedFields();
@@ -729,15 +763,17 @@ page 50111 "FSONBC_APIV2 - Purch Invoices"
         CurrencyCodeTxt := GraphMgtGeneralTools.TranslateNAVCurrencyCodeToCurrencyCode(LCYCurrencyCode, Rec."Currency Code");
     end;
 
-    //Added
+    #region
     local procedure SetCustomFields()
     var
         PurchHdr: Record "Purchase Header";
     begin
-        if PurchHdr.get("purchase Document Type"::"Invoice", Rec."No.") then
-            Rec."Posting No." := PurchHdr."Posting No.";
+        if PurchHdr.get("purchase Document Type"::"Invoice", Rec."No.") then begin
+            Rec."FSONBCPosting No." := PurchHdr."Posting No.";
+            Rec."FSONBCVAT Base Discount" := PurchHdr."VAT Base Discount %";
+        end;
     end;
-
+    #endregion
     local procedure UpdateDiscount()
     var
         PurchaseHeader: Record "Purchase Header";
@@ -755,5 +791,4 @@ page 50111 "FSONBC_APIV2 - Purch Invoices"
         PurchaseHeader.Get(Rec."Document Type"::Invoice, Rec."No.");
         PurchCalcDiscByType.ApplyInvDiscBasedOnAmt(InvoiceDiscountAmount, PurchaseHeader);
     end;
-    //Added
 }

@@ -1,10 +1,11 @@
-pageextension 50101 GlAccountCard extends "G/L Account Card"
+pageextension 50101 FSONBCGlAccountCard extends "G/L Account Card"
 {
     layout
     {
         modify("Account Category")
         {
             ShowMandatory = true;
+            BlankZero = true;
         }
     }
     trigger OnNewRecord(BelowxRec: Boolean)
@@ -14,7 +15,8 @@ pageextension 50101 GlAccountCard extends "G/L Account Card"
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
-        Rec.TestField("Account Category");
+        if Rec."No." <> '' then
+            if Rec."Account Category" = Rec."Account Category"::" " then
+                rec.TestField("Account Category");
     end;
-
 }

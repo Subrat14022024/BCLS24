@@ -1,130 +1,128 @@
-table 50101 "Shop Payment Entries"
+namespace FSO_NAVBCConnector.Shoppayment;
+
+using Microsoft.Inventory.Location;
+using Microsoft.Finance.GeneralLedger.Journal;
+using Microsoft.Finance.GeneralLedger.Account;
+table 50101 "FSONBCShopPaymentEntries"
 {
     Caption = 'Shop Payment Entries';
     DataClassification = CustomerContent;
-    Permissions = tabledata "Shop Payment Entries" = rmid;
+    Permissions = tabledata "FSONBCShopPaymentEntries" = rmid;
 
     fields
     {
-        field(1; "Entry No."; Integer)
+        field(1; "FSONBCEntry No."; Integer)
         {
             AutoIncrement = true;
-            CaptionML = ENU = 'Entry No.', FRA = 'N° séquence';
+            Caption = 'Entry No.';
         }
-        field(5; "Type"; Enum ShopPaymentType)
+        field(5; "FSONBCType"; Enum FSONBCShopPaymentType)
         {
-            CaptionML = ENU = 'Type', FRA = 'Type';
+            Caption = 'Type';
         }
-        field(6; "Date"; Date)
+        field(6; "FSONBCDate"; Date)
         {
-            CaptionML = ENU = 'Date', FRA = 'Date';
+            Caption = 'Date';
         }
-        field(7; "Location Code"; Code[10])
+        field(7; "FSONBCLocation Code"; Code[10])
         {
-            CaptionML = ENU = 'Location Code', FRA = 'Code magasin';
+            Caption = 'Location Code';
             TableRelation = Location.Code;
         }
-        // field(8; "Subsidiary Code"; Code[10])
-        // {
-        //     CaptionML = ENU = 'Subsidiary code', FRA = 'Code filiale';
-        //     //TableRelation = PFSubsidiary.Code;
-        // }
-        field(10; "Tender Type"; Code[10])
+        field(10; "FSONBCTender Type"; Code[10])
         {
-            CaptionML = ENU = 'Tender type', FRA = 'Type de payement';
+            Caption = 'Tender type';
             TableRelation = "LSC Tender Type Setup".Code;
         }
-        field(11; "Tender Subtype"; Code[10])
+        field(11; "FSONBCTender Subtype"; Code[10])
         {
-            CaptionML = ENU = 'Tender subtype', FRA = 'Subtype de payement';
-            TableRelation = "LSC Tender Type Card Setup"."Card No." where("Tender Type Code" = field("Tender Type"));
+            Caption = 'Tender subtype';
+            TableRelation = "LSC Tender Type Card Setup"."Card No." where("Tender Type Code" = field("FSONBCTender Type"));
         }
-        field(12; "G/L Account No."; Code[20])
+        field(12; "FSONBCG/L Account No."; Code[20])
         {
-            CaptionML = ENU = 'G/L account no.', FRA = 'N° compte général';
+            Caption = 'G/L account no.';
             TableRelation = "G/L Account"."No.";
 
         }
-        field(15; "Total Amount Transactions"; Decimal)
+        field(15; "FSONBCTotal Amount Trans"; Decimal)
         {
-            CaptionML = ENU = 'Total amount transactions', FRA = 'Montant total des transactions';
+            Caption = 'Total amount transactions';
         }
-        field(20; "Exported to Sales Subs."; Boolean)
+        field(20; "FSONBCExported to Sales Subs."; Boolean)
         {
-            CaptionML = ENU = 'Exported to sales subsidiary', NLB = 'Exporté aux ventes filiale';
+            Caption = 'Exported to sales subsidiary';
         }
-        field(21; "Synchronization Date Export"; Date)
+        field(21; "FSONBCSynchronization Date Exp"; Date)
         {
-            CaptionML = ENU = 'Synchronization date export', FRA = 'Date synchronisation exportée';
+            Caption = 'Synchronization date export';
         }
-        field(22; "Synchronization Time Export"; Time)
+        field(22; "FSONBCSynchronization Time Exp"; Time)
         {
-            CaptionML = ENU = 'Synchronization time export', FRA = 'Heure synchronisation exportée';
+            Caption = 'Synchronization time export';
         }
-        field(23; "Synchronization Date Import"; Date)
+        field(23; "FSONBCSynchronization Date Imp"; Date)
         {
-            CaptionML = ENU = 'Synchronization date import', FRA = 'Date synchronisation importée';
+            Caption = 'Synchronization date import';
         }
-        field(24; "Synchronization Time Import"; Time)
+        field(24; "FSONBCSynchronization Time Imp"; Time)
         {
-            CaptionML = ENU = 'Synchronization time import', FRA = 'Heure synchronisation importée';
+            Caption = 'Synchronization time import';
         }
-        field(30; "Gen. Journal Template"; Code[10])
+        field(30; "FSONBCGen. Journal Template"; Code[10])
         {
-            CaptionML = ENU = 'Gen. journal template', FRA = 'Modèle feuille comptabilité';
+            Caption = 'Gen. journal template';
             TableRelation = "Gen. Journal Template".Name;
         }
-        field(31; "Gen. Journal Batch"; Code[10])
+        field(31; "FSONBCGen. Journal Batch"; Code[10])
         {
-            CaptionML = ENU = 'Gen. journal batch', FRA = 'Nom feuille comptabilité';
-            TableRelation = "Gen. Journal Batch".Name where("Journal Template Name" = field("Gen. Journal Template"));
+            Caption = 'Gen. journal batch';
+            TableRelation = "Gen. Journal Batch".Name where("Journal Template Name" = field("FSONBCGen. Journal Template"));
         }
-        field(32; "Gen. Journal Line No."; Integer)
+        field(32; "FSONBCGen. Journal Line No."; Integer)
         {
-            CaptionML = ENU = 'Gen. journal line no.', FRA = 'N° ligne feuille comptabilité';
+            Caption = 'Gen. journal line no.';
         }
-        field(33; "Gen. Journal Amount"; Decimal)
+        field(33; "FSONBCGen. Journal Amount"; Decimal)
         {
-            CaptionML = ENU = 'Gen. journal amount', FRA = 'Montant feuille comptabilité';
+            Caption = 'Gen. journal amount';
         }
-        field(40; Processed; Boolean)
+        field(40; FSONBCProcessed; Boolean)
         {
-            CaptionML = ENU = 'Processed', FRA = 'Traite';
+            Caption = 'Processed';
         }
-        field(41; Posted; Boolean)
+        field(41; FSONBCPosted; Boolean)
         {
-            CaptionML = ENU = 'Posted', FRA = 'Enregistré';
+            Caption = 'Posted';
         }
-        field(50; "Invoice No."; Code[20])
+        field(50; "FSONBCInvoice No."; Code[20])
         {
-            CaptionML = ENU = 'Invoice No.', FRB = 'N° facture;NLB=Factuurnr.';
+            Caption = 'Invoice No.';
         }
-        field(60; Description; Text[50])
+        field(60; FSONBCDescription; Text[50])
         {
             Caption = 'Description';
         }
-        field(61; "Type of Posting"; Enum ShopPmtTypeofPosting)
+        field(61; "FSONBCType of Posting"; Enum FSONBCShopPmtTypeofPosting)
         {
             Caption = 'Type of Posting';
-            // OptionCaptionML = ENU = 'DagAfsluiting,Kluis';
-            // OptionMembers = DagAfsluiting,Kluis;
         }
     }
     keys
     {
-        key(PK; "Entry No.")
+        key(PK; "FSONBCEntry No.")
         {
             Clustered = true;
         }
-        key(Key1; Type, Date, "Location Code", "Tender Type", "Tender Subtype")
+        key(Key1; FSONBCType, FSONBCDate, "FSONBCLocation Code", "FSONBCTender Type", "FSONBCTender Subtype")
         {
 
         }
-        key(Key2; Type, Date, "Location Code", "G/L Account No.")
+        key(Key2; FSONBCType, FSONBCDate, "FSONBCLocation Code", "FSONBCG/L Account No.")
         {
 
         }
-        key(key3; Processed, Date, "Location Code")
+        key(key3; FSONBCProcessed, FSONBCDate, "FSONBCLocation Code")
         {
 
         }

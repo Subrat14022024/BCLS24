@@ -1,19 +1,15 @@
-namespace BCLS.BCLS;
+namespace FSO_NAVBCConnector.SalesInv;
 
 using Microsoft.Integration.Entity;
-using Microsoft.Foundation.NoSeries;
-using Microsoft.Inventory.Location;
-
-tableextension 50101 SalesInvoiceEntityggregateExtn extends "Sales Invoice Entity Aggregate"
+tableextension 50101 FSONBCSalesInvEntityAggrExtn extends "Sales Invoice Entity Aggregate"
 {
     fields
     {
-        field(50001; "Posting No."; Code[20])
+        field(50001; "FSONBCPosting No."; Code[20])
         {
             Caption = 'Posting No.';
             DataClassification = CustomerContent;
         }
-
     }
 }
 

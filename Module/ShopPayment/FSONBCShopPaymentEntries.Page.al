@@ -1,18 +1,18 @@
-namespace BCLS.BCLS;
-
-page 50112 "Shop Payment Entries"
+namespace FSO_NAVBCConnector.Shoppayment;
+page 50112 "FSONBCShopPaymentEntries"
 {
     APIGroup = 'sales';
     APIPublisher = 'fso';
     APIVersion = 'v2.0';
     ApplicationArea = All;
-    Caption = 'shopPaymentEntries';
+    EntityCaption = 'Shop Payment Entries';
     ChangeTrackingAllowed = true;
     DelayedInsert = true;
-    EntityName = 'shoppaymententries';
+    EntityName = 'shoppaymententry';
     EntitySetName = 'shoppaymententries';
+    ODataKeyFields = "FSONBCEntry No.";
     PageType = API;
-    SourceTable = "Shop Payment Entries";
+    SourceTable = "FSONBCShopPaymentEntries";
 
     layout
     {
@@ -20,97 +20,71 @@ page 50112 "Shop Payment Entries"
         {
             repeater(General)
             {
-                field("date"; Rec."Date")
+                field("FSONBCdate"; Rec."FSONBCDate")
                 {
-                    Caption = 'Date';
                 }
-                field(description; Rec.Description)
+                field(FSONBCdescription; Rec.FSONBCDescription)
                 {
-                    Caption = 'Description';
                 }
-                field(entryNo; Rec."Entry No.")
+                field(FSONBCentryNo; Rec."FSONBCEntry No.")
                 {
-                    Caption = 'Entry No.';
                 }
-                field(exportedToSalesSubs; Rec."Exported to Sales Subs.")
+                field(FSONBCexportedToSalesSubs; Rec."FSONBCExported to Sales Subs.")
                 {
-                    Caption = 'Exported to Sales Subs.';
                 }
-                field(gLAccountNo; Rec."G/L Account No.")
+                field(FSONBCgLAccountNo; Rec."FSONBCG/L Account No.")
                 {
-                    Caption = 'G/L Account No.';
                 }
-                field(genJournalAmount; Rec."Gen. Journal Amount")
+                field(FSONBCgenJournalAmount; Rec."FSONBCGen. Journal Amount")
                 {
-                    Caption = 'Gen. Journal Amount';
                 }
-                field(genJournalBatch; Rec."Gen. Journal Batch")
+                field(FSONBCgenJournalBatch; Rec."FSONBCGen. Journal Batch")
                 {
-                    Caption = 'Gen. Journal Batch';
                 }
-                field(genJournalLineNo; Rec."Gen. Journal Line No.")
+                field(FSONBCgenJournalLineNo; Rec."FSONBCGen. Journal Line No.")
                 {
-                    Caption = 'Gen. Journal Line No.';
                 }
-                field(genJournalTemplate; Rec."Gen. Journal Template")
+                field(FSONBCgenJournalTemplate; Rec."FSONBCGen. Journal Template")
                 {
-                    Caption = 'Gen. Journal Template';
                 }
-                field(invoiceNo; Rec."Invoice No.")
+                field(FSONBCinvoiceNo; Rec."FSONBCInvoice No.")
                 {
-                    Caption = 'Invoice No.';
                 }
-                field(locationCode; Rec."Location Code")
+                field(FSONBClocationCode; Rec."FSONBCLocation Code")
                 {
-                    Caption = 'Location Code';
                 }
-                field(posted; Rec.Posted)
+                field(FSONBCposted; Rec.FSONBCPosted)
                 {
-                    Caption = 'Posted';
                 }
-                field(processed; Rec.Processed)
+                field(FSONBCprocessed; Rec.FSONBCProcessed)
                 {
-                    Caption = 'Processed';
                 }
-                // field(subsidiaryCode; Rec."Subsidiary Code")
-                // {
-                //     Caption = 'Subsidiary Code';
-                // }
-                field(synchronizationDateExport; Rec."Synchronization Date Export")
+                field(FSONBCsynchronizationDateExport; Rec."FSONBCSynchronization Date Exp")
                 {
-                    Caption = 'Synchronization Date Export';
                 }
-                field(synchronizationDateImport; Rec."Synchronization Date Import")
+                field(FSONBCsynchronizationDateImport; Rec."FSONBCSynchronization Date Imp")
                 {
-                    Caption = 'Synchronization Date Import';
                 }
-                field(synchronizationTimeExport; Rec."Synchronization Time Export")
+                field(FSONBCsynchronizationTimeExport; Rec."FSONBCSynchronization Time Exp")
                 {
-                    Caption = 'Synchronization Time Export';
                 }
-                field(synchronizationTimeImport; Rec."Synchronization Time Import")
+                field(FSONBCsynchronizationTimeImport; Rec."FSONBCSynchronization Time Imp")
                 {
-                    Caption = 'Synchronization Time Import';
                 }
-                field(tenderSubtype; Rec."Tender Subtype")
+                field(FSONBCtenderSubtype; Rec."FSONBCTender Subtype")
                 {
-                    Caption = 'Tender Subtype';
                 }
-                field(tenderType; Rec."Tender Type")
+                field(FSONBCtenderType; Rec."FSONBCTender Type")
                 {
-                    Caption = 'Tender Type';
                 }
-                field(totalAmountTransactions; Rec."Total Amount Transactions")
+                field(FSONBCtotalAmountTransactions; Rec."FSONBCTotal Amount Trans")
                 {
-                    Caption = 'Total Amount Transactions';
                 }
-                field("type"; Rec."Type")
+                field(FSONBCtype; Rec."FSONBCType")
                 {
-                    Caption = 'Type';
                 }
-                field(typeOfPosting; Rec."Type of Posting")
+                field(FSONBCtypeOfPosting; Rec."FSONBCType of Posting")
                 {
-                    Caption = 'Type of Posting';
                 }
             }
         }

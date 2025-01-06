@@ -1,11 +1,8 @@
-namespace Shoppayment;
-
-using BCLS.BCLS;
-
-permissionset 50100 GeneratedPermission
+namespace FSO_NAVBCConnector.Shoppayment;
+permissionset 50100 FSONBCGenPermission
 {
     Assignable = true;
-    Permissions = tabledata "Shop Payment Entries" = RIMD,
-        table "Shop Payment Entries" = X,
-        page "Shop Payment Entries" = X;
+    Permissions = tabledata "FSONBCShopPaymentEntries" = RIMD,
+        table "FSONBCShopPaymentEntries" = X,
+        page "FSONBCShopPaymentEntries" = X;
 }

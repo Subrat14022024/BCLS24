@@ -1,37 +1,37 @@
-namespace BCLS.BCLS;
+namespace FSO_NAVBCConnector.Shoppayment;
 
 using Microsoft.Finance.GeneralLedger.Setup;
 
-pageextension 50102 GeneralLedgerSetupExt extends "General Ledger Setup"
+pageextension 50102 FSONBCGeneralLedgerSetupExt extends "General Ledger Setup"
 {
     layout
     {
-        addlast(VATReportingDateGroup)
+        addlast(content)
         {
-            group(ShopPayment)
+            group(FSONBCShopPayment)
             {
                 Caption = 'Shop Payment Setup';
-                field("Gen. Jnl. Template Safe Jrnl."; Rec."Gen. Jnl. Template Safe Jrnl.")
+                field("FSONBCGenJnlTemplate Safe Jrnl"; Rec."FSONBCGenJnlTemplate Safe Jrnl")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Define General Template for Safe Entries';
                 }
-                field("Gen. Jnl. Batch Safe Jrnl."; Rec."Gen. Jnl. Batch Safe Jrnl.")
+                field("FSONBCGenJnlBatch Safe Jrnl."; Rec."FSONBCGenJnlBatch Safe Jrnl.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Define General Batch for Safe Entries';
                 }
-                field("Default Shop Payment Journal"; Rec."Default Shop Payment Journal")
+                field("FSONBCDefault Shop Pmt. Jrnl"; Rec."FSONBCDefault Shop Pmt. Jrnl")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Define General Template for shop Entries';
                 }
-                field("Default Shop Payment Batch"; Rec."Default Shop Payment Batch")
+                field("FSONBCDefault Shop Pmt. Batch"; Rec."FSONBCDefault Shop Pmt. Batch")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Define General Batch for Shop Entries';
                 }
-                field("Create Shop Inv DateFilter"; Rec."Create Shop Inv DateFilter")
+                field("FSONBCCreate Shop Inv DFilter"; Rec."FSONBCCreate Shop Inv DFilter")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Define General Batch for Shop Entries';

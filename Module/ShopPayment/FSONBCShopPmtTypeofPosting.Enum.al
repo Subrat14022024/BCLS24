@@ -1,15 +1,15 @@
-namespace BCLS.BCLS;
+namespace FSO_NAVBCConnector.Shoppayment;
 
-enum 50101 ShopPmtTypeofPosting
+enum 50101 FSONBCShopPmtTypeofPosting
 {
     Extensible = true;
-    
-    value(0; DagAfsluiting)
+
+    value(0; DayClosing)
     {
-        Caption = 'DagAfsluiting';
+        Caption = 'DayClosing', Locked = true;
     }
-    value(1; Kluis)
+    value(1; Vault)
     {
-        Caption = 'Kluis';
+        Caption = 'Vault', Locked = true;
     }
 }
