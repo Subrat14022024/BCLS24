@@ -79,8 +79,8 @@ page 50104 "Azure File Service Setup"
 
                     AzureFileServiceSetup.Get();
                     AzureFileServiceSetup.TestField("Storage Account");
-                    AzureFileServiceSetup.TestField("File Share");
-                    AzureFileServiceSetup.TestField("Sas Token");
+                    // AzureFileServiceSetup.TestField("File Share");
+                    // AzureFileServiceSetup.TestField("Sas Token");
                     //AzureFileServiceSetup.TestField("Azure Folder");
                     AzureFileServiceSetup.TestField("Azure Processed Folder");
                     AFSDirectoryContent.Reset();
@@ -109,42 +109,16 @@ page 50104 "Azure File Service Setup"
                 Image = Cloud;
                 trigger OnAction()
                 var
-                    AFSDirectoryContent: Record "AFS Directory Content";
-                    AzureFileServiceSetup: Record "Azure File Service Setup";
+                    //AFSDirectoryContent: Record "AFS Directory Content";
+                    //AzureFileServiceSetup: Record "Azure File Service Setup";
                     AzureFileService: Codeunit "Azure File Service";
-                    TempBlob: Codeunit "Temp Blob";
-                    FileContent: BigText;
-                    FileInStream: InStream;
-                    msgmovedlbl: Label 'File %1 Moved';
-                    FileText: Text;
+                //TempBlob: Codeunit "Temp Blob";
+                //FileContent: BigText;
+                //FileInStream: InStream;
+                //msgmovedlbl: Label 'File %1 Moved';
+                //FileText: Text;
                 begin
-                    // this function will do the following steps
-                    // 1.Read files from azure file share 
-                    // 2. Display the file names in a message box
-                    // 3. Display the file file content in a message box
-                    // 4. Move the file to another location
-
-                    AzureFileServiceSetup.Get();
-                    AzureFileServiceSetup.TestField("Storage Account");
-                    AzureFileServiceSetup.TestField("File Share");
-                    AzureFileServiceSetup.TestField("Sas Token");
-                    //AzureFileServiceSetup.TestField("Azure Folder");
-                    AzureFileServiceSetup.TestField("Azure Processed Folder");
-                    AFSDirectoryContent.Reset();
-                    AzureFileService.ReadFileFromShare(AzureFileServiceSetup."Azure Folder", FileText);
-                    AFSDirectoryContent.SetRange("Resource Type", AFSDirectoryContent."Resource Type"::File);
-                    if AFSDirectoryContent.FindSet() then
-                        repeat
-                            Message(AFSDirectoryContent.Name);
-                            Clear(FileContent);
-                            TempBlob.CreateInStream(FileInStream);
-                            AzureFileService.ReadFileFromShare(AFSDirectoryContent."Full Name", FileText);
-                            FileContent.AddText(FileText);
-                            Message(FileText);
-                            AzureFileService.MoveFileFromShare(AFSDirectoryContent."Full Name", AzureFileServiceSetup."Azure Processed Folder", AFSDirectoryContent.Name, FileText);
-                            Message(msgmovedlbl, AFSDirectoryContent."Full Name");
-                        until AFSDirectoryContent.Next() = 0;
-
+                    AzureFileService.CountFilesInFolder()
                 end;
             }
 

@@ -1,0 +1,468 @@
+codeunit 50104 "CODA Management"
+{
+    trigger OnRun();
+    begin
+        CASE STEP2RUN OF
+            '':
+                OnRunCode;
+            '10':
+                ProcessNewFiles;
+            '20':
+                ImportArchiveProcessNewFiles;
+            '21':
+                ImportCODAFile;
+            '22':
+                ProcessStatement;
+            '24':
+                TransferStatement;
+            '26':
+                PostJournal; //  HS 20190130 WAM14-0108
+        END;
+    end;
+
+    var
+        STEP2RUN: Code[20];
+        StatementNo: Code[20];
+        BankAccountNo: Code[20];
+        CODAFILE_Path: Text[250];
+        CODAFILE_Name: Text[250];
+        CODAFILE_DIR: Text[250];
+        NoOfRecordInFile: Integer;
+        EndOfEachRecInFile1: Integer;
+        EndOfEachRecInFile2: Integer;
+        EndOfEachRecInFile3: Integer;
+        A: File;
+        JournalTemplate: Code[10];
+        JournalBatch: Code[10];
+
+    local procedure OnRunCode();
+    var
+        RunInstance: Codeunit "50104";
+    begin
+        //Global loop
+        RunInstance.SetNEXTSTEP('10');
+        IF NOT RunInstance.RUN THEN BEGIN
+            //GETLASTERRORTEXT
+        END;
+        CLEAR(RunInstance);
+        RunInstance.SetNEXTSTEP('20');
+        IF NOT RunInstance.RUN THEN BEGIN
+            //GETLASTERRORTEXT
+        END;
+        CLEAR(RunInstance);
+    end;
+
+    procedure SetNEXTSTEP(NextStep: Code[20]);
+    begin
+        STEP2RUN := NextStep;
+    end;
+
+    procedure SetStep21Param(pBankAccountNo: Code[20]; pCODAFILE_Path: Text[250]; pCODAFILE_Name: Text[250]; pCODAFILE_Dir: Text[250]);
+    begin
+        BankAccountNo := pBankAccountNo;
+        CODAFILE_Path := pCODAFILE_Path;
+        CODAFILE_Name := pCODAFILE_Name;
+        CODAFILE_DIR := pCODAFILE_Dir;
+    end;
+
+    procedure SetStep22Param(pBankAccountNo: Code[20]; pStatementNo: Code[20]);
+    begin
+        BankAccountNo := pBankAccountNo;
+        StatementNo := pStatementNo;
+    end;
+
+    procedure SetStep24Param(pBankAccountNo: Code[20]; pStatementNo: Code[20]);
+    begin
+        BankAccountNo := pBankAccountNo;
+        StatementNo := pStatementNo;
+    end;
+
+    procedure SetStep26Param(pJournalTemplate: Code[10]; pJournalBatch: Code[10]);
+    begin
+        //  HS 20190130 WAM14-0108 START
+        JournalTemplate := pJournalTemplate;
+        JournalBatch := pJournalBatch;
+        //  HS 20190130 WAM14-0108 STOP
+    end;
+
+    local procedure ProcessNewFiles();
+    var
+        GeneralLedgerSetup: Record "General Ledger Setup";
+        ImportFiles: Record File;
+        FileManagement: Codeunit "File Management";
+
+        AccountNo: Text;
+    begin
+        GeneralLedgerSetup.GET;
+        GeneralLedgerSetup.TESTFIELD("CODA Import Folder");
+        GeneralLedgerSetup.TESTFIELD("CODA Archive Folder");
+        GeneralLedgerSetup.TESTFIELD("CODA ERROR Folder");//  HS 20190130 WAM14-0108
+        ImportFiles.SETRANGE(Path, GeneralLedgerSetup."CODA Import Folder");
+        ImportFiles.SETRANGE("Is a file", TRUE);
+        IF ImportFiles.FINDSET THEN
+            REPEAT
+                AccountNo := IdentifyAccount(ImportFiles.Path + '\' + ImportFiles.Name);
+                NoOfRecordInFile := IdentifyNoOfRecordInFile(ImportFiles.Path + '\' + ImportFiles.Name);
+                IF AccountNo = '' THEN
+                    AccountNo := 'UNKNOWN';
+                FileManagement.ServerCreateDirectory(GeneralLedgerSetup."CODA Import Folder" + '\' + AccountNo);
+                FileManagement.MoveFile(ImportFiles.Path + '\' + ImportFiles.Name, ImportFiles.Path + '\' + AccountNo + '\' + ImportFiles.Name);
+            UNTIL ImportFiles.NEXT = 0
+        ELSE
+            IF GUIALLOWED THEN
+                MESSAGE('Geen files op %1', GeneralLedgerSetup."CODA Import Folder");
+    end;
+
+    local procedure IdentifyAccount(FileName: Text): Text;
+    var
+        CODAFile: File;
+        CODALine: Text;
+        AccountNoFound: Boolean;
+        AccountNo: Text;
+    begin
+        CODAFile.TEXTMODE(TRUE);
+        IF CODAFile.OPEN(FileName) THEN BEGIN
+            WHILE (CODAFile.READ(CODALine) > 0) AND NOT AccountNoFound DO BEGIN
+                IF COPYSTR(CODALine, 1, 1) = '1' THEN BEGIN //Data Record Old Balance
+                    CASE COPYSTR(CODALine, 2, 1) OF
+                        '0': //Belgian account number
+                            AccountNo := COPYSTR(CODALine, 6, 12);
+                        '1': //foreign account number
+                            AccountNo := COPYSTR(CODALine, 6, 34);
+                        '2': //IBAN of the Belgian account number
+                            AccountNo := COPYSTR(CODALine, 6, 31);
+                        '3': //IBAN of the foreign account number
+                            AccountNo := COPYSTR(CODALine, 6, 34);
+                    END;
+                    AccountNo := DELCHR(AccountNo);//  HS 20190111 WAM14-0108
+                    AccountNoFound := (AccountNo <> '');
+                END;
+            END;
+            CODAFile.CLOSE;
+        END;
+        EXIT(AccountNo);
+    end;
+
+    local procedure ImportArchiveProcessNewFiles();
+    var
+        BankAccount: Record "270";
+        GeneralLedgerSetup: Record "98";
+        FileManagement: Codeunit "419";
+        ImportFiles: Record "2000000022";
+        RunInstance: Codeunit "50016";
+        CODAStatement: Record "2000040";
+        ERRFile: File;
+        lBankAccountOrIBAN: Text;
+        ErrorFilesExistWarning: TextConst ENU = 'ATTENTION, There are files in the ERROR folder that didn''t process', NLB = 'OPGELET, er staan bestanden in de ERROR folder die niet verwerkt werden';
+    begin
+        GeneralLedgerSetup.GET();
+        GeneralLedgerSetup.TESTFIELD("CODA Import Folder");
+        GeneralLedgerSetup.TESTFIELD("CODA Archive Folder");
+        GeneralLedgerSetup.TESTFIELD("CODA ERROR Folder"); //  HS 20190130 WAM14-0108
+        IF BankAccount.FINDSET() THEN
+            REPEAT
+                IF BankAccount."Bank Account No." <> '' THEN
+                    IF FileManagement.ServerDirectoryExists(GeneralLedgerSetup."CODA Import Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-')) THEN BEGIN
+                        ImportFiles.SETRANGE(Path, GeneralLedgerSetup."CODA Import Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-'));
+                        ImportFiles.SETRANGE("Is a file", TRUE);
+                        IF ImportFiles.FINDSET THEN
+                            REPEAT
+                                CODAFILE_Name := ImportFiles.Name;
+                                CLEAR(RunInstance);
+                                RunInstance.SetNEXTSTEP('21');
+                                RunInstance.SetStep21Param(BankAccount."No.", ImportFiles.Path, ImportFiles.Name, DELCHR(BankAccount."Bank Account No.", '=', ' .-'));
+                                IF NOT RunInstance.RUN THEN BEGIN
+                                    //  HS 20190130 WAM14-0108 START
+                                    //FileManagement.ServerCreateDirectory(GeneralLedgerSetup."CODA Import Folder" + '\' + DELCHR(BankAccount."Bank Account No.",'=',' .-') + '\ERROR');
+                                    //FileManagement.MoveFile(ImportFiles.Path + '\' + ImportFiles.Name,GeneralLedgerSetup."CODA Import Folder" + '\' + DELCHR(BankAccount."Bank Account No.",'=',' .-') + '\ERROR\' + ImportFiles.Name);
+                                    //ERRFile.TEXTMODE(TRUE);
+                                    //ERRFile.CREATE(GeneralLedgerSetup."CODA Import Folder" + '\' + DELCHR(BankAccount."Bank Account No.",'=',' .-') + '\ERROR\' + ImportFiles.Name + '_ERROR.txt',TEXTENCODING::UTF16);
+                                    FileManagement.ServerCreateDirectory(GeneralLedgerSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-'));
+                                    FileManagement.MoveFile(ImportFiles.Path + '\' + ImportFiles.Name, GeneralLedgerSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-') + '\' + ImportFiles.Name);
+                                    ERRFile.TEXTMODE(TRUE);
+                                    ERRFile.CREATE(GeneralLedgerSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-') + '\' + ImportFiles.Name + '_ERROR.txt', TEXTENCODING::UTF16);
+                                    //  HS 20190130 WAM14-0108 STOP
+                                    ERRFile.WRITE(GETLASTERRORTEXT);
+                                    ERRFile.CLOSE;
+                                END ELSE BEGIN
+                                    CODAStatement.SETRANGE(OrgFileName, CODAFILE_Name);
+                                    IF CODAStatement.FINDSET THEN
+                                        REPEAT
+                                            CLEAR(RunInstance);
+                                            RunInstance.SetNEXTSTEP('22');
+                                            RunInstance.SetStep22Param(BankAccount."No.", CODAStatement."Statement No.");
+                                            IF NOT RunInstance.RUN THEN BEGIN
+                                                //GETLASTERRORTEXT
+                                            END ELSE BEGIN
+                                                CLEAR(RunInstance);
+                                                RunInstance.SetNEXTSTEP('24');
+                                                RunInstance.SetStep24Param(BankAccount."No.", CODAStatement."Statement No.");
+                                                IF NOT RunInstance.RUN THEN BEGIN
+                                                    //GETLASTERRORTEXT
+                                                END
+                                            END;
+                                        UNTIL CODAStatement.NEXT = 0;
+                                END;
+                            UNTIL ImportFiles.NEXT = 0;
+                    END;
+                IF BankAccount.IBAN <> '' THEN
+                    IF FileManagement.ServerDirectoryExists(GeneralLedgerSetup."CODA Import Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-')) THEN BEGIN
+                        ImportFiles.SETRANGE(Path, GeneralLedgerSetup."CODA Import Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-'));
+                        ImportFiles.SETRANGE("Is a file", TRUE);
+                        IF ImportFiles.FINDSET THEN
+                            REPEAT
+                                CODAFILE_Name := ImportFiles.Name;
+                                CLEAR(RunInstance);
+                                RunInstance.SetNEXTSTEP('21');
+                                RunInstance.SetStep21Param(BankAccount."No.", ImportFiles.Path, ImportFiles.Name, DELCHR(BankAccount.IBAN, '=', ' .-'));
+                                IF NOT RunInstance.RUN THEN BEGIN
+                                    //  HS 20190130 WAM14-0108 START
+                                    //FileManagement.ServerCreateDirectory(GeneralLedgerSetup."CODA Import Folder" + '\' + DELCHR(BankAccount.IBAN,'=',' .-') + '\ERROR');
+                                    //FileManagement.MoveFile(ImportFiles.Path + '\' + ImportFiles.Name,GeneralLedgerSetup."CODA Import Folder" + '\' + DELCHR(BankAccount.IBAN,'=',' .-') + '\ERROR\' + ImportFiles.Name);
+                                    //ERRFile.TEXTMODE(TRUE);
+                                    //ERRFile.CREATE(GeneralLedgerSetup."CODA Import Folder" + '\' + DELCHR(BankAccount.IBAN,'=',' .-') + '\ERROR\' + ImportFiles.Name + '_ERROR.txt',TEXTENCODING::UTF16);
+                                    FileManagement.ServerCreateDirectory(GeneralLedgerSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-'));
+                                    FileManagement.MoveFile(ImportFiles.Path + '\' + ImportFiles.Name, GeneralLedgerSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-') + '\' + ImportFiles.Name);
+                                    ERRFile.TEXTMODE(TRUE);
+                                    ERRFile.CREATE(GeneralLedgerSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-') + '\' + ImportFiles.Name + '_ERROR.txt', TEXTENCODING::UTF16);
+                                    //  HS 20190130 WAM14-0108 STOP
+                                    ERRFile.WRITE(GETLASTERRORTEXT);
+                                    ERRFile.CLOSE;
+                                END ELSE BEGIN
+                                    CLEAR(RunInstance);
+                                    RunInstance.SetNEXTSTEP('22');
+                                    CODAStatement.SETRANGE(OrgFileName, CODAFILE_Name);
+                                    IF CODAStatement.FINDSET THEN
+                                        REPEAT
+                                            CLEAR(RunInstance);
+                                            RunInstance.SetNEXTSTEP('22');
+                                            RunInstance.SetStep22Param(BankAccount."No.", CODAStatement."Statement No.");
+                                            IF NOT RunInstance.RUN THEN BEGIN
+                                                //GETLASTERRORTEXT
+                                            END ELSE BEGIN
+                                                CLEAR(RunInstance);
+                                                RunInstance.SetNEXTSTEP('24');
+                                                RunInstance.SetStep24Param(BankAccount."No.", CODAStatement."Statement No.");
+                                                IF NOT RunInstance.RUN THEN BEGIN
+                                                    //GETLASTERRORTEXT
+                                                END
+                                            END;
+                                        UNTIL CODAStatement.NEXT = 0;
+                                END;
+                            UNTIL ImportFiles.NEXT = 0;
+                    END;
+            UNTIL BankAccount.NEXT = 0;
+
+        //  HS 20190130 WAM14-0108 START
+        IF GUIALLOWED THEN
+            IF CheckErrorFilesExist THEN
+                MESSAGE(ErrorFilesExistWarning)
+            ELSE
+                MESSAGE('Done');
+        //  HS 20190130 WAM14-0108 STOP
+    end;
+
+    local procedure ImportCODAFile();
+    var
+        BankAccount: Record "270";
+        GeneralLedgerSetup: Record "98";
+        ImportCODA: Report "2000030";
+        StatementNo: Code[20];
+        FileManagement: Codeunit "419";
+        lBankAccountOrIBAN: Text;
+    begin
+        BankAccount.GET(BankAccountNo);
+        GeneralLedgerSetup.GET;
+        ImportCODA.SetBankAcc(BankAccount);
+        ImportCODA.InitializeRequest(CODAFILE_Path + '\' + CODAFILE_Name);
+        IF NoOfRecordInFile = 0 THEN
+            NoOfRecordInFile := IdentifyNoOfRecordInFile(CODAFILE_Path + '\' + CODAFILE_Name);
+        ImportCODA.SetNoOfRecordInFile(NoOfRecordInFile);
+        IF NoOfRecordInFile < 2 THEN
+            ImportCODA.SetNoGUI(TRUE);
+        ImportCODA.RUNMODAL;
+        CLEAR(ImportCODA);
+        FileManagement.ServerCreateDirectory(GeneralLedgerSetup."CODA Archive Folder" + '\' + CODAFILE_DIR);
+        FileManagement.MoveFile(CODAFILE_Path + '\' + CODAFILE_Name, GeneralLedgerSetup."CODA Archive Folder" + '\' + CODAFILE_DIR + '\' + CODAFILE_Name);
+    end;
+
+    local procedure ProcessStatement();
+    var
+        CodaBankStmt: Record "2000040";
+        PostCodaStatementLines: Report "2000059";
+    begin
+        CodaBankStmt.SETRANGE("Bank Account No.", BankAccountNo);
+        IF NoOfRecordInFile = 0 THEN
+            NoOfRecordInFile := IdentifyNoOfRecordInFile(CODAFILE_Path + '\' + CODAFILE_Name);
+        IF NoOfRecordInFile < 2 THEN
+            CodaBankStmt.SETRANGE("Statement No.", StatementNo);
+        PostCodaStatementLines.SETTABLEVIEW(CodaBankStmt);
+        PostCodaStatementLines.USEREQUESTPAGE(FALSE);
+        PostCodaStatementLines.SetNoGUI(TRUE);
+        PostCodaStatementLines.RUNMODAL;
+    end;
+
+    local procedure ReportError();
+    begin
+    end;
+
+    local procedure TransferStatement();
+    var
+        CodaBankStmtLine: Record "2000041";
+        PostCodedBankStatement: Codeunit "2000042";
+        BankAccount: Record "270";
+        RunInstance: Codeunit "50016";
+        GenJnlBatch: Record "232";
+        BatchName: Code[10];
+    begin
+        CodaBankStmtLine.SETRANGE("Bank Account No.", BankAccountNo);
+        CodaBankStmtLine.SETRANGE("Statement No.", StatementNo);
+        PostCodedBankStatement.SetNoGUI(TRUE);
+        PostCodedBankStatement.RUN(CodaBankStmtLine);
+        CodaBankStmtLine.RESET;
+        //  HS 20190130 WAM14-0108 START
+        BankAccount.GET(BankAccountNo);
+        IF BankAccount."Auto Post CODA Journals" THEN BEGIN
+            GenJnlBatch.SETRANGE("Bal. Account Type", GenJnlBatch."Bal. Account Type"::"Bank Account");
+            GenJnlBatch.SETRANGE("Bal. Account No.", BankAccountNo);
+            GenJnlBatch.SETRANGE(CODA, TRUE);
+            //GenJnlBatch.SETRANGE(Name, "Bank Account No."+"Statement No.");
+            BatchName := STRSUBSTNO('%1%2', COPYSTR(BankAccountNo, 1, 7), COPYSTR(StatementNo, 1, 3));
+            GenJnlBatch.SETRANGE(Name, BatchName);
+            IF GenJnlBatch.COUNT = 1 THEN BEGIN
+                GenJnlBatch.FINDFIRST;
+                CLEAR(RunInstance);
+                RunInstance.SetNEXTSTEP('26');
+                RunInstance.SetStep26Param(GenJnlBatch."Journal Template Name", GenJnlBatch.Name);
+                COMMIT;
+                IF NOT RunInstance.RUN THEN BEGIN
+                    //GETLASTERRORTEXT
+                END
+            END;
+        END;
+        //  HS 20190130 WAM14-0108 STOP
+    end;
+
+    local procedure IdentifyNoOfRecordInFile(FileName: Text): Integer;
+    var
+        CODAFile: File;
+        CODALine: Text;
+        AccountNoFound: Boolean;
+        I: Integer;
+    begin
+        I := 0;
+        CODAFile.TEXTMODE(TRUE);
+        IF CODAFile.OPEN(FileName) THEN BEGIN
+            WHILE (CODAFile.READ(CODALine) > 0) DO BEGIN
+                IF COPYSTR(CODALine, 1, 1) = '9' THEN BEGIN //Data Record Old Balance
+                    NoOfRecordInFile += 1;
+                    IF NoOfRecordInFile = 1 THEN
+                        EndOfEachRecInFile1 := CODAFile.POS
+                    ELSE IF NoOfRecordInFile = 2 THEN BEGIN
+                        EndOfEachRecInFile2 := CODAFile.POS;
+                    END
+                    ELSE IF NoOfRecordInFile = 3 THEN
+                        EndOfEachRecInFile3 := CODAFile.POS;
+                    I += 1;
+                END;
+            END;
+            CODAFile.CLOSE;
+        END;
+        EXIT(NoOfRecordInFile);
+    end;
+
+    local procedure PostJournal();
+    var
+        GenJnlLine: Record "81";
+        GenJnlPost: Codeunit "231";
+    begin
+        //  HS 20190130 WAM14-0108 START
+        IF (JournalTemplate = '') OR (JournalBatch = '') THEN
+            EXIT;
+        GenJnlLine.RESET;
+        GenJnlLine.SETRANGE("Journal Template Name", JournalTemplate);
+        GenJnlLine.SETRANGE("Journal Batch Name", JournalBatch);
+        IF NOT GenJnlLine.FINDSET THEN
+            EXIT;
+        IF CheckJournalBalance(GenJnlLine) THEN BEGIN
+            //CODEUNIT.RUN(CODEUNIT::"Gen. Jnl.-Post",GenJnlLine);
+            GenJnlPost.SetNoGUI(TRUE);
+            GenJnlPost.RUN(GenJnlLine);
+        END;
+        //  HS 20190130 WAM14-0108 STOP
+    end;
+
+    local procedure CheckJournalBalance(var pGenJnlLine: Record "81"): Boolean;
+    var
+        Total: Decimal;
+        Currency: Boolean;
+        GenJnlTemplate: Record "80";
+        BankAccount: Record "270";
+        GenJnlLine: Record "81";
+        Text11300: TextConst ENU = 'There is a difference of %1. Please check the lines.', FRB = 'Il y a une différence de %1. Vérifiez les lignes.', NLB = 'Er is een verschil van %1. Controleer de regels.';
+        GenJnlBatch: Record "232";
+        StatementEndingBalance: Decimal;
+        BalanceLastStatement: Decimal;
+    begin
+        //  HS 20190130 WAM14-0108 START
+        Total := 0;
+        Currency := FALSE;
+
+        GenJnlTemplate.GET(pGenJnlLine."Journal Template Name");
+        IF (GenJnlTemplate.Type = GenJnlTemplate.Type::Financial) AND
+           (GenJnlTemplate."Bal. Account Type" = GenJnlTemplate."Bal. Account Type"::"Bank Account")
+        THEN BEGIN
+            GenJnlTemplate.TESTFIELD("Bal. Account No.");
+            BankAccount.GET(GenJnlTemplate."Bal. Account No.");
+            Currency := BankAccount."Currency Code" <> '';
+        END;
+
+        pGenJnlLine.CALCSUMS(Amount, "Amount (LCY)");
+        IF Currency THEN
+            Total := -pGenJnlLine.Amount
+        ELSE
+            Total := -pGenJnlLine."Amount (LCY)";
+
+        IF GenJnlBatch.GET(GenJnlTemplate.Name, pGenJnlLine."Journal Batch Name") THEN
+            IF GenJnlBatch.CODA THEN BEGIN
+                StatementEndingBalance := GenJnlBatch."Statement Ending Balance";
+                BalanceLastStatement := GenJnlBatch."Balance Last Statement";
+            END;
+
+        //IF Total <> StatementEndingBalance - BalanceLastStatement THEN
+        //ERROR(Text11300,-(Total - StatementEndingBalance + BalanceLastStatement));
+        EXIT(Total = StatementEndingBalance - BalanceLastStatement);
+        //  HS 20190130 WAM14-0108 STOP
+    end;
+
+    procedure CheckErrorFilesExist(): Boolean;
+    var
+        GeneralLedgerSetup: Record "98";
+        FileManagement: Codeunit "419";
+        Folders: Record "2000000022";
+        Files: Record "2000000022";
+        TempNameValueBuffer: Record "823" temporary;
+        ExitValue: Boolean;
+    begin
+        //  HS 20190130 WAM14-0108 START
+        GeneralLedgerSetup.GET;
+        GeneralLedgerSetup.TESTFIELD("CODA ERROR Folder");
+        //FileManagement.GetServerDirectoryDirectoryList(TempNameValueBuffer,GeneralLedgerSetup."CODA ERROR Folder");//Function doesn't exist
+        Folders.SETRANGE(Path, GeneralLedgerSetup."CODA ERROR Folder");
+        Folders.SETRANGE("Is a file", FALSE);
+        IF Folders.FINDSET THEN
+            REPEAT
+                IF (Folders.Name <> '.') AND (Folders.Name <> '..') THEN BEGIN
+                    Files.SETRANGE(Path, Folders.Path + '\' + Folders.Name);
+                    //Files.SETRANGE("Is a file", TRUE);
+                    IF Files.ISEMPTY THEN
+                        FileManagement.ServerRemoveDirectory(Folders.Path + '\' + Folders.Name, FALSE);
+                    IF NOT Files.ISEMPTY THEN
+                        ExitValue := TRUE;
+                END;
+            UNTIL Folders.NEXT = 0;
+        EXIT(ExitValue);
+        //  HS 20190130 WAM14-0108 STOP
+    end;
+}
+

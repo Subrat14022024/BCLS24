@@ -42,7 +42,7 @@ report 50100 "FSONBCProcessShopPaymentEnt"
                         "FSONBCType of Posting"::Vault:
                             begin
                                 if not (FSONBCLocation.Name = '') then
-                                    gGenJnlBatch := COPYSTR(FSONBCLocation.Name, 1, MAXSTRLEN(lCustomer.Name))
+                                    gGenJnlBatch := COPYSTR(FSONBCLocation.Name, 1, MAXSTRLEN(lGenJournalBatch."Journal Template Name"))
                                 else
                                     gGenJnlBatch := FSONBCLocation.Code;
 
@@ -188,7 +188,7 @@ report 50100 "FSONBCProcessShopPaymentEnt"
         lCustLedgEntry.SetRange("Document No.", GenJnlLine."Applies-to Doc. No.");
         lCustLedgEntry.ReadIsolation(IsolationLevel::ReadUncommitted);
         lCustLedgEntry.SetLoadFields("Amount to Apply", "Remaining Amount", "Remaining Pmt. Disc. Possible"
-                                    , "Document Type", "Document No.", "Posting Date", "Pmt. Discount Date");
+                                    , "Document Type", "Document No.", "Posting Date", "Pmt. Discount Date", "Currency Code");
         if lCustLedgEntry.FindFirst() then begin
             if GenJnlLine."Currency Code" <> lCustLedgEntry."Currency Code" then
                 GenJnlLine.validate("Currency Code", lCustLedgEntry."Currency Code");

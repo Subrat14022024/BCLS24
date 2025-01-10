@@ -1,4 +1,7 @@
+using system.net;
+
 codeunit 50103 "Azure File Service"
+
 {
     var
         AzureFileServiceSetup: Record "Azure File Service Setup";
@@ -14,9 +17,9 @@ codeunit 50103 "Azure File Service"
     begin
         AzureFileServiceSetup.Get();
         SasToken := AzureFileServiceSetup."Sas Token";
-        AzureFileServiceSetup.TestField("Storage Account");
-        AzureFileServiceSetup.TestField("File Share");
-        AzureFileServiceSetup.TestField("Sas Token");
+        // AzureFileServiceSetup.TestField("Storage Account");
+        // AzureFileServiceSetup.TestField("File Share");
+        // AzureFileServiceSetup.TestField("Sas Token");
         AFSOptParamater.Meta('sv', '2022-11-02');
         AFSOptParamater.Meta('ss', 'bfqt');
         AFSOptParamater.Meta('srt', 'sco');
@@ -108,5 +111,32 @@ codeunit 50103 "Azure File Service"
             Error(AFSOperationResponse.GetError());
     end;
 
+    procedure CountFilesInFolder()
+    var
+        HttpClient: HttpClient;
+        HttpResponse: HttpResponseMessage;
+        ResponseContent: Text;
+        //XmlDoc: XmlDocument;
+        //XmlNodeList: XmlNodeList;
+        //XmlNamespaceManager: XmlNamespaceManager;
+        //XmlNode: XmlNode;
+        //FileCount: Integer;
+        Url: Text;
+    begin
+        Url := 'https://stbcnonprodwe01.file.core.windows.net/icotest?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytf&se=2025-01-31T16%3A56%3A43Z&st=2024-12-09T08%3A56%3A43Z&spr=https&sig=JTg89JTjGbOg0fGQ1qY4P0R9eGFGCvKgFFYfxgmDEBk%3D&comp=list&restype=directory';
+        HttpClient.Get(Url, HttpResponse);
+        if HttpResponse.IsSuccessStatusCode() then begin
+            HttpResponse.Content.ReadAs(ResponseContent);
+            Message('Response Content: %1', ResponseContent);
+            // XmlDoc := XmlDocument.Create();
+            // XmlDoc.LoadXml(ResponseContent);
+            // XmlNamespaceManager := XmlNamespaceManager.Create(XmlDoc.NameTable);
+            // XmlNamespaceManager.AddNamespace('x', 'http://schemas.microsoft.com/ado/2007/08/dataservices');
+            // XmlNodeList := XmlDoc.SelectNodes('/EnumerationResults/Entries/File', XmlNamespaceManager);
+            // FileCount := XmlNodeList.Count;
+            // Message('Number of files in the folder: %1', FileCount);
+        end else
+            Error('Failed to retrieve files from the folder. Status Code: %1', HttpResponse.HttpStatusCode());
+    end;
 
 }
