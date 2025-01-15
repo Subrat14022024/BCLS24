@@ -70,18 +70,15 @@ page 50104 "Azure File Service Setup"
                     FileInStream: InStream;
                     msgmoved_Lbl: Label 'File %1 Moved';
                     FileText: Text;
+                    AccountNo: Text;
+                    AccountNoFound: Boolean;
                 begin
-                    // this function will do the following steps
-                    // 1.Read files from azure file share 
-                    // 2. Display the file names in a message box
-                    // 3. Display the file file content in a message box
-                    // 4. Move the file to another location
-
+                    Clear(AccountNoFound);
                     AzureFileServiceSetup.Get();
                     AzureFileServiceSetup.TestField("Storage Account");
-                    // AzureFileServiceSetup.TestField("File Share");
-                    // AzureFileServiceSetup.TestField("Sas Token");
-                    //AzureFileServiceSetup.TestField("Azure Folder");
+                    AzureFileServiceSetup.TestField("File Share");
+                    AzureFileServiceSetup.TestField("Sas Token");
+                    AzureFileServiceSetup.TestField("Azure Folder");
                     AzureFileServiceSetup.TestField("Azure Processed Folder");
                     AFSDirectoryContent.Reset();
                     AzureFileService.ReadListFromShare(AzureFileServiceSetup."Azure Folder", AFSDirectoryContent);
@@ -91,13 +88,29 @@ page 50104 "Azure File Service Setup"
                             Message(AFSDirectoryContent.Name);
                             Clear(FileContent);
                             TempBlob.CreateInStream(FileInStream);
-                            AzureFileService.ReadFileFromShare(AFSDirectoryContent."Full Name", FileText);
+                            AzureFileService.ReadFileFromShare(AFSDirectoryContent."Full Name", FileText, FileInStream);
                             FileContent.AddText(FileText);
-                            Message(FileText);
+                            //AzureFileService.CreateGLLines(FileInStream, AFSDirectoryContent);
+
+                            if COPYSTR(FileText, 1, 1) = '1' then begin //Data Record Old Balance
+                                case COPYSTR(FileText, 2, 1) of
+                                    '0': //Belgian account number
+                                        AccountNo := COPYSTR(FileText, 6, 12);
+                                    '1': //foreign account number
+                                        AccountNo := COPYSTR(FileText, 6, 34);
+                                    '2': //IBAN of the Belgian account number
+                                        AccountNo := COPYSTR(FileText, 6, 31);
+                                    '3': //IBAN of the foreign account number
+                                        AccountNo := COPYSTR(FileText, 6, 34);
+                                end;
+                                AccountNo := DELCHR(AccountNo);//  HS 20190111 WAM14-0108
+                                AccountNoFound := (AccountNo <> '');
+                            end;
+                            Message(AccountNo);
+
                             AzureFileService.MoveFileFromShare(AFSDirectoryContent."Full Name", AzureFileServiceSetup."Azure Processed Folder", AFSDirectoryContent.Name, FileText);
                             Message(msgmoved_Lbl, AFSDirectoryContent."Full Name");
                         until AFSDirectoryContent.Next() = 0;
-
                 end;
             }
             action(ReadFileContent)
@@ -119,6 +132,22 @@ page 50104 "Azure File Service Setup"
                 //FileText: Text;
                 begin
                     AzureFileService.CountFilesInFolder()
+                end;
+            }
+            action(importfromAzureFileservice)
+            {
+                Caption = 'Import from Azure File Service';
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                Image = ImportExcel;
+                ToolTip = 'This Action will import the data from Azure File Service';
+                trigger OnAction()
+                var
+                    AzureFileService: Codeunit "Azure File Service";
+                begin
+                    Message('HI');
+                    //AzureFileService.CreateGLLines();
                 end;
             }
 
