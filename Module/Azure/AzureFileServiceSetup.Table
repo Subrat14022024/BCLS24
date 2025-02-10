@@ -25,7 +25,7 @@ table 50105 "Azure File Service Setup"
         field(4; "Sas Token"; Text[250])
         {
             Caption = 'Sas Token';
-            DataClassification = CustomerContent;
+            DataClassification = EndUserIdentifiableInformation;
             ExtendedDatatype = Masked;
         }
         field(5; "Azure Folder"; Text[250])
@@ -47,4 +47,28 @@ table 50105 "Azure File Service Setup"
             Clustered = true;
         }
     }
+
+    procedure SetToken(SetTokenValue: Text)
+    begin
+        if IsolatedStorage.Contains(Sastoken_Lbl, DataScope::Module) then
+            IsolatedStorage.Delete(Sastoken_Lbl, DataScope::Module);
+
+        IsolatedStorage.Set(Sastoken_Lbl, SetTokenValue, DataScope::Module);
+    end;
+
+    procedure GetToken(): Text
+    var
+        Token: Text;
+    begin
+        if IsolatedStorage.Contains(Sastoken_Lbl, DataScope::Module) then
+            if IsolatedStorage.Get(Sastoken_Lbl, DataScope::Module, Token) then
+                exit(Token)
+    end;
+
+
+    var
+        Sastoken_Lbl: Label 'Sas Token', Locked = true;
+
+
+
 }

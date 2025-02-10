@@ -452,11 +452,9 @@ page 50111 "FSONBC APIV2 - Purch Invoices"
                     EntitySetName = 'dimensionSetLines';
                     SubPageLink = "Parent Id" = field(Id), "Parent Type" = const("Purchase Invoice");
                 }
-                part(purchaseInvoiceLines; "APIV2 - Purchase Invoice Lines")
+                part(purchaseInvoiceLines; "FSONBC APIV2 Purch Inv Lines")
                 {
                     Caption = 'Lines';
-                    EntityName = 'purchaseInvoiceLine';
-                    EntitySetName = 'purchaseInvoiceLines';
                     SubPageLink = "Document Id" = field(Id);
                 }
                 part(pdfDocument; "APIV2 - PDF Document")

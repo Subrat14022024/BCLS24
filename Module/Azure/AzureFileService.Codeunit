@@ -1,0 +1,262 @@
+codeunit 50103 "Azure File Service"
+
+{
+    var
+        AzureFileServiceSetup: Record "Azure File Service Setup";
+
+    procedure ReadListFromShare(FilePath: Text[2048]; var AFSDirectoryContent: Record "AFS Directory Content")
+    var
+        AFSFileClient: Codeunit "AFS File Client";
+        AFSOperationResponse: Codeunit "AFS Operation Response";
+        StorageAccountAutherization: Codeunit "Storage Service Authorization";
+        SecretText1: SecretText;
+    begin
+        Clear(AFSFileClient);
+        AzureFileServiceSetup.Get();
+        // AFSOptParamater.Meta('sv', '2022-11-02');
+        // AFSOptParamater.Meta('ss', 'bfqt');
+        // AFSOptParamater.Meta('srt', 'sco');
+        // AFSOptParamater.Meta('sp', 'rwdlacupiytf');
+        // AFSOptParamater.Meta('se', '2025-01-31T16%3A56%3A43Z');
+        // AFSOptParamater.Meta('st', '2024-12-09T08%3A56%3A43Z');
+        // AFSOptParamater.Meta('spr', 'https');
+        // AFSOptParamater.Meta('sig', 'JTg89JTjGbOg0fGQ1qY4P0R9eGFGCvKgFFYfxgmDEBk%3D');
+        // AFSOptParamater.Meta('comp', 'list');
+        // AFSOptParamater.Meta('restype', 'directory');
+        //Message(AzureFileServiceSetup.GetTokenAsSecretText(AzureFileServiceSetup.FieldCaption("Sas Token")));
+        SecretText1 := AzureFileServiceSetup.GetToken();
+        AFSFileClient.Initialize(AzureFileServiceSetup."Storage Account", AzureFileServiceSetup."File Share",
+        StorageAccountAutherization.UseReadySAS(SecretText1));
+        //AFSOperationResponse := AFSFileClient.SetFileMetadata(FilePath, Metadata, AFSOptParamater);
+        AFSOperationResponse := AFSFileClient.ListDirectory(FilePath, AFSDirectoryContent);
+        if not AFSOperationResponse.IsSuccessful() then
+            Error(AFSOperationResponse.GetError());
+    end;
+
+    procedure ReadFileFromShare(FilePath: Text; var FileText: Text; var FileInstream: InStream)
+    var
+        AFSFileClient: Codeunit "AFS File Client";
+        AFSOperationResponse: Codeunit "AFS Operation Response";
+        StorageAccountAutherization: Codeunit "Storage Service Authorization";
+        SecretText1: SecretText;
+    //FileInstream: InStream;
+    begin
+        Clear(AFSFileClient);
+        AzureFileServiceSetup.Get();
+        AzureFileServiceSetup.TestField("Storage Account");
+        AzureFileServiceSetup.TestField("File Share");
+
+
+        SecretText1 := AzureFileServiceSetup.GetToken();
+
+        AFSFileClient.Initialize(AzureFileServiceSetup."Storage Account", AzureFileServiceSetup."File Share",
+        StorageAccountAutherization.UseReadySAS(SecretText1));
+
+        AFSOperationResponse := AFSFileClient.GetFileAsStream(FilePath, FileInstream);
+        AFSFileClient.GetFileAsText(FilePath, FileText);
+        if not AFSOperationResponse.IsSuccessful() then
+            Error(AFSOperationResponse.GetError());
+    end;
+
+    procedure MoveFileFromShare(FromFilePath: Text; ToFilePath: Text; FileName: Text; FileText: Text)
+    var
+        AFSFileClient: Codeunit "AFS File Client";
+        AFSOperationResponse: Codeunit "AFS Operation Response";
+        StorageAccountAutherization: Codeunit "Storage Service Authorization";
+        TempBlob: Codeunit "Temp Blob";
+        FileInStream: InStream;
+        FileOutStream: OutStream;
+        SecretText1: SecretText;
+    begin
+        Clear(AFSFileClient);
+        FromFilePath := FromFilePath.Replace('\', '/');
+        ToFilePath := ToFilePath.Replace('\', '/');
+        AzureFileServiceSetup.Get();
+        AzureFileServiceSetup.TestField("Storage Account");
+        AzureFileServiceSetup.TestField("File Share");
+        //SecretText1 := AzureFileServiceSetup.GetTokenAsSecretText(AzureFileServiceSetup.FieldCaption("Sas Token"));
+        SecretText1 := AzureFileServiceSetup.GetToken();
+        AFSFileClient.Initialize(AzureFileServiceSetup."Storage Account", AzureFileServiceSetup."File Share",
+        StorageAccountAutherization.UseReadySAS(SecretText1));
+        TempBlob.CreateOutStream(FileOutStream);
+        FileOutStream.WriteText(FileText);
+        TempBlob.CreateInStream(FileInStream);
+
+
+
+        WriteFiletoShare(ToFilePath + '\' + FileName, FileInStream);
+
+        AFSOperationResponse := AFSFileClient.DeleteFile(FromFilePath);
+        if not AFSOperationResponse.IsSuccessful() then
+            Error(AFSOperationResponse.GetError());
+    end;
+
+    procedure WriteFiletoShare(FilePath: Text; var FileContent: InStream)
+    var
+        AFSFileClient: Codeunit "AFS File Client";
+        AFSOperationResponse: Codeunit "AFS Operation Response";
+        StorageAccountAutherization: Codeunit "Storage Service Authorization";
+        SecretText1: SecretText;
+    begin
+        AzureFileServiceSetup.Get();
+        AzureFileServiceSetup.TestField("Storage Account");
+        AzureFileServiceSetup.TestField("File Share");
+
+        //SecretText1 := AzureFileServiceSetup.GetTokenAsSecretText(AzureFileServiceSetup.FieldCaption("Sas Token"));
+        SecretText1 := AzureFileServiceSetup.GetToken();
+        AFSFileClient.Initialize(AzureFileServiceSetup."Storage Account", AzureFileServiceSetup."File Share",
+        StorageAccountAutherization.UseReadySAS(SecretText1));
+
+        AFSOperationResponse := AFSFileClient.CreateFile(FilePath, FileContent);
+        if not AFSOperationResponse.IsSuccessful() then
+            Error(AFSOperationResponse.GetError());
+        AFSOperationResponse := AFSFileClient.PutFileStream(FilePath, FileContent);
+        if not AFSOperationResponse.IsSuccessful() then
+            Error(AFSOperationResponse.GetError());
+    end;
+
+    procedure createfolder(FilePath: Text)
+    var
+        AFSFileClient: Codeunit "AFS File Client";
+        AFSOperationResponse: Codeunit "AFS Operation Response";
+        StorageAccountAutherization: Codeunit "Storage Service Authorization";
+        SecretText1: SecretText;
+    begin
+        AzureFileServiceSetup.Get();
+        AzureFileServiceSetup.TestField("Storage Account");
+        AzureFileServiceSetup.TestField("File Share");
+        SecretText1 := AzureFileServiceSetup.GetToken();
+        //SecretText1 := AzureFileServiceSetup.GetTokenAsSecretText(AzureFileServiceSetup.FieldCaption("Sas Token"));
+        AFSFileClient.Initialize(AzureFileServiceSetup."Storage Account", AzureFileServiceSetup."File Share",
+        StorageAccountAutherization.UseReadySAS(SecretText1));
+        AFSOperationResponse := AFSFileClient.CreateDirectory(FilePath);
+        if not AFSOperationResponse.IsSuccessful() then
+            Error(AFSOperationResponse.GetError());
+    end;
+
+    procedure CheckListofDirectory(DirectoryPath: Text[2048]; var AFSDirectoryContent: Record "AFS Directory Content" temporary)
+    var
+        AFSFileClient: Codeunit "AFS File Client";
+        AFSOperationResponse: Codeunit "AFS Operation Response";
+        StorageAccountAutherization: Codeunit "Storage Service Authorization";
+        SecretText1: SecretText;
+    begin
+        AzureFileServiceSetup.Get();
+        AzureFileServiceSetup.TestField("Storage Account");
+        AzureFileServiceSetup.TestField("File Share");
+        SecretText1 := AzureFileServiceSetup.GetToken();
+        //SecretText1 := AzureFileServiceSetup.GetTokenAsSecretText(AzureFileServiceSetup.FieldCaption("Sas Token"));
+
+
+        AFSFileClient.Initialize(AzureFileServiceSetup."Storage Account", AzureFileServiceSetup."File Share",
+        StorageAccountAutherization.UseReadySAS(SecretText1));
+        AFSOperationResponse := AFSFileClient.ListDirectory(DirectoryPath, AFSDirectoryContent);
+        if not AFSOperationResponse.IsSuccessful() then
+            Error(AFSOperationResponse.GetError());
+    end;
+
+    procedure CreateGLLines(var FileInStream: InStream; var AFSDirectoryContent: Record "AFS Directory Content" temporary)
+    var
+        TempCSVBuffer: Record "CSV Buffer" temporary;
+        JournalLine: Record "Gen. Journal Line";
+        LineNo: Integer;
+        CsvLineNo: Integer;
+        CSVAmount: Decimal;
+        CSVDate: date;
+    begin
+        LineNo += 10000;
+        CsvLineNo := 0;
+
+        AFSDirectoryContent.SetRange("Resource Type", AFSDirectoryContent."Resource Type"::File);
+        if AFSDirectoryContent.FindSet() then
+            repeat
+                TempCSVBuffer.LoadDataFromStream(FileInstream, ';');
+                if TempCSVBuffer.FindSet() then
+                    repeat
+                        if CsvLineNo <> TempCSVBuffer."Line No." then begin
+                            CsvLineNo := TempCSVBuffer."Line No.";
+                            JournalLine.Init();
+                            JournalLine."Line No." := LineNo;
+                            journalLine.Validate("Journal Template Name", 'GENERAL');
+                            JournalLine.Validate("Journal Batch Name", 'TEST');
+                            LineNo += 10000;
+                        end;
+                        case
+                            TempCSVBuffer."Field No." of
+                            1:
+                                begin
+                                    JournalLine.Validate("Account Type", JournalLine."Account Type"::"G/L Account");
+                                    JournalLine.Validate("Account No.", TempCSVBuffer.Value);
+                                end;
+                            2:
+                                begin
+                                    Evaluate(CSVAmount, TempCSVBuffer.value);
+                                    JournalLine.Validate(Amount, CSVAmount);
+                                end;
+                            3:
+                                begin
+                                    Evaluate(CSVDate, TempCSVBuffer.Value);
+                                    JournalLine.Validate("Posting Date", CSVdate);
+                                    JournalLine.Insert(true);
+                                end;
+                        end;
+                    until TempCSVBuffer.Next() = 0;
+            until AFSDirectoryContent.Next() = 0;
+    end;
+
+    procedure CreateandProcessPayrollfiles(PayrollFileText: Text; DocumentNo: text[20])
+    var
+        JournalLine: Record "Gen. Journal Line";
+        journalLine1: Record "Gen. Journal Line";
+        LineNo: Integer;
+        Amount: Decimal;
+    begin
+        if PayrollFileText <> '' then begin
+            journalLine1.SetRange("Journal Template Name", 'GENERAL');
+            JournalLine1.SetRange("Journal Batch Name", 'TEST');
+            if JournalLine1.FindLast() then
+                LineNo := JournalLine1."Line No." + 10000
+            else
+                LineNo := 10000;
+
+            JournalLine.Init();
+            JournalLine."Line No." := LineNo;
+            journalLine.Validate("Journal Template Name", 'GENERAL');
+            JournalLine.Validate("Journal Batch Name", 'TEST');
+            JournalLine.Insert(true);
+
+            JournalLine.Validate("Posting Date", WorkDate());
+            JournalLine."Document No." := DocumentNo;
+            JournalLine.validate("Document Type", JournalLine."Document Type"::" ");
+            JournalLine.Validate("Account Type", JournalLine."Account Type"::"G/L Account");
+            JournalLine.Validate("Account No.", CopyStr(PayrollFileText, 10, 6));
+            JournalLine.Description := CopyStr(TrimSpaces(CopyStr(PayrollFileText, 33, 30)), 1, MaxStrLen(JournalLine.Description));
+
+            if Evaluate(Amount, CopyStr(PayrollFileText, 63, 11)) then
+                if Amount <> 0 then
+                    if CopyStr(PayrollFileText, 32, 1) = 'C' then
+                        JournalLine.Validate("Credit Amount", Amount / 100)
+                    else
+                        if CopyStr(PayrollFileText, 32, 1) = 'D' then
+                            JournalLine.Validate("Debit Amount", Amount / 100);
+            if TrimSpaces(CopyStr(PayrollFileText, 20, 4)) <> '' then
+                JournalLine.Validate("Shortcut Dimension 1 Code", TrimSpaces(CopyStr(PayrollFileText, 20, 4)));
+
+            if TrimSpaces(CopyStr(PayrollFileText, 16, 4)) <> '000' then begin
+                if TrimSpaces(CopyStr(PayrollFileText, 20, 4)) <> '' then
+                    JournalLine.Validate("Shortcut Dimension 2 Code", 'VERK')
+                else
+                    JournalLine.Validate("Shortcut Dimension 2 Code", '');
+            end else
+                JournalLine.Validate("Shortcut Dimension 2 Code", TrimSpaces(CopyStr(PayrollFileText, 16, 4)));
+            JournalLine.Validate("Account No.", TrimSpaces(CopyStr(PayrollFileText, 10, 6)));
+            JournalLine.Modify(true);
+        end;
+    end;
+
+    procedure TrimSpaces(PTrimText: Text): Text
+    begin
+        exit(DELCHR(PTrimText, '<>', ' '));
+    end;
+
+}

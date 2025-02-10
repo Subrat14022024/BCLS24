@@ -2,7 +2,7 @@
     "id": "4362a92c-ed5e-4999-8197-ff362a7a80d2",
     "name": "BCLS24",
     "publisher": "HS_SUBRAT",
-    "version": "1.0.0.0",
+    "version": "2.0.0.0",
     "brief": "",
     "description": "",
     "privacyStatement": "",
@@ -27,38 +27,14 @@
             "id": "2A0547FA-F60F-401D-B1FE-C7C4BE8FB230",
             "name": "LS Central System App",
             "publisher": "LS Retail",
-            "version": "23.1.0.87"
+            "version": "25.1.0.573"
         },
         {
-            "id": "8b43c3ff-6c7b-4693-8e75-71b253e729ec",
-            "name": "ALPractice",
-            "publisher": "Default Publisher",
-            "version": "1.0.0.0"
-        },
-        {
-          "id": "10cb69d9-bc8a-4d27-970a-9e110e9db2a5",
-          "name": "_Exclude_APIV2_",
-          "publisher": "Microsoft",
-          "version": "22.0.54157.55195"
-        },
-                {
-          "id": "23de40a6-dfe8-4f80-80db-d70f83ce8caf",
-          "name": "Test Runner",
-          "publisher": "Microsoft",
-          "version": "24.0.16410.18056"
-        }
-        ,
-        {
-          "id": "dd0be2ea-f733-4d65-bb34-a28f4624fb14",
-          "name": "Library Assert",
-          "publisher": "Microsoft",
-          "version": "24.0.16410.18056"
-        },
-        {
-          "id": "73df947b-2724-4ae1-8bab-c55d424a4edd",
-          "name": "TCOG BE CODA",
-          "publisher": "TCOG",
-          "version": "24.0.19584.0"
+            "id": "10cb69d9-bc8a-4d27-970a-9e110e9db2a5",
+            "name": "_Exclude_APIV2_",
+            "publisher": "Microsoft",
+            "version": "25.2.27733.27999"
+
         }
     ],
     "screenshots": [],
@@ -76,7 +52,7 @@
         "includeSourceInSymbolFile": true,
         "applyToDevExtension": true
     },
-    "runtime": "13.0",
+    "runtime": "14.0",
     "features": [
         "NoImplicitWith","TranslationFile","GenerateCaptions"
     ]

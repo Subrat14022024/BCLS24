@@ -1,0 +1,32 @@
+namespace FINBC.FINBC;
+
+using Microsoft.Purchases.Posting;
+using Microsoft.Foundation.PaymentTerms;
+using Microsoft.Purchases.Document;
+using Microsoft.Finance.VAT.Calculation;
+using Microsoft.Finance.Currency;
+
+codeunit 58000 TESTVATDISCOUNT
+{
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", OnDivideAmountOnBeforeTempVATAmountLineRemainderModify, '', false, false)]
+    local procedure "Purch.-Post_OnDivideAmountOnBeforeTempVATAmountLineRemainderModify"(PurchHeader: Record "Purchase Header"; var PurchLine: Record "Purchase Line"; var TempVATAmountLine: Record "VAT Amount Line" temporary; var TempVATAmountLineRemainder: Record "VAT Amount Line" temporary; Currency: Record Currency)
+    var
+        PaymentTerm: Record "Payment Terms";
+        PmtDiscountBase: Decimal;
+    begin
+        if TempVATAmountLine.CalcLineAmount() <> 0 then begin
+            if PaymentTerm.Get(PurchHeader."Payment Terms Code") then;
+            if PaymentTerm."Cash Discount Excl. VAT" then
+                PmtDiscountBase := TempVATAmountLine."Line Amount"
+            else
+                PmtDiscountBase := TempVATAmountLine."Amount Including VAT";
+            TempVATAmountLineRemainder."Pmt. Discount Amount" +=
+              PmtDiscountBase * PurchHeader."Payment Discount %" / 100 *
+              PurchLine.CalcLineAmount() / TempVATAmountLine.CalcLineAmount();
+            PurchLine."Pmt. Discount Amount" :=
+              Round(TempVATAmountLineRemainder."Pmt. Discount Amount", Currency."Amount Rounding Precision");
+            TempVATAmountLineRemainder."Pmt. Discount Amount" :=
+              TempVATAmountLineRemainder."Pmt. Discount Amount" - PurchLine."Pmt. Discount Amount";
+        end;
+    end;
+}
