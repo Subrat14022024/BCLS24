@@ -1,4 +1,4 @@
-table 50105 "Azure File Service Setup"
+table 50105 "Azure File Service Setup TEST"
 
 {
     Caption = 'Azure File Service Setup';
@@ -22,12 +22,7 @@ table 50105 "Azure File Service Setup"
             DataClassification = CustomerContent;
 
         }
-        field(4; "Sas Token"; Text[250])
-        {
-            Caption = 'Sas Token';
-            DataClassification = EndUserIdentifiableInformation;
-            ExtendedDatatype = Masked;
-        }
+
         field(5; "Azure Folder"; Text[250])
         {
             Caption = 'Azure File Folder';

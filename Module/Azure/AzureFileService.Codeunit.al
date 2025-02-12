@@ -2,7 +2,7 @@ codeunit 50103 "Azure File Service"
 
 {
     var
-        AzureFileServiceSetup: Record "Azure File Service Setup";
+        AzureFileServiceSetup: Record "Azure File Service Setup TEST";
 
     procedure ReadListFromShare(FilePath: Text[2048]; var AFSDirectoryContent: Record "AFS Directory Content")
     var

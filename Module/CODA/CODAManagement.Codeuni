@@ -1,0 +1,499 @@
+codeunit 50109 "CODA Management"
+{
+    Access = Internal;
+    trigger OnRun();
+    begin
+        GetGLSetup();
+        case STEP2RUN OF
+            '':
+                OnRunCode();
+            '10':
+                ProcessNewFiles();
+            '20':
+                ImportArchiveProcessNewFiles();
+            '21':
+                ImportCODAFile(InStreamCodafile);
+            '22':
+                ProcessStatement();
+            '24':
+                TransferStatement();
+            '26':
+                PostJournal();
+        end;
+    end;
+
+    var
+        GLSetup: Record "General Ledger Setup";
+        STEP2RUN: Code[20];
+        StatementNo: Code[20];
+        BankAccountNo: Code[20];
+        CODAFILE_Name: Text[250];
+        NoOfRecordInFile: Integer;
+        // EndOfEachRecInFile1: Integer;
+        // EndOfEachRecInFile2: Integer;
+        // EndOfEachRecInFile3: Integer;
+        JournalTemplate: Code[10];
+        JournalBatch: Code[10];
+        InStreamCodafile: InStream;
+        gFileText: Text;
+        UnknownAccount_Lbl: Label 'UNKNOWN', Locked = true;
+
+    local procedure OnRunCode();
+    var
+        RunInstance: Codeunit "CODA Management";
+    begin
+        RunInstance.SetNEXTSTEP('10');
+        if not RunInstance.Run() then;
+        Clear(RunInstance);
+        RunInstance.SetNEXTSTEP('20');
+        if not RunInstance.Run() then;
+        Clear(RunInstance);
+    end;
+
+    local procedure ProcessNewFiles();
+    var
+        AFSDirectoryContent: Record "AFS Directory Content";
+        Azurefileservice: Codeunit "FSOINTAzure File Service";
+        AccountNo: Text;
+        lfiletext: text;
+        InStreamCoda: InStream;
+    begin
+        GLSetup.TestField("CODA Import Folder");
+        GLSetup.TestField("CODA Archive Folder");
+        GLSetup.TestField("CODA ERROR Folder");
+        GLSetup.TestField("File Share Name");
+        AFSDirectoryContent.Reset();
+        AzureFileService.SetFileShare(GLSetup."File Share Name");
+        AzureFileService.ReadListFromShare(GLSetup."CODA Import Folder", AFSDirectoryContent);
+        AFSDirectoryContent.SetRange("Resource Type", AFSDirectoryContent."Resource Type"::File);
+        if AFSDirectoryContent.FindSet() then
+            repeat
+                AzureFileService.ReadFileFromShare(AFSDirectoryContent."Full Name", lfiletext, InStreamCoda);
+                AccountNo := IdentifyAccount(InStreamCoda);
+                if AccountNo = '' then
+                    AccountNo := UnknownAccount_Lbl;
+                if CheckCreateDirectory(GLSetup."CODA Import Folder", AccountNo, GLSetup."CODA Import Folder" + '\' + AccountNo) then
+                    MoveFileFromShare(AFSDirectoryContent."Full Name", GLSetup."CODA Import Folder" + '\' + AccountNo, AFSDirectoryContent.Name, lfiletext);
+            until AFSDirectoryContent.Next() = 0
+        else
+            if GuiAllowed then
+                MESSAGE('Geen files op %1', GLSetup."CODA Import Folder");
+    end;
+
+    local procedure IdentifyAccount(var inS: InStream): Text;
+    var
+        AccountNoFound: Boolean;
+        AccountNo: Text;
+        CodaLine: Text;
+    begin
+        while not inS.EOS and not AccountNoFound do begin
+            inS.ReadText(CodaLine);
+            if CopyStr(CodaLine, 1, 1) = '1' then //Data Record Old Balance
+                case CopyStr(CodaLine, 2, 1) of
+                    '0': //Belgian account number
+                        AccountNo := CopyStr(CodaLine, 6, 12);
+                    '1': //foreign account number
+                        AccountNo := CopyStr(CodaLine, 6, 34);
+                    '2': //IBAN of the Belgian account number
+                        AccountNo := CopyStr(CodaLine, 6, 31);
+                    '3': //IBAN of the foreign account number
+                        AccountNo := CopyStr(CodaLine, 6, 34);
+                end;
+            AccountNo := DelChr(AccountNo);
+            AccountNoFound := (AccountNo <> '');
+        end;
+        exit(AccountNo);
+    end;
+
+    local procedure ImportArchiveProcessNewFiles();
+    var
+        AFSDirectoryContent: Record "AFS Directory Content";
+        BankAccount: Record "Bank Account";
+        CODAStatement: Record "CODA Statement";
+        AzurefileService: Codeunit "FSOINTAzure File Service";
+        RunInstance: Codeunit "CODA Management";
+        TempBlob: Codeunit "Temp Blob";
+        FileContent: BigText;
+        FileInStream: InStream;
+        FileOutStream: OutStream;
+        ErrorFileInStream: InStream;
+        ErrorText: Text;
+    begin
+        GLSetup.TestField("CODA Import Folder");
+        GLSetup.TestField("CODA Archive Folder");
+        GLSetup.TestField("CODA ERROR Folder");
+        if BankAccount.FindSet() then
+            repeat
+                if BankAccount."Bank Account No." <> '' then
+                    if CheckCreateDirectory(GLSetup."CODA Import Folder", DELCHR(BankAccount."Bank Account No.", '=', ' .-'), GLSetup."CODA Import Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-')) then begin
+                        AzureFileService.ReadListFromShare(GLSetup."CODA Import Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-'), AFSDirectoryContent);
+                        AFSDirectoryContent.SetRange("Resource Type", AFSDirectoryContent."Resource Type"::File);
+                        if AFSDirectoryContent.FindSet() then
+                            repeat
+                                CODAFILE_Name := CopyStr(AFSDirectoryContent.Name, 1, MaxStrLen(CODAFILE_Name));
+                                Clear(FileContent);
+                                TempBlob.CreateInStream(FileInStream);
+                                AzureFileService.ReadFileFromShare(AFSDirectoryContent."Full Name", gFileText, FileInStream);
+                                FileContent.AddText(gFileText);
+                                Clear(RunInstance);
+                                Clear(ErrorText);
+                                RunInstance.SetNEXTSTEP('21');
+                                RunInstance.SetStep21Param(BankAccount."No.", gFileText, FileInStream);
+                                if not RunInstance.Run() then begin
+                                    ErrorText := GetLastErrorText();
+                                    if CheckCreateDirectory(GLSetup."CODA ERROR Folder", DELCHR(BankAccount."Bank Account No.", '=', ' .-'), GLSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-')) then
+                                        MoveFileFromShare(AFSDirectoryContent."Full Name", GLSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-'), AFSDirectoryContent.Name, gFileText);
+
+                                    Clear(TempBlob);
+                                    TempBlob.CreateOutStream(FileOutStream);
+                                    FileOutStream.WriteText(ErrorText);
+
+                                    TempBlob.CreateInStream(FileInStream);
+                                    AzurefileService.WriteFiletoShare(GLSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-') + '\' + AFSDirectoryContent.Name + '_ERROR.txt', FileInStream);
+                                end else begin
+                                    if CheckCreateDirectory(GLSetup."CODA Archive Folder", DELCHR(BankAccount."Bank Account No.", '=', ' .-'), GLSetup."CODA Archive Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-')) then
+                                        AzurefileService.MoveFileFromShare(AFSDirectoryContent."Full Name", GLSetup."CODA Archive Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-'), AFSDirectoryContent.Name, gFileText);
+
+                                    CODAStatement.SetRange("TCOG CODA Name", CODAFILE_Name);
+                                    if CODAStatement.FindSet() then
+                                        repeat
+                                            Clear(RunInstance);
+                                            RunInstance.SetNEXTSTEP('22');
+                                            RunInstance.SetStep22Param(BankAccount."No.", CODAStatement."Statement No.", FileInStream);
+                                            if RunInstance.Run() then begin
+                                                Clear(RunInstance);
+                                                RunInstance.SetNEXTSTEP('24');
+                                                RunInstance.SetStep24Param(BankAccount."No.", CODAStatement."Statement No.");
+                                                if not RunInstance.Run() then;
+                                            end;
+                                        until CODAStatement.Next() = 0;
+                                end;
+                            until AFSDirectoryContent.Next() = 0;
+                    end;
+                if BankAccount.IBAN <> '' then
+                    if CheckCreateDirectory(GLSetup."CODA Import Folder", DELCHR(BankAccount.IBAN, '=', ' .-'), GLSetup."CODA Import Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-')) then begin
+                        AzureFileService.ReadListFromShare(GLSetup."CODA Import Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-'), AFSDirectoryContent);
+                        AFSDirectoryContent.SetRange("Resource Type", AFSDirectoryContent."Resource Type"::File);
+                        if AFSDirectoryContent.FindSet() then
+                            repeat
+                                CODAFILE_Name := CopyStr(AFSDirectoryContent.Name, 1, MaxStrLen(CODAFILE_Name));
+                                Clear(RunInstance);
+                                Clear(ErrorText);
+                                AzureFileService.ReadFileFromShare(AFSDirectoryContent."Full Name", gFileText, FileInStream);
+                                FileContent.AddText(gFileText);
+                                RunInstance.SetnextSTEP('21');
+                                RunInstance.SetStep21Param(BankAccount."No.", gFileText, FileInStream);
+                                if not RunInstance.Run() then begin
+                                    ErrorText := GetLastErrorText();
+                                    if CheckCreateDirectory(GLSetup."CODA ERROR Folder", DELCHR(BankAccount.IBAN, '=', ' .-'), GLSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-')) then
+                                        MoveFileFromShare(AFSDirectoryContent."Full Name", GLSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-'), AFSDirectoryContent.Name, gFileText);
+                                    Clear(TempBlob);
+                                    TempBlob.CreateOutStream(FileOutStream);
+                                    FileOutStream.WriteText(ErrorText);
+                                    TempBlob.CreateInStream(ErrorFileInStream);
+                                    AzurefileService.WriteFiletoShare(GLSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-') + '\' + AFSDirectoryContent.Name + '_ERROR.txt', ErrorFileInStream);
+                                end else begin
+                                    Clear(RunInstance);
+                                    if CheckCreateDirectory(GLSetup."CODA Archive Folder", DELCHR(BankAccount.IBAN, '=', ' .-'), GLSetup."CODA Archive Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-')) then
+                                        MoveFileFromShare(AFSDirectoryContent."Full Name", GLSetup."CODA Archive Folder" + '\' + DELCHR(BankAccount.IBAN, '=', ' .-'), AFSDirectoryContent.Name, gFileText);
+
+                                    CODAStatement.SetRange("TCOG CODA Name", CODAFILE_Name);
+                                    if CODAStatement.FindSet() then
+                                        repeat
+                                            Clear(RunInstance);
+                                            RunInstance.SetNEXTSTEP('22');
+                                            RunInstance.SetStep22Param(BankAccount."No.", CODAStatement."Statement No.", FileInStream);
+                                            if RunInstance.Run() then begin
+                                                Clear(RunInstance);
+                                                RunInstance.SetNEXTSTEP('24');
+                                                RunInstance.SetStep24Param(BankAccount."No.", CODAStatement."Statement No.");
+                                                if not RunInstance.Run() then;
+                                            end;
+                                        until CODAStatement.Next() = 0;
+                                end;
+                            until AFSDirectoryContent.Next() = 0;
+                    end;
+            until BankAccount.Next() = 0;
+    end;
+
+    local procedure ImportCODAFile(var ins: InStream);
+    var
+        BankAccount: Record "Bank Account";
+        TCOGCODAImportCoda: Report "Tcog"
+    begin
+        BankAccount.Get(BankAccountNo);
+        Clear(TCOGCODAImportCoda);
+        TCOGCODAImportCoda.Public_InitializeRequest(ins);
+        TCOGCODAImportCoda.Public_SetBankAcc(BankAccount);
+        TCOGCODAImportCoda.RunModal();
+    end;
+
+    local procedure ProcessStatement();
+    var
+        CodaBankStmt: Record "CODA Statement";
+        PostCodaStatementLines: Report "Post CODA Stmt. Lines";
+    begin
+        CodaBankStmt.SetRange("Bank Account No.", BankAccountNo);
+        if NoOfRecordInFile = 0 then
+            NoOfRecordInFile := IdentifyNoOfRecordInFile(InStreamCodafile);
+        if NoOfRecordInFile < 2 then
+            CodaBankStmt.SetRange("Statement No.", StatementNo);
+        PostCodaStatementLines.SetTableView(CodaBankStmt);
+        PostCodaStatementLines.UseRequestPage(FALSE);
+        PostCodaStatementLines.RunModal();
+    end;
+
+    local procedure TransferStatement();
+    var
+        CodaBankStmtLine: Record "CODA Statement Line";
+        BankAccount: Record "Bank Account";
+        GenJnlBatch: Record "Gen. Journal Batch";
+        PostCodedBankStatement: Codeunit "Post Coded Bank Statement";
+        RunInstance: Codeunit "CODA Management";
+        BatchName: Code[10];
+    begin
+        CodaBankStmtLine.SetRange("Bank Account No.", BankAccountNo);
+        CodaBankStmtLine.SetRange("Statement No.", StatementNo);
+        PostCodedBankStatement.RUN(CodaBankStmtLine);
+        CodaBankStmtLine.RESET();
+        BankAccount.ReadIsolation(IsolationLevel::ReadUncommitted);
+        BankAccount.SetLoadFields("No.", "Auto Post CODA Journals");
+        BankAccount.Get(BankAccountNo);
+        if BankAccount."Auto Post CODA Journals" then begin
+            GenJnlBatch.SetRange("Bal. Account Type", GenJnlBatch."Bal. Account Type"::"Bank Account");
+            GenJnlBatch.SetRange("Bal. Account No.", BankAccountNo);
+            GenJnlBatch.SetRange(CODA, TRUE);
+            GenJnlBatch.ReadIsolation(IsolationLevel::ReadUncommitted);
+            GenJnlBatch.SetLoadFields(GenJnlBatch."Journal Template Name", GenJnlBatch.Name);
+            BatchName := StrSubstNo('%1%2', COPYSTR(BankAccountNo, 1, 7), COPYSTR(StatementNo, 1, 3));
+            GenJnlBatch.SetRange(Name, BatchName);
+            if GenJnlBatch.Count() = 1 then begin
+                GenJnlBatch.FINDFIRST();
+                Clear(RunInstance);
+                RunInstance.SetNEXTSTEP('26');
+                RunInstance.SetStep26Param(GenJnlBatch."Journal Template Name", GenJnlBatch.Name);
+                Commit();
+                if not RunInstance.Run() then;
+            end;
+        end;
+    end;
+
+    local procedure IdentifyNoOfRecordInFile(CodaIns: InStream): Integer;
+    var
+        CODALine: Text;
+    begin
+        //I := 0;
+        while not CodaIns.EOS do begin
+            CodaIns.READTEXT(CODALine);
+            if COPYSTR(CODALine, 1, 1) = '9' then  //Data Record Old Balance
+                NoOfRecordInFile += 1;
+
+
+            // case NoOfRecordInFile of
+            //     1:
+            //         EndOfEachRecInFile1 := CodaIns.Position;
+            //     2:
+            //         EndOfEachRecInFile2 := CodaIns.Position;
+            //     3:
+            //         EndOfEachRecInFile3 := CodaIns.Position;
+            // end;
+
+            // if NoOfRecordInFile = 1 then
+            //     EndOfEachRecInFile1 := CodaIns.Position
+            // else if NoOfRecordInFile = 2 then begin
+            //     EndOfEachRecInFile2 := CodaIns.Position;
+            // end
+            // else if NoOfRecordInFile = 3 then
+            //     EndOfEachRecInFile3 := CodaIns.Position;
+            //I += 1;
+
+        end;
+        exit(NoOfRecordInFile);
+    end;
+
+    local procedure PostJournal();
+    var
+        GenJnlLine: Record "Gen. Journal Line";
+        GenJnlPost: Codeunit "Gen. Jnl.-Post";
+    begin
+        if (JournalTemplate = '') OR (JournalBatch = '') then
+            exit;
+        GenJnlLine.RESET();
+        GenJnlLine.SetRange("Journal Template Name", JournalTemplate);
+        GenJnlLine.SetRange("Journal Batch Name", JournalBatch);
+        if not GenJnlLine.IsEmpty then begin
+            if not GenJnlLine.FindSet() then
+                exit;
+            if CheckJournalBalance(GenJnlLine) then begin
+                CODEUNIT.Run(CODEUNIT::"Gen. Jnl.-Post", GenJnlLine);
+                GenJnlPost.Run(GenJnlLine);
+            end;
+        end;
+    end;
+
+    local procedure CheckJournalBalance(var pGenJnlLine: Record "Gen. Journal Line"): Boolean;
+    var
+        GenJnlTemplate: Record "Gen. Journal Template";
+        BankAccount: Record "Bank Account";
+        GenJnlBatch: Record "Gen. Journal Batch";
+        Total: Decimal;
+        Currency: Boolean;
+        StatementEndingBalance: Decimal;
+        BalanceLastStatement: Decimal;
+    begin
+        Total := 0;
+        GenJnlTemplate.Get(pGenJnlLine."Journal Template Name");
+        if (GenJnlTemplate.Type = GenJnlTemplate.Type::Financial) AND
+           (GenJnlTemplate."Bal. Account Type" = GenJnlTemplate."Bal. Account Type"::"Bank Account")
+        then begin
+            GenJnlTemplate.TestField("Bal. Account No.");
+            BankAccount.Get(GenJnlTemplate."Bal. Account No.");
+            Currency := BankAccount."Currency Code" <> '';
+        end;
+
+        pGenJnlLine.CALCSUMS(Amount, "Amount (LCY)");
+        if Currency then
+            Total := -pGenJnlLine.Amount
+        else
+            Total := -pGenJnlLine."Amount (LCY)";
+
+        if GenJnlBatch.Get(GenJnlTemplate.Name, pGenJnlLine."Journal Batch Name") then
+            if GenJnlBatch.CODA then begin
+                StatementEndingBalance := GenJnlBatch."Statement Ending Balance";
+                BalanceLastStatement := GenJnlBatch."Balance Last Statement";
+            end;
+        exit(Total = StatementendingBalance - BalanceLastStatement);
+    end;
+
+    local procedure CheckCreateDirectory(DirectoryPath: Text[2048]; AccountNo: Text; CreateFolderPath: Text): Boolean
+    var
+        AFSDirectoryContent: Record "AFS Directory Content";
+        AzurefileService: Codeunit "FSOINTAzure File Service";
+        Directoryexists: Boolean;
+    begin
+        if AzurefileService.CheckListofDirectory(DirectoryPath, AFSDirectoryContent) then begin
+            AFSDirectoryContent.SetRange("Resource Type", AFSDirectoryContent."Resource Type"::Directory);
+            if AFSDirectoryContent.FindSet() then
+                repeat
+                    if AFSDirectoryContent.Name = AccountNo then
+                        Directoryexists := true;
+                until AFSDirectoryContent.Next() = 0;
+            if not Directoryexists then
+                CraeteFile(CreateFolderPath);
+            exit(true);
+        end;
+    end;
+
+    local procedure CraeteFile(DirectoryPath: Text)
+    var
+        AzurefileService: Codeunit "FSOINTAzure File Service";
+    begin
+        AzureFileService.SetFileShare(GLSetup."File Share Name");
+        AzurefileService.Createfolder(DirectoryPath);
+    end;
+
+    local procedure MoveFileFromShare(FromFilePath: Text; ToFilePath: Text; FileName: Text; FileText: Text)
+    var
+        AzurefileService: Codeunit "FSOINTAzure File Service";
+    begin
+        AzureFileService.SetFileShare(GLSetup."File Share Name");
+        AzurefileService.MoveFileFromShare(FromFilePath, ToFilePath, FileName, FileText);
+    end;
+
+    internal procedure SetNEXTSTEP(NextStep: Code[20]);
+    begin
+        STEP2RUN := NextStep;
+    end;
+
+    internal procedure SetStep21Param(pBankAccountNo: Code[20]; pFileText: Text; pIns: InStream);
+    begin
+        BankAccountNo := pBankAccountNo;
+        gFileText := pFileText;
+        InStreamCodafile := pIns;
+    end;
+
+    internal procedure SetStep22Param(pBankAccountNo: Code[20]; pStatementNo: Code[20]; pIns: InStream);
+    begin
+        BankAccountNo := pBankAccountNo;
+        StatementNo := pStatementNo;
+        InStreamCodafile := pIns;
+    end;
+
+    internal procedure SetStep24Param(pBankAccountNo: Code[20]; pStatementNo: Code[20]);
+    begin
+        BankAccountNo := pBankAccountNo;
+        StatementNo := pStatementNo;
+    end;
+
+    internal procedure SetStep26Param(pJournalTemplate: Code[10]; pJournalBatch: Code[10]);
+    begin
+        JournalTemplate := pJournalTemplate;
+        JournalBatch := pJournalBatch;
+    end;
+
+    internal procedure GetGLSetup()
+    begin
+        GLSetup.ReadIsolation(IsolationLevel::ReadUncommitted);
+        GLSetup.SetLoadFields("CODA Archive Folder", "CODA ERROR Folder", "CODA Import Folder", "File Share Name");
+        GLSetup.Get();
+    end;
+
+    internal procedure BankAccountProcess(BankAccount: Record "Bank Account")
+    var
+        AFSDirectoryContent: Record "AFS Directory Content";
+        CODAStatement: Record "CODA Statement";
+        AzurefileService: Codeunit "FSOINTAzure File Service";
+        RunInstance: Codeunit "CODA Management";
+        TempBlob: Codeunit "Temp Blob";
+        FileContent: BigText;
+        FileInStream: InStream;
+        FileOutStream: OutStream;
+        ErrorText: Text;
+    begin
+        if CheckCreateDirectory(GLSetup."CODA Import Folder", DELCHR(BankAccount."Bank Account No.", '=', ' .-'), GLSetup."CODA Import Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-')) then begin
+            AzureFileService.ReadListFromShare(GLSetup."CODA Import Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-'), AFSDirectoryContent);
+            AFSDirectoryContent.SetRange("Resource Type", AFSDirectoryContent."Resource Type"::File);
+            if AFSDirectoryContent.FindSet() then
+                repeat
+                    CODAFILE_Name := CopyStr(AFSDirectoryContent.Name, 1, MaxStrLen(CODAFILE_Name));
+                    Clear(FileContent);
+                    TempBlob.CreateInStream(FileInStream);
+                    AzureFileService.ReadFileFromShare(AFSDirectoryContent."Full Name", gFileText, FileInStream);
+                    FileContent.AddText(gFileText);
+                    Clear(RunInstance);
+                    Clear(ErrorText);
+                    RunInstance.SetNEXTSTEP('21');
+                    RunInstance.SetStep21Param(BankAccount."No.", gFileText, FileInStream);
+                    if not RunInstance.Run() then begin
+                        ErrorText := GetLastErrorText();
+                        if CheckCreateDirectory(GLSetup."CODA ERROR Folder", DELCHR(BankAccount."Bank Account No.", '=', ' .-'), GLSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-')) then
+                            MoveFileFromShare(AFSDirectoryContent."Full Name", GLSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-'), AFSDirectoryContent.Name, gFileText);
+
+                        Clear(TempBlob);
+                        TempBlob.CreateOutStream(FileOutStream);
+                        FileOutStream.WriteText(ErrorText);
+
+                        TempBlob.CreateInStream(FileInStream);
+                        AzurefileService.WriteFiletoShare(GLSetup."CODA ERROR Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-') + '\' + AFSDirectoryContent.Name + '_ERROR.txt', FileInStream);
+                    end else begin
+                        if CheckCreateDirectory(GLSetup."CODA Archive Folder", DELCHR(BankAccount."Bank Account No.", '=', ' .-'), GLSetup."CODA Archive Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-')) then
+                            AzurefileService.MoveFileFromShare(AFSDirectoryContent."Full Name", GLSetup."CODA Archive Folder" + '\' + DELCHR(BankAccount."Bank Account No.", '=', ' .-'), AFSDirectoryContent.Name, gFileText);
+
+                        CODAStatement.SetRange("TCOG CODA Name", CODAFILE_Name);
+                        if CODAStatement.FindSet() then
+                            repeat
+                                Clear(RunInstance);
+                                RunInstance.SetNEXTSTEP('22');
+                                RunInstance.SetStep22Param(BankAccount."No.", CODAStatement."Statement No.", FileInStream);
+                                if RunInstance.Run() then begin
+                                    Clear(RunInstance);
+                                    RunInstance.SetNEXTSTEP('24');
+                                    RunInstance.SetStep24Param(BankAccount."No.", CODAStatement."Statement No.");
+                                    if not RunInstance.Run() then;
+                                end;
+                            until CODAStatement.Next() = 0;
+                    end;
+                until AFSDirectoryContent.Next() = 0;
+        end;
+    end;
+}

@@ -2,7 +2,7 @@
     "id": "4362a92c-ed5e-4999-8197-ff362a7a80d2",
     "name": "BCLS24",
     "publisher": "HS_SUBRAT",
-    "version": "2.0.0.0",
+    "version": "3.0.0.0",
     "brief": "",
     "description": "",
     "privacyStatement": "",
@@ -35,6 +35,26 @@
             "publisher": "Microsoft",
             "version": "25.2.27733.27999"
 
+        },
+        {
+            "id": "e18edded-350e-4a81-b450-5aa1ae137d19",
+            "name": "AzureFileService",
+            "publisher": "Hansamukh_Subrat",
+            "version": "1.0.0.0"
+
+        },
+        {
+          "id": "73df947b-2724-4ae1-8bab-c55d424a4edd",
+          "name": "TCOG BE CODA",
+          "publisher": "TCOG",
+          "version": "24.0.23051.0"
+        }
+    ],
+    "internalsVisibleTo": [
+        {
+            "id": "73df947b-2724-4ae1-8bab-c55d424a4edd",
+            "name": "TCOG BE CODA",
+            "publisher": "TCOG"
         }
     ],
     "screenshots": [],

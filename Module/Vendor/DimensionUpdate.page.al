@@ -65,29 +65,9 @@ page 50121 DimensionUpdate
                 {
                     Caption = 'ParentId';
                 }
-                field(systemCreatedAt; Rec.SystemCreatedAt)
-                {
-                    Caption = 'SystemCreatedAt';
-                }
-                field(systemCreatedBy; Rec.SystemCreatedBy)
-                {
-                    Caption = 'SystemCreatedBy';
-                }
                 field(systemId; Rec.SystemId)
                 {
                     Caption = 'SystemId';
-                }
-                field(systemModifiedAt; Rec.SystemModifiedAt)
-                {
-                    Caption = 'SystemModifiedAt';
-                }
-                field(systemModifiedBy; Rec.SystemModifiedBy)
-                {
-                    Caption = 'SystemModifiedBy';
-                }
-                field(tableCaption; Rec."Table Caption")
-                {
-                    Caption = 'Table Caption';
                 }
                 field(valuePosting; Rec."Value Posting")
                 {

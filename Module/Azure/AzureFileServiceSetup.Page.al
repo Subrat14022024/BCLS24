@@ -1,9 +1,9 @@
-page 50105 "Azure File Service Setup"
+page 50105 "Azure File Service Setup TEST"
 {
     ApplicationArea = All;
     Caption = 'Azure File Service Setup';
     PageType = Card;
-    SourceTable = "Azure File Service Setup";
+    SourceTable = "Azure File Service Setup TEST";
     UsageCategory = Administration;
 
     layout
@@ -72,7 +72,7 @@ page 50105 "Azure File Service Setup"
                 var
                     AFSDirectoryContent: Record "AFS Directory Content";
                     AFSDirectoryContent1: Record "AFS Directory Content";
-                    AzureFileServiceSetup: Record "Azure File Service Setup";
+                    AzureFileServiceSetup: Record "Azure File Service Setup TEST";
                     AzureFileService: Codeunit "Azure File Service";
                     FileContent: BigText;
                     FileInStream: InStream;
@@ -176,7 +176,7 @@ page 50105 "Azure File Service Setup"
                 trigger OnAction()
                 var
                     AFSDirectoryContent: Record "AFS Directory Content";
-                    AzureFileServiceSetup: Record "Azure File Service Setup";
+                    AzureFileServiceSetup: Record "Azure File Service Setup TEST";
                     AzureFileService: Codeunit "Azure File Service";
                     FileContent: BigText;
                     FileInStream: InStream;
