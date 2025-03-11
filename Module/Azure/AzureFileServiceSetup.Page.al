@@ -216,8 +216,10 @@ page 50105 "Azure File Service Setup TEST"
             action(whatismysastoken)
 
             {
-                Caption = 'what is my token';
                 ApplicationArea = all;
+                Caption = 'what is my token';
+                ToolTip = 'Executes the what is my token action.';
+                Image = CopyCostBudget;
                 trigger OnAction()
                 begin
                     Message(sastoken);

@@ -47,14 +47,7 @@
           "id": "73df947b-2724-4ae1-8bab-c55d424a4edd",
           "name": "TCOG BE CODA",
           "publisher": "TCOG",
-          "version": "24.0.23051.0"
-        }
-    ],
-    "internalsVisibleTo": [
-        {
-            "id": "73df947b-2724-4ae1-8bab-c55d424a4edd",
-            "name": "TCOG BE CODA",
-            "publisher": "TCOG"
+          "version": "24.0.24649.0"
         }
     ],
     "screenshots": [],

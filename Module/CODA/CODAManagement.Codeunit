@@ -106,11 +106,11 @@ codeunit 50109 "CODA Management"
 
     local procedure IdentifyAccount(FileName: Text): Text;
     var
+        TEST: Report "TCOG CODA Import CODA Stat.";
         CODAFile: File;
         CODALine: Text;
         AccountNoFound: Boolean;
         AccountNo: Text;
-        TEST: Report "TCOG CODA Import CODA Stat.";
     begin
         // CODAFile.TEXTMODE(TRUE);
         // IF CODAFile.OPEN(FileName) THEN BEGIN
@@ -257,7 +257,7 @@ codeunit 50109 "CODA Management"
     var
         BankAccount: Record "Bank Account";
         GeneralLedgerSetup: Record "General Ledger Setup";
-        ImportCODA: Report "Coda";
+        //ImportCODA: Report "Coda";
         StatementNo: Code[20];
         //FileManagement: Codeunit 419;
         lBankAccountOrIBAN: Text;
@@ -271,8 +271,8 @@ codeunit 50109 "CODA Management"
         // ImportCODA.SetNoOfRecordInFile(NoOfRecordInFile);
         // IF NoOfRecordInFile < 2 THEN
         //     ImportCODA.SetNoGUI(TRUE);
-        ImportCODA.RUNMODAL();
-        CLEAR(ImportCODA);
+        //ImportCODA.RUNMODAL();
+        //CLEAR(ImportCODA);
         // FileManagement.ServerCreateDirectory(GeneralLedgerSetup."CODA Archive Folder" + '\' + CODAFILE_DIR);
         // FileManagement.MoveFile(CODAFILE_Path + '\' + CODAFILE_Name, GeneralLedgerSetup."CODA Archive Folder" + '\' + CODAFILE_DIR + '\' + CODAFILE_Name);
     end;

@@ -17,7 +17,7 @@ pageextension 50128 BankaccountListExtn extends "Bank Account List"
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
-                RunObject = page "API Routes";
+                RunObject = report 80501;
                 ToolTip = 'This action will import and process for all coda files';
             }
         }
