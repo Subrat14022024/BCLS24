@@ -6,12 +6,13 @@ using Microsoft.Foundation.NoSeries;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Sales.Receivables;
 using Microsoft.Finance.Dimension;
+using Microsoft.Foundation.BatchProcessing;
 using Microsoft.Finance.GeneralLedger.Journal;
+using Microsoft.Finance.GeneralLedger.Posting;
 using Microsoft.Finance.ReceivablesPayables;
 
 report 50100 "FSONBCProcessShopPaymentEnt"
 {
-
     ApplicationArea = all;
     Caption = 'Process shop payment entries';
     ProcessingOnly = true;
@@ -89,10 +90,17 @@ report 50100 "FSONBCProcessShopPaymentEnt"
                 var
                     lGenJournalBatch: Record "Gen. Journal Batch";
                 begin
-
                     getShopPaymentBatch(lGenJournalBatch, FSONBCLocation.Code);
                     gGenJnlTemplate := lGenJournalBatch."Journal Template Name";
                     gGenJnlBatch := lGenJournalBatch.Name;
+
+                    if gGLSetup."FSONBCProcess Difference" then
+                        ProcessJournalDifferences(gGenJnlTemplate, gGenJnlBatch, gGenJnlDocNo);
+
+                    if gGLSetup."FSONBCAuto Post Journals" then begin
+                        AutoPostJournalLines(gGenJnlTemplate, gGenJnlBatch);
+                        AutoPostJournalLines(gGLSetup."FSONBCGenJnlTemplate Safe Jrnl", GetVaultBatch(lGenJournalBatch, FSONBCLocation.Code));
+                    end;
                 end;
 
                 trigger OnPreDataItem();
@@ -254,7 +262,7 @@ report 50100 "FSONBCProcessShopPaymentEnt"
         lCustLedgEntry.SetRange("Customer No.", CustNo);
         lCustLedgEntry.SetRange("Posting Date", PostingDate);
         lCustLedgEntry.SetRange(Open, true);
-        exit(lCustLedgEntry.COUNT);
+        exit(lCustLedgEntry.COUNT());
     end;
 
     local procedure InsertGenJnlLine(ShopPaymEntries: Record "FSONBCShopPaymentEntries");
@@ -432,6 +440,144 @@ report 50100 "FSONBCProcessShopPaymentEnt"
         pGenJournalBatch.Name := lBatchName;
         pGenJournalBatch.SetupNewBatch();
         pGenJournalBatch.Insert(true);
+    end;
+
+
+    local procedure GetVaultBatch(var pGenJournalBatch: Record "Gen. Journal Batch"; LocationCode: Code[10]): Code[10];
+    var
+        lGlsetup: Record "General Ledger Setup";
+        lBatchName: Text[10];
+    begin
+        lGlsetup.ReadIsolation(IsolationLevel::ReadUncommitted);
+        lGlsetup.SetLoadFields("FSONBCGenJnlTemplate Safe Jrnl");
+        lGlsetup.get();
+        lGlsetup.TestField("FSONBCGenJnlTemplate Safe Jrnl");
+        FSONBCLocation.ReadIsolation(IsolationLevel::ReadUncommitted);
+        FSONBCLocation.SetLoadFields(Name);
+        FSONBCLocation.get(LocationCode);
+
+        if not (FSONBCLocation.Name = '') then
+            lBatchName := CopyStr(FSONBCLocation.Name, 1, MaxStrLen(pGenJournalBatch.Name))
+        else
+            lBatchName := FSONBCLocation.Code;
+
+        exit(lBatchName);
+
+    end;
+
+    procedure ProcessJournalDifferences(JournalTemplate: Code[10]; JournalBatch: Code[10]; DocumentNo: Code[20])
+    var
+        lGenJnlLine: Record "Gen. Journal Line";
+        OriginalLine: Record "Gen. Journal Line";
+        lPostingDate: Date;
+        lTotalDif: Decimal;
+    begin
+        lGenJnlLine.SETCURRENTKEY("Journal Template Name", "Journal Batch Name", "Posting Date", "Document No.");
+        lGenJnlLine.SETRANGE("Journal Template Name", JournalTemplate);
+        lGenJnlLine.SETRANGE("Journal Batch Name", JournalBatch);
+        lGenJnlLine.SETRANGE("Document No.", DocumentNo);
+        if lGenJnlLine.FINDSET() then
+            repeat
+                if lGenJnlLine."Account No." <> gGLSetup."FSONBCDifference GL A/c" then begin
+                    lPostingDate := lGenJnlLine."Posting Date";
+
+                    OriginalLine.Reset();
+                    OriginalLine.SETCURRENTKEY("Journal Template Name", "Journal Batch Name", "Posting Date", "Document No.");
+                    OriginalLine.SETRANGE("Journal Template Name", JournalTemplate);
+                    OriginalLine.SETRANGE("Journal Batch Name", JournalBatch);
+                    OriginalLine.SETRANGE("Document No.", DocumentNo);
+                    OriginalLine.SETRANGE("Posting Date", lPostingDate);
+
+                    lTotalDif := 0;
+                    if OriginalLine.FINDSET() then
+                        repeat
+                            lTotalDif += OriginalLine.Amount;
+                        until OriginalLine.Next() = 0;
+
+                    if (ABS(lTotalDif) > 0) then
+                        if (ABS(lTotalDif) <= gGLSetup."FSONBCMax. Difference Allowed") then
+                            InsertGenJnlLineForDifference(lGenJnlLine."Line No." + 10, gGLSetup."FSONBCDifference GL A/c", lPostingDate, -lTotalDif);
+                end;
+            until lGenJnlLine.Next() = 0;
+    end;
+
+    local procedure InsertGenJnlLineForDifference(LineNo: Integer; AccountNo: Code[20]; PostingDate: Date; DiffAmount: Decimal)
+    var
+        GenJnlTemplate: Record "Gen. Journal Template";
+        GenJnlBatch: Record "Gen. Journal Batch";
+        NewGenJnlLine: Record "Gen. Journal Line";
+    begin
+        GenJnlTemplate.Get(gGenJnlTemplate);
+        GenJnlBatch.Get(gGenJnlTemplate, gGenJnlBatch);
+        NewGenJnlLine.ReadIsolation(IsolationLevel::UpdLock);
+        NewGenJnlLine.Init();
+        NewGenJnlLine."Journal Template Name" := gGenJnlTemplate;
+        NewGenJnlLine."Journal Batch Name" := gGenJnlBatch;
+        NewGenJnlLine."Line No." := LineNo;
+        NewGenJnlLine."Source Code" := GenJnlTemplate."Source Code";
+        NewGenJnlLine."Reason Code" := GenJnlBatch."Reason Code";
+        NewGenJnlLine."Posting No. Series" := GenJnlBatch."Posting No. Series";
+        NewGenJnlLine."Bal. Account Type" := GenJnlBatch."Bal. Account Type";
+        NewGenJnlLine.Validate("Bal. Account No.", GenJnlBatch."Bal. Account No.");
+        NewGenJnlLine.Insert(true);
+
+        NewGenJnlLine.Validate("Posting Date", PostingDate);
+        NewGenJnlLine.Validate("Account Type", NewGenJnlLine."Account Type"::"G/L Account");
+        NewGenJnlLine.Validate("Account No.", AccountNo);
+        NewGenJnlLine.Validate("Document Type", NewGenJnlLine."Document Type"::" ");
+        NewGenJnlLine."Document No." := gGenJnlDocNo;
+        NewGenJnlLine.Validate(Amount, DiffAmount);
+        NewGenJnlLine.Validate(NewGenJnlLine."Shortcut Dimension 1 Code", gGlobalDim1);
+        NewGenJnlLine.Validate(NewGenJnlLine."Shortcut Dimension 2 Code", gGlobalDim2);
+        NewGenJnlLine.Modify(true);
+    end;
+
+    local procedure PostJournals(var lGenJnlLine: Record "Gen. Journal Line")
+    var
+        BatchProcessingMgt: Codeunit "Batch Processing Mgt.";
+    begin
+        BatchProcessingMgt.BatchProcessGenJournalLine(lGenJnlLine, Codeunit::"Gen. Jnl.-Post")
+    end;
+
+    local procedure CheckLinesExitsforPosting(GenJnlTemplate: Code[10]; GenJnlBatch: Code[10]): Boolean
+    var
+        lGenJnlLine: Record "Gen. Journal Line";
+    begin
+        lGenJnlLine.Reset();
+        lGenJnlLine.SETCURRENTKEY("Journal Template Name", "Journal Batch Name", "Posting Date", "Document No.");
+        lGenJnlLine.SETRANGE("Journal Template Name", GenJnlTemplate);
+        lGenJnlLine.SETRANGE("Journal Batch Name", GenJnlBatch);
+        lGenJnlLine.ReadIsolation(IsolationLevel::ReadUncommitted);
+        if not lGenJnlLine.IsEmpty() then
+            exit(true)
+        else
+            exit(false)
+    end;
+
+    procedure AutoPostJournalLines(JournalTemplate: Code[10]; JournalBatch: Code[10])
+    var
+        lGenJnlLine: Record "Gen. Journal Line";
+        lGenJnlLine1: Record "Gen. Journal Line";
+        lPostingDate: Date;
+    begin
+        if CheckLinesExitsforPosting(JournalTemplate, JournalBatch) then begin
+            lGenJnlLine.Reset();
+            lGenJnlLine.SETCURRENTKEY("Journal Template Name", "Journal Batch Name", "Posting Date", "Document No.");
+            lGenJnlLine.SETRANGE("Journal Template Name", JournalTemplate);
+            lGenJnlLine.SETRANGE("Journal Batch Name", JournalBatch);
+            if lGenJnlLine.FINDSET() then begin
+                Clear(lPostingDate);
+                repeat
+                    if lPostingDate <> lGenJnlLine."Posting Date" then begin
+                        lPostingDate := lGenJnlLine."Posting Date";
+                        lGenJnlLine1.CopyFilters(lGenJnlLine);
+                        lGenJnlLine1.SetRange("Posting Date", lPostingDate);
+                        if lGenJnlLine1.FindSet() then
+                            PostJournals(lGenJnlLine1);
+                    end;
+                until lGenJnlLine.Next() = 0;
+            end;
+        end;
     end;
 
     var

@@ -2,6 +2,7 @@ namespace FSO_NAVBCConnector.Shoppayment;
 
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.GeneralLedger.Journal;
+using Microsoft.Finance.GeneralLedger.Account;
 
 tableextension 50103 FSONBCGenLedSetup extends "General Ledger Setup"
 {
@@ -34,6 +35,31 @@ tableextension 50103 FSONBCGenLedSetup extends "General Ledger Setup"
         field(50104; "FSONBCCreate Shop Inv DFilter"; DateFormula)
         {
             Caption = 'Create Shop Invoices DateFilter';
+            DataClassification = CustomerContent;
+        }
+        field(50106; "FSONBCProcess Difference"; Boolean)
+        {
+            Caption = 'Process Difference';
+            ToolTip = 'Process Difference';
+            DataClassification = CustomerContent;
+        }
+        field(50107; "FSONBCMax. Difference Allowed"; Decimal)
+        {
+            Caption = 'Max. Difference Allowed';
+            ToolTip = 'Max. Difference Allowed';
+            DataClassification = CustomerContent;
+        }
+        field(50108; "FSONBCDifference GL A/c"; Code[20])
+        {
+            Caption = 'Difference GL A/c';
+            ToolTip = 'Difference GL A/c';
+            TableRelation = "G/L Account"."No.";
+            DataClassification = CustomerContent;
+        }
+        field(50109; "FSONBCAuto Post Journals"; Boolean)
+        {
+            Caption = 'Auto Post Journals';
+            ToolTip = 'Auto Post Journals';
             DataClassification = CustomerContent;
         }
     }

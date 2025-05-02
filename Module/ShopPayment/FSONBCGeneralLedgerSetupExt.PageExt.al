@@ -36,6 +36,25 @@ pageextension 50102 FSONBCGeneralLedgerSetupExt extends "General Ledger Setup"
                     ApplicationArea = All;
                     ToolTip = 'Define General Batch for Shop Entries';
                 }
+                group("Difference Posting")
+                {
+                    field("FSONBCProcess Difference"; Rec."FSONBCProcess Difference")
+                    {
+                        ApplicationArea = all;
+                    }
+                    field("FSONBCAuto Post Journals"; Rec."FSONBCAuto Post Journals")
+                    {
+                        ApplicationArea = all;
+                    }
+                    field("FSONBCMax. Difference Allowed"; Rec."FSONBCMax. Difference Allowed")
+                    {
+                        ApplicationArea = all;
+                    }
+                    field("FSONBCDifference GL A/c"; Rec."FSONBCDifference GL A/c")
+                    {
+                        ApplicationArea = all;
+                    }
+                }
             }
         }
     }
