@@ -1,0 +1,22 @@
+query 50100 "Vendor Ledger Query"
+{
+    elements
+    {
+        DataItem(VendorLedgerEntry; "Vendor Ledger Entry")
+        {
+            column(PostingDate; "Posting Date")
+            { }
+            column(VendorNo; "Vendor No.")
+            { }
+            column(DocumentNo; "Document No.")
+            { }
+            column(Vendor_Name; "Vendor Name")
+            { }
+            column(ExternalDocumentNo; "External Document No.")
+            { }
+            column(AmountLCY; "Amount (LCY)")
+            { }
+            column()
+        }
+        }
+    }

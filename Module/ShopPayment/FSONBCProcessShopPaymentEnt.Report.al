@@ -1,12 +1,12 @@
 namespace FSO_NAVBCConnector.Shoppayment;
 
 using Microsoft.Inventory.Location;
+using Microsoft.Foundation.BatchProcessing;
 using Microsoft.Sales.Customer;
 using Microsoft.Foundation.NoSeries;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Sales.Receivables;
 using Microsoft.Finance.Dimension;
-using Microsoft.Foundation.BatchProcessing;
 using Microsoft.Finance.GeneralLedger.Journal;
 using Microsoft.Finance.GeneralLedger.Posting;
 using Microsoft.Finance.ReceivablesPayables;
@@ -102,6 +102,7 @@ report 50100 "FSONBCProcessShopPaymentEnt"
                         AutoPostJournalLines(gGLSetup."FSONBCGenJnlTemplate Safe Jrnl", GetVaultBatch(lGenJournalBatch, FSONBCLocation.Code));
                     end;
                 end;
+
 
                 trigger OnPreDataItem();
                 var
@@ -489,10 +490,9 @@ report 50100 "FSONBCProcessShopPaymentEnt"
                     OriginalLine.SETRANGE("Posting Date", lPostingDate);
 
                     lTotalDif := 0;
-                    if OriginalLine.FINDSET() then
-                        repeat
-                            lTotalDif += OriginalLine.Amount;
-                        until OriginalLine.Next() = 0;
+
+                    OriginalLine.CalcSums("Amount (LCY)");
+                    lTotalDif := OriginalLine."Amount (LCY)";
 
                     if (ABS(lTotalDif) > 0) then
                         if (ABS(lTotalDif) <= gGLSetup."FSONBCMax. Difference Allowed") then
@@ -532,13 +532,6 @@ report 50100 "FSONBCProcessShopPaymentEnt"
         NewGenJnlLine.Modify(true);
     end;
 
-    local procedure PostJournals(var lGenJnlLine: Record "Gen. Journal Line")
-    var
-        BatchProcessingMgt: Codeunit "Batch Processing Mgt.";
-    begin
-        BatchProcessingMgt.BatchProcessGenJournalLine(lGenJnlLine, Codeunit::"Gen. Jnl.-Post")
-    end;
-
     local procedure CheckLinesExitsforPosting(GenJnlTemplate: Code[10]; GenJnlBatch: Code[10]): Boolean
     var
         lGenJnlLine: Record "Gen. Journal Line";
@@ -573,11 +566,20 @@ report 50100 "FSONBCProcessShopPaymentEnt"
                         lGenJnlLine1.CopyFilters(lGenJnlLine);
                         lGenJnlLine1.SetRange("Posting Date", lPostingDate);
                         if lGenJnlLine1.FindSet() then
-                            PostJournals(lGenJnlLine1);
+                            PostGenJournalLine(lGenJnlLine1);
                     end;
                 until lGenJnlLine.Next() = 0;
             end;
         end;
+    end;
+
+
+    local procedure PostGenJournalLine(var GenJournalLine: Record "Gen. Journal Line")
+    var
+        GenJnlPostviaJobQueue: Codeunit "Gen. Jnl.-Post via Job Queue";
+    begin
+        if GenJournalLine.GetDocumentBalance(GenJournalLine) = 0 then
+            GenJnlPostviaJobQueue.EnqueueGenJrnlLineWithUI(GenJournalLine, false)
     end;
 
     var

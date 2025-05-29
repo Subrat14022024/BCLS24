@@ -1,0 +1,37 @@
+query 50102 MyQuery
+{
+    QueryType = Normal;
+
+    elements
+    {
+        DataItem(VendorLedgerEntry; "Vendor Ledger Entry")
+        {
+            Column(ExternalDocNo; "External Document No.")
+            { }
+            Column(PostingDate; "Posting Date")
+            { }
+            Column(DocumentNo; "Document No.")
+            { }
+            Column(Amount; Amount)
+            { }
+        }
+        DataItem(CustomerLedgerEntry; "Cust. Ledger Entry")
+        {
+            Column(External_Document_No_; "External Document No.")
+            { }
+            Column(PostingDate; "Posting Date")
+            { }
+            Column(DocumentNo; "Document No.")
+            { }
+            Column(Amount; Amount)
+            { }
+        }
+
+    var
+        myInt: Integer;
+
+    trigger OnBeforeOpen()
+    begin
+
+    end;
+}

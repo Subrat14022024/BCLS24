@@ -11,6 +11,7 @@ pageextension 50101 FSONBCGlAccountCard extends "G/L Account Card"
     trigger OnNewRecord(BelowxRec: Boolean)
     begin
         Rec."Consol. Translation Method" := Rec."Consol. Translation Method"::"Historical Rate";
+        Rec."Review Policy" := Rec."Review Policy"::"Allow Review and Match Balance";
     end;
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean
