@@ -1,0 +1,23 @@
+namespace BCLS.BCLS;
+
+codeunit 58555 Memory
+
+{
+    SingleInstance = true;
+    procedure Set(Coda: Boolean)
+    begin
+        SetCoda := Coda;
+    end;
+
+    procedure Get(): Boolean
+    begin
+        exit(SetCoda);
+    end;
+
+    var
+        SetCoda: Boolean;
+
+
+
+
+}

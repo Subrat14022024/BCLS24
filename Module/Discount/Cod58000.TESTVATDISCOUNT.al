@@ -7,10 +7,15 @@ using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.VAT.Calculation;
 using Microsoft.Finance.Currency;
 
+#pragma warning disable AA0215
 codeunit 58000 TESTVATDISCOUNT
+#pragma warning restore AA0215
 {
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post", OnDivideAmountOnBeforeTempVATAmountLineRemainderModify, '', false, false)]
-    local procedure "Purch.-Post_OnDivideAmountOnBeforeTempVATAmountLineRemainderModify"(PurchHeader: Record "Purchase Header"; var PurchLine: Record "Purchase Line"; var TempVATAmountLine: Record "VAT Amount Line" temporary; var TempVATAmountLineRemainder: Record "VAT Amount Line" temporary; Currency: Record Currency)
+    local procedure "Purch.-Post_OnDivideAmountOnBeforeTempVATAmountLineRemainderModify"
+#pragma warning disable AL0432
+(PurchHeader: Record "Purchase Header"; var PurchLine: Record "Purchase Line"; var TempVATAmountLine: Record "VAT Amount Line" temporary; var TempVATAmountLineRemainder: Record "VAT Amount Line" temporary; Currency: Record Currency)
+#pragma warning restore AL0432
     var
         PaymentTerm: Record "Payment Terms";
         PmtDiscountBase: Decimal;

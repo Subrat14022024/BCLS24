@@ -54,18 +54,6 @@
           "name": "Review General Ledger Entries",
           "publisher": "Microsoft",
           "version": "25.2.27733.27999"
-        },
-        {
-            "id": "8b43c3ff-6c7b-4693-8e75-71b253e729ec",
-            "name": "ALPractice",
-            "publisher": "Default Publisher",
-            "version": "1.0.0.0"
-        },
-        {
-            "id": "e449565e-5b61-4275-a36d-d2e6f988afc8",
-            "name": "DTBEHQ0150",
-            "publisher": "Default Publisher",
-            "version": "1.0.0.0"
         }
     ],
     "screenshots": [],

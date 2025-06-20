@@ -49,6 +49,7 @@ codeunit 50104 FSOINSTBEEventSubscriber
         IntrastatReportLine."Statistical Value" := IntrastatPurchase."Statistical Value";
         IntrastatReportLine."Document No." := IntrastatPurchase."Document No.";
         IntrastatReportLine."Total Weight" := IntrastatPurchase."Total Weight";
+        IntrastatReportLine."Net Weight" := IntrastatPurchase."Total Weight" / IntrastatPurchase.Quantity;
         IntrastatReportLine."Supplementary Units" := IntrastatPurchase."Supplementary Units";
         IntrastatReportLine."Entry/Exit Point" := IntrastatPurchase."Entry Point";
         IntrastatReportLine."Area" := IntrastatPurchase."Area";

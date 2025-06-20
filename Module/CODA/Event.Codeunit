@@ -1,0 +1,255 @@
+namespace BCLS.BCLS;
+
+using Microsoft.Finance.GeneralLedger.Posting;
+using Microsoft.Finance.GeneralLedger.Journal;
+using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Finance.Dimension;
+
+codeunit 56000 "Event"
+{
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post", OnBeforeShowPostResultMessage, '', false, false)]
+    // local procedure "Gen. Jnl.-Post_OnBeforeShowPostResultMessage"(var GenJnlLine: Record "Gen. Journal Line"; TempJnlBatchName: Code[10]; var IsHandled: Boolean)
+    // var
+    //     GeneralJournalBatch: Record "Gen. Journal Batch";
+    //     GeneralJournalTemplate: Record "Gen. Journal Template";
+    // begin
+    //     if GeneralJournalTemplate.Get(GenJnlLine."Journal Template Name") then
+    //         if GeneralJournalTemplate.Type <> GeneralJournalTemplate.Type::Financial then
+    //             exit;
+
+    //     GeneralJournalBatch.Setrange("Template Type", GeneralJournalBatch."Template Type"::Financial);
+    //     GeneralJournalBatch.SetRange(CODA, true);
+    //     if GeneralJournalBatch.FindLast() then begin
+    //         TempJnlBatchName := GeneralJournalBatch.Name;
+    //         if GenJnlLine.IsEmpty then begin
+    //             GenJnlLine."Journal Batch Name" := GeneralJournalBatch.Name;
+    //             GenJnlLine."Line No." := 1;
+    //         end
+    //     end else begin
+    //         GeneralJournalBatch.SetRange(CODA);
+    //         if GeneralJournalBatch.FindLast() then
+    //             TempJnlBatchName := GeneralJournalBatch.Name;
+    //         if GenJnlLine.IsEmpty then begin
+    //             GenJnlLine."Journal Batch Name" := GeneralJournalBatch.Name;
+    //             GenJnlLine."Line No." := 1;
+    //         end;
+    //     end;
+    // end;
+
+    // This event subscriber handles the selection and assignment of the appropriate journal batch name
+    // before showing the post result message. It checks if the batch is of type Financial and, depending
+    // on the CODA flag and batch existence, assigns or increments the batch name to ensure correct posting.
+    // The logic ensures that the correct batch is used for posting, especially when working with CODA batches,
+    // and maintains the line number consistency for new or empty journal lines.
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post", OnBeforeShowPostResultMessage, '', false, false)]
+    local procedure "Gen. Jnl.-Post_OnBeforeShowPostResultMessage"(var GenJnlLine: Record "Gen. Journal Line"; TempJnlBatchName: Code[10]; var IsHandled: Boolean)
+    var
+        GeneralJournalBatch: Record "Gen. Journal Batch";
+        GeneralJournalTemplate: Record "Gen. Journal Template";
+        Memory: Codeunit Memory;
+        IncrementedBatchName: code[20];
+    begin
+
+        if not Memory.Get() then
+            exit;
+        if GeneralJournalTemplate.Get(GenJnlLine."Journal Template Name") then
+            if GeneralJournalTemplate.Type <> GeneralJournalTemplate.Type::Financial then
+                exit;
+        GeneralJournalBatch.Setrange("Template Type", GeneralJournalBatch."Template Type"::Financial);
+        IncrementedBatchName := IncStr(GenJnlLine."Journal Batch Name");
+        if GeneralJournalBatch.Get(GenJnlLine."Journal Template Name", IncrementedBatchName) then begin
+            GeneralJournalBatch.SetRange(Name, IncrementedBatchName);
+            GeneralJournalBatch.SetRange(CODA, true);
+            if GeneralJournalBatch.FindFirst() then begin
+                if GenJnlLine.IsEmpty then begin
+                    GenJnlLine."Journal Batch Name" := GeneralJournalBatch.Name;
+                    GeneralJournalBatch.Reset();
+                    GeneralJournalBatch.SetRange(CODA, false);
+                    if GeneralJournalBatch.FindFirst() then
+                        if GenJnlLine.IsEmpty then begin
+                            GenJnlLine."Journal Batch Name" := GeneralJournalBatch.Name;
+                            GenJnlLine."Line No." := 1;
+                        end;
+                    GenJnlLine."Journal Batch Name" := GeneralJournalBatch.Name;
+                    GenJnlLine."Line No." := 1;
+                end;
+                if GenJnlLine.IsEmpty then begin
+                    GenJnlLine."Journal Batch Name" := GenJnlLine."Journal Batch Name"; // Keep original batch name
+                    GenJnlLine."Line No." := 1;
+                end;
+            end;
+        end;
+    end;
+
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post", OnBeforeShowPostResultMessage, '', false, false)]
+    // local procedure "Gen. Jnl.-Post_OnBeforeShowPostResultMessage"(var GenJnlLine: Record "Gen. Journal Line"; TempJnlBatchName: Code[10]; var IsHandled: Boolean)
+    // var
+    //     GenJournalBatch: Record "Gen. Journal Batch";
+    //     LastBatchWasCoda: Boolean;
+    // begin
+    //     if GenJournalBatch.Get('FINANCIAL', IncStr(TempJnlBatchName)) then begin
+    //         LastBatchWasCoda := GenJournalBatch."Coda";
+    //         if LastBatchWasCoda then begin
+    //             GenJournalBatch.SetRange(Coda, true);
+    //             if GenJournalBatch.FIND('=><') then
+    //                 GenJnlLine."Journal Batch Name" := GenJournalBatch.Name;
+    //         end;
+    //     end else begin
+    //         GenJournalBatch.Name := INCSTR(TempJnlBatchName);
+    //         if GenJournalBatch.INSERT() then
+    //             GenJnlLine."Journal Batch Name" := GenJournalBatch.Name;
+    //     end;
+    // end;
+
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post Batch", OnAfterIncrementBatchName, '', false, false)]
+    // local procedure "Gen. Jnl.-Post Batch_OnAfterIncrementBatchName"(var GenJournalBatch: Record "Gen. Journal Batch"; OldBatchName: Code[10])
+    // var
+    //     LastBatchWasCoda: Boolean;
+    // begin
+    //     LastBatchWasCoda := GenJournalBatch."Coda";
+    //     if LastBatchWasCoda then begin
+    //         GenJournalBatch.SetRange(Coda, true);
+    //         if GenJournalBatch.FIND('=><') then;
+    //     end else begin
+    //         GenJournalBatch.Name := INCSTR(OldBatchName);
+    //         if GenJournalBatch.INSERT() then;
+    //     end;
+    // end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post", OnCodeOnAfterGenJnlPostBatchRun, '', false, false)]
+    local procedure "Gen. Jnl.-Post_OnCodeOnAfterGenJnlPostBatchRun"(var GenJnlLine: Record "Gen. Journal Line")
+    var
+        GeneralJournalBatch: Record "Gen. Journal Batch";
+        Memory: Codeunit Memory;
+    begin
+        if GeneralJournalBatch.get(GenJnlLine."Journal Template Name", GenJnlLine."Journal Batch Name") then
+            if GeneralJournalBatch.CODA then begin
+                Memory.Set(true);
+                GeneralJournalBatch.Delete();
+            end else
+                Memory.Set(false);
+    end;
+
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Gen. Jnl.-Post", OnBeforeCode, '', false, false)]
+    // local procedure "Gen. Jnl.-Post_OnBeforeCode"(var HideDialog: Boolean)
+    // begin
+    //     if GuiAllowed then
+    //         HideDialog := true;
+    // end;
+
+    // [EventSubscriber(ObjectType::Table, Database::"Dimension Set Entry", 'OnAfterModifyEvent', '', false, false)]
+    // local procedure MyProcedure(var Rec: Record "Dimension Set Entry" temporary)
+    // var
+    //     TempDimensionSetEntry: Record "Dimension Set Entry" temporary;
+    //     DimensionValue: Record "Dimension Value";
+    //     GLSetUp: Record "General Ledger Setup";
+    // begin
+    //     GLSetUp.get();
+    //     if DimensionValue.Get(Rec."Dimension Code", Rec."Dimension Value Code") then begin
+    //         TempDimensionSetEntry.Init();
+    //         TempDimensionSetEntry."Dimension Code" := GLSetUp."Shortcut Dimension 5 Code";
+    //         TempDimensionSetEntry."Dimension Value Code" := DimensionValue.Entity;
+    //         if not TempDimensionSetEntry.Insert(true) then
+    //             TempDimensionSetEntry.Modify(true);
+    //     end;
+    // end;
+
+    // [EventSubscriber(ObjectType::Table, Database::"Dimension Set Entry", 'OnAfterInsertEvent', '', false, false)]
+    // local procedure MyProcedure1(var Rec: Record "Dimension Set Entry")
+    // var
+    //     DimensionSetEntry: Record "Dimension Set Entry";
+    //     DimensionValue: Record "Dimension Value";
+    //     GLSetUp: Record "General Ledger Setup";
+    //     DimMgt: Codeunit DimensionManagement;
+    // begin
+    //     GLSetUp.Get();
+    //     if DimensionValue.Get(Rec."Dimension Code", Rec."Dimension Value Code") then
+    //         if not DimensionSetEntry.Get(Rec."Dimension Set ID", Rec."Dimension Code") then begin
+    //             DimensionSetEntry.Init();
+    //             DimensionSetEntry."Dimension Set ID" := DimMgt.GetDimensionSetID(Rec);
+    //             DimensionSetEntry.Validate("Dimension Code", GLSetUp."Shortcut Dimension 5 Code");
+    //             DimensionSetEntry.Validate("Dimension Value Code", DimensionValue.Entity);
+    //             DimensionSetEntry.Validate("Global Dimension No.", Rec.GetGlobalDimNo());
+    //             if DimensionSetEntry.Insert(true) then
+    //                 DimensionSetEntry.Modify(true);
+    //         end;
+    // end;
+
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::DimensionManagement, OnBeforeEditDimensionSet2, '', false, false)]
+    // local procedure DimensionManagement_OnBeforeEditDimensionSet2(DimSetID: Integer; NewCaption: Text[250]; var GlobalDimVal1: Code[20]; var GlobalDimVal2: Code[20]; var NewDimSetID: Integer; var IsHandled: Boolean; RecVariant: Variant)
+    // var
+    // RecRef : RecordRef;
+    // begin
+    //     if RecVariant.IsRecord then
+    //         RecRef.GetTable(RecVariant);
+    //         RecRef.tra
+    // end;
+
+    // [EventSubscriber(ObjectType::Page, Page::"Edit Dimension Set Entries", 'OnInsertRecordEvent', '', false, false)]
+    // local procedure MyProcedure(var Rec: Record "Dimension Set Entry" temporary)
+    // begin
+    //     //Message('%1', Rec.Count());
+    // end;
+
+    // [EventSubscriber(ObjectType::table, Database::"Dimension Set Entry", 'OnAfterModifyEvent', '', false, false)]
+    // local procedure MyProcedure2(var Rec: Record "Dimension Set Entry" temporary)
+    // var
+    //     DimensionValue: Record "Dimension Value";
+    //     GLSetUp: Record "General Ledger Setup";
+    // begin
+    //     GLSetUp.Get();
+    //     if Rec.FindSet() then
+    //         repeat
+    //             if DimensionValue.Get(Rec."Dimension Code", rec."Dimension Value Code") then
+    //                 TempProcedure(Rec);
+    //         until Rec.Next() = 0;
+
+    //     //Message('%1', Rec.Count());
+    // end;
+
+    // local procedure TempProcedure(var TempDimVal: Record "Dimension Set Entry" temporary)
+    // var
+    //     DimensionValue: Record "Dimension Value";
+    //     GLSetUp: Record "General Ledger Setup";
+    // begin
+    //     GLSetUp.get();
+    //     if TempDimVal."Dimension Code" = GLSetUp."Global Dimension 1 Code" then begin
+    //         TempDimVal.SetRange("Dimension Code", GLSetUp."Shortcut Dimension 5 Code");
+    //         TempDimVal.SetRange("Dimension Value Code", DimensionValue.Entity);
+    //         if not TempDimVal.FindFirst() then begin
+    //             TempDimVal.Init();
+    //             TempDimVal."Dimension Code" := GLSetUp."Shortcut Dimension 5 Code";
+    //             TempDimVal."Dimension Value Code" := DimensionValue.Entity;
+    //             TempDimVal.Insert(true);
+    //         end;
+    //     end;
+    // end;
+
+
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::DimensionManagement, OnGetDefaultDimIDOnBeforeFindNewDimSetIDProcedure, '', false, false)]
+    // local procedure DimensionManagement_OnGetDefaultDimIDOnBeforeFindNewDimSetIDProcedure(var TempDimensionBuffer: Record "Dimension Buffer" temporary; DefaultDimSource: List of [Dictionary of [Integer, Code[20]]]; var GlobalDim1Code: Code[20]; var GlobalDim2Code: Code[20]; SourceCode: Code[20]; GLSetupShortcutDimCode: array[8] of Code[20]; var TempDimensionSetEntry0: Record "Dimension Set Entry" temporary; InheritFromDimSetID: Integer; InheritFromTableNo: Integer)
+    // var
+    //     GLSetup: Record "General Ledger Setup";
+    //     DimensionValue: Record "Dimension Value";
+    // begin
+    //     GLSetup.Get();
+    //     if TempDimensionBuffer."Dimension Code" = GLSetup."Shortcut Dimension 1 Code" then
+    //         if DimensionValue.Get(TempDimensionBuffer."Dimension Code", TempDimensionBuffer."Dimension Value Code") then
+    //             if DimensionValue.Entity <> '' then
+    //                 InsertTempDimBufEntry(TempDimensionBuffer, InheritFromTableNo, 0, GLSetup."Shortcut Dimension 5 Code", DimensionValue.Entity)
+    // end;
+
+
+    // local procedure InsertTempDimBufEntry(var TempDimBuf: Record "Dimension Buffer" temporary; TableId: Integer; EntryNo: Integer; DimCode: Code[20]; DimValueCode: Code[20])
+    // begin
+    //     TempDimBuf.Init();
+    //     TempDimBuf."Table ID" := TableId;
+    //     TempDimBuf."Entry No." := EntryNo;
+    //     TempDimBuf."Dimension Code" := DimCode;
+    //     TempDimBuf."Dimension Value Code" := DimValueCode;
+    //     TempDimBuf.Insert();
+    // end;
+
+
+}
