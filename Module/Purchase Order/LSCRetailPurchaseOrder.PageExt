@@ -1,0 +1,16 @@
+namespace BCLS.BCLS;
+
+pageextension 50111 "LSC Retail Purchase Order" extends "LSC Retail Purchase Order"
+{
+    layout
+    {
+        addafter("Version No.")
+        {
+            field("LSC Attrib 4 Code"; Rec."LSC Attrib 4 Code")
+            {
+                ApplicationArea = all;
+                CaptionClass = '98,27,10001409';
+            }
+        }
+    }
+}

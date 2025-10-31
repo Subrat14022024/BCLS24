@@ -1,0 +1,34 @@
+namespace BCLS.BCLS;
+
+using Microsoft.FixedAssets.Journal;
+using Microsoft.FixedAssets.FixedAsset;
+using Microsoft.Finance.GeneralLedger.Journal;
+
+pageextension 50111 FAWizard extends "Fixed Asset Acquisition Wizard"
+{
+    layout
+    {
+        addfirst("Para3.1")
+        {
+            field("FSOBEF Neg. Acquisition Value"; FixedAsset."FSOBEF Neg. Acquisition Value")
+            {
+                Editable = true;
+                ApplicationArea = FixedAssets;
+                Caption = 'Negative Acquisition Value';
+                ToolTip = 'Specifies whether the fixed asset has a negative acquisition value.';
+                trigger OnValidate()
+                begin
+
+                end;
+            }
+        }
+    }
+
+    trigger OnOpenPage()
+    begin
+        if FixedAsset.Get(Rec."Account No.") then;
+    end;
+
+    var
+        FixedAsset: Record "Fixed Asset";
+}

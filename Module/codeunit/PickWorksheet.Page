@@ -1,0 +1,354 @@
+namespace SeleniumDB.SeleniumDB;
+
+using Microsoft.Warehouse.Activity;
+using Microsoft.Inventory.Location;
+using Microsoft.Inventory.Transfer;
+using Microsoft.Warehouse.Structure;
+using Microsoft.Inventory.Item;
+using System.Utilities;
+using System.IO;
+using FSO_Integration.AFS;
+
+page 50401 "Pick Worksheet"
+{
+    ApplicationArea = All;
+    Caption = 'Pick Worksheet';
+    PageType = Worksheet;
+    SourceTable = "Warehouse Activity Line";
+    DataCaptionFields = "No.";
+    DeleteAllowed = false;
+    //SourceTableView = where("Pick Exported" = filter(false));
+
+    layout
+    {
+        area(Content)
+        {
+            group(Filters)
+            {
+                field("Zone Filter"; ZoneFilter)
+                {
+                    Caption = 'Zone Filter';
+                    TableRelation = Zone.Code where("location code" = filter('STORAGE'));
+
+
+                    trigger OnValidate()
+                    begin
+                        if ZoneFilter <> '' then
+                            Rec.SetFilter("Zone Code", ZoneFilter)
+                        else
+                            Rec.SetRange("Zone Code");
+
+                        CurrPage.Update(false);
+                    end;
+                }
+                field("Item Category Filter"; ItemCategoryFilter)
+                {
+                    Caption = 'Item Category Filter';
+                    TableRelation = "Item Category".Code;
+
+                    trigger OnValidate()
+                    begin
+                        if ItemCategoryFilter <> '' then
+                            Rec.SetFilter("Item Category Code", ItemCategoryFilter)
+                        else
+                            Rec.SetRange("Item Category Code");
+
+                        CurrPage.Update(false);
+                    end;
+                }
+                field("Brand Filter"; BrandFilter)
+                {
+                    Caption = 'Brand Filter';
+                    TableRelation = "LSC Attribute Setup";
+
+                    trigger OnLookup(var Text: Text): Boolean
+                    var
+                        AttributeSetup: Record "LSC Attribute Setup";
+                        lAnswer: Text[250];
+                        lActionReturned: Action;
+                    begin
+                        AttributeSetup.Get;
+                        lAnswer := AttributeUtils.LookupOptionValues(0, AttributeSetup."Item Attrib. 1 Code", lActionReturned);
+                        if lActionReturned = ACTION::LookupOK then
+                            BrandFilter := CopyStr(lAnswer, 1, 30);
+                    end;
+
+                    trigger OnValidate()
+                    begin
+                        if BrandFilter <> '' then
+                            Rec.SetFilter("Attrib 1 Code", BrandFilter)
+                        else
+                            Rec.SetRange("Attrib 1 Code");
+
+                        CurrPage.Update(false);
+                    end;
+                }
+                field("Maximum Quantity per Pick"; MaxQtyPerPick)
+                {
+                    Caption = 'Maximum Quantity per Pick';
+                    Editable = false;
+                }
+            }
+            repeater(General)
+            {
+                Editable = false;
+                Caption = 'Lines';
+
+                field("No."; Rec."No.")
+                {
+                    ToolTip = 'Specifies the number of the involved entry or record, according to the specified number series.';
+                }
+                field("Item No."; Rec."Item No.")
+                {
+                    ToolTip = 'Specifies the item number of the item to be handled, such as picked or put away.';
+                }
+                field("Variant Code"; Rec."Variant Code")
+                {
+                    ToolTip = 'Specifies the variant of the item on the line.';
+                }
+                field(Description; Rec.Description)
+                {
+                    ToolTip = 'Specifies the description';
+                }
+                field(Quantity; Rec.Quantity)
+                {
+                    ToolTip = 'Specifies the quantity of the item to be handled, such as received, put-away, or assigned.';
+                }
+                field("Zone Code"; Rec."Zone Code")
+                {
+                    ToolTip = 'Specifies the zone code where the bin on this line is located.';
+                }
+                field("Bin Code"; Rec."Bin Code")
+                {
+                    ToolTip = 'Specifies the bin where the items are picked or put away.';
+                }
+                field("Item Category Code"; Rec."Item Category Code")
+                {
+                    ToolTip = 'Specifies the value of the Item Category Code field.', Comment = '%';
+                }
+                field("Attrib 1 Code"; Rec."Attrib 1 Code")
+                {
+                    ToolTip = 'Specifies the value of the Attrib 1 Code field.', Comment = '%';
+                }
+                field("Exported Pick No."; Rec."Pick No.")
+                {
+                    ToolTip = 'Specifies the value of the Exported Pick No. field.', Comment = '%';
+                }
+            }
+        }
+    }
+
+    actions
+    {
+        area(Processing)
+        {
+            group("&Functions")
+            {
+                action("Assign Pick")
+                {
+                    Caption = 'Assign Pick';
+                    ApplicationArea = All;
+                    PromotedCategory = Process;
+                    Promoted = true;
+                    Image = ExportFile;
+                    trigger OnAction()
+                    begin
+                        AssignPickNumbers();
+                    end;
+                }
+
+                action("Clear Pick")
+                {
+                    Caption = 'Clear Pick';
+                    ApplicationArea = All;
+                    PromotedCategory = Process;
+                    Promoted = true;
+                    //Image = ;
+                    trigger OnAction()
+                    begin
+                        ClearPickNumbers();
+                    end;
+                }
+
+                action("Export Pick")
+                {
+                    Caption = 'Export Pick';
+                    ApplicationArea = All;
+                    PromotedCategory = Process;
+                    Promoted = true;
+                    Image = Export;
+                    trigger OnAction()
+                    begin
+                        ExportPick();
+                    end;
+                }
+            }
+        }
+    }
+
+    trigger OnOpenPage()
+    begin
+        MaxQtyPerPick := 100;  //To get this value from a setup table
+    end;
+
+    local procedure AssignPickNumbers()
+    var
+        WhseActLine: Record "Warehouse Activity Line";
+        ExportedPickNo: Code[20];
+        PrevZone: Code[10];
+        PrevBrand: Text[30];
+        LblPicksAssigned: Label 'Picks from %1 to %2 are assigned!';
+    begin
+        WhseActLine.Copy(Rec);
+        if WhseActLine.FindSet() then begin
+            TotalPickQty := 0;
+            ExportedPickNo := WhseActLine."No." + '_001';
+            WhseActLine.SetCurrentKey("Zone Code", "Attrib 1 Code");
+            repeat
+                if TotalPickQty + WhseActLine.Quantity > 100 then begin  //This 100 to be changed to a field value from a setup
+                    ExportedPickNo := IncStr(ExportedPickNo);
+                end else
+                    if (PrevZone <> '') and (PrevZone <> WhseActLine."Zone Code") then begin
+                        ExportedPickNo := IncStr(ExportedPickNo);
+                    end else
+                        if (PrevBrand <> '') and (PrevBrand <> WhseActLine."Attrib 1 Code") then begin
+                            ExportedPickNo := IncStr(ExportedPickNo);
+                        end;
+                TotalPickQty += WhseActLine.Quantity;
+                WhseActLine."Pick No." := ExportedPickNo;
+                WhseActLine.Modify(true);
+                PrevBrand := WhseActLine."Attrib 1 Code";
+                PrevZone := WhseActLine."Zone Code";
+
+                if FirstPickNo = '' then
+                    FirstPickNo := WhseActLine."Pick No.";
+                LastPickNo := WhseActLine."Pick No.";
+            until WhseActLine.Next() = 0;
+            if FirstPickNo <> '' then
+                Message(LblPicksAssigned, FirstPickNo, LastPickNo);
+        end;
+        CurrPage.Update(false);
+    end;
+
+    local procedure ClearPickNumbers()
+    var
+        WhseActLine: Record "Warehouse Activity Line";
+    begin
+        WhseActLine.Reset();
+        WhseActLine.SetRange("Activity Type", Rec."Activity Type");
+        WhseActLine.SetRange("No.", Rec."No.");
+        WhseActLine.SetFilter("Pick No.", '<>%1', '');
+        ;
+        if WhseActLine.FindSet() then begin
+            WhseActLine.ModifyAll("Pick No.", '', true);
+        end;
+    end;
+
+    local procedure ExportPick()
+    var
+        WhseActLine: Record "Warehouse Activity Line";
+        Location: Record Location;
+        TransferLine: Record "Transfer Line";
+        Barcodes: Record "LSC Barcodes";
+        FSOINTAzureFileServiceSetup: Record "FSOINTAzure File Service Setup";
+        TempBlob: Codeunit "Temp Blob";
+        FileMgmt: Codeunit "File Management";
+        FSOINTAzureFileService: Codeunit "FSOINTAzure File Service";
+        OutStr: OutStream;
+        InStr: InStream;
+        FileName: Text;
+        LineText: TextBuilder;
+        i: Integer;
+        PrevPickNo: code[20];
+        FileExt: Label '.txt';
+        LblExported: Label 'Picks from %1 to %2 are exported!';
+        LblPickNoWarning: Label 'Please generate Pick Numbers before exporting!';
+    begin
+        WhseActLine.SetRange("Activity Type", Rec."Activity Type");
+        WhseActLine.SetRange("No.", Rec."No.");
+        WhseActLine.SetFilter("Pick No.", '<>%1', '');
+        if ZoneFilter <> '' then
+            WhseActLine.SetFilter("Zone Code", ZoneFilter);
+        if ItemCategoryFilter <> '' then
+            WhseActLine.SetFilter("Item Category Code", ItemCategoryFilter);
+        if BrandFilter <> '' then
+            WhseActLine.SetFilter("Attrib 1 Code", BrandFilter);
+        if WhseActLine.FindSet() then begin
+            FSOINTAzureFileServiceSetup.Get('LOGISTICS');
+            Clear(FSOINTAzureFileService);
+            FSOINTAzureFileService.SetFileShare(FSOINTAzureFileServiceSetup.FileShareName);
+            WhseActLine.SetCurrentKey("Pick No.");
+            PrevPickNo := '';
+            Clear(TempBlob);
+            TempBlob.CreateOutStream(OutStr);
+            repeat
+                if (PrevPickNo <> '') and (PrevPickNo <> WhseActLine."Pick No.") then begin
+                    TempBlob.CreateInStream(InStr);
+                    FileName := PrevPickNo + FileExt;
+                    FSOINTAzureFileService.WriteFiletoShare('Logistics' + '\' + FileName, InStr);
+                    Clear(InStr);
+                    Clear(OutStr);
+                    Clear(TempBlob);
+                    TempBlob.CreateOutStream(OutStr);
+                end;
+
+                Clear(LineText);
+                LineText.Append(WhseActLine."No." + ';');
+                LineText.Append(WhseActLine."Item No." + ';');
+                //Add Item variant barcode
+                TransferLine.Get(WhseActLine."Source No.", WhseActLine."Source Line No.");
+                //LineText .Append(TransferLine.barcode
+                LineText.Append(Format(WhseActLine.Quantity) + ';');
+                LineText.Append(WhseActLine."Bin Code" + ';');
+                LineText.Append(Format(WhseActLine."Bin Ranking") + ';');
+                LineText.Append(WhseActLine."Description 2" + ';');
+                LineText.Append(WhseActLine."Destination No." + ';');
+                Location.Get(WhseActLine."Destination No.");
+                LineText.Append(Location.Name + ';');
+
+                //Additional 4 barcodes
+                Barcodes.SetRange("Item No.", WhseActLine."Item No.");
+                Barcodes.SetRange("Variant Code", WhseActLine."Variant Code");
+                //Barcodes.SetFilter("Barcode No."'<>%1',);
+                i := 1;
+                repeat
+                    LineText.Append(Barcodes."Barcode No.");
+                    i += 1;
+                    if i < 4 then
+                        LineText.Append(';');
+                until (Barcodes.Next() = 0) or (i <= 4);
+                if i <= 3 then
+                    for i := i to 3 do
+                        LineText.Append(';');
+                LineText.AppendLine();
+                OutStr.WriteText(LineText.ToText());
+
+                PrevPickNo := WhseActLine."Pick No.";
+                if FirstPickNo = '' then
+                    FirstPickNo := WhseActLine."Pick No.";
+                LastPickNo := WhseActLine."Pick No.";
+
+            //WhseActLine."Pick Exported" := true;
+            //WhseActLine.modify(false);
+            until WhseActLine.Next() = 0;
+            if LineText.ToText() <> '' then begin
+                TempBlob.CreateInStream(InStr);
+                FileName := WhseActLine."Pick No." + FileExt;
+                FSOINTAzureFileService.WriteFiletoShare('Logistics' + '\' + FileName, InStr);
+            end;
+            if FirstPickNo <> '' then
+                Message(LblExported, FirstPickNo, LastPickNo);
+        end else
+            Error(LblPickNoWarning);
+    end;
+
+    var
+        AttributeUtils: Codeunit "LSC Attribute Utils";
+        TotalPickQty: Decimal;
+        ZoneFilter: Code[250];
+        ItemCategoryFilter: Code[250];
+        BrandFilter: Text;
+        MaxQtyPerPick: Integer;
+        FirstPickNo: Code[20];
+        LastPickNo: Code[20];
+}

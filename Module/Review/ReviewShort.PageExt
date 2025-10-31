@@ -1,0 +1,18 @@
+namespace FSFINBELTEST.FSFINBELTEST;
+
+using Microsoft.Finance.GeneralLedger.Review;
+
+pageextension 50114 "Review Short" extends "Review G/L Entries"
+{
+    actions
+    {
+        modify(SetSelectedAsReviewed)
+        {
+            //ApplicationArea = Basic, Suite;
+            //Promoted = true;
+            //PromotedCategory = Process;
+            //PromotedIsBig = true;
+
+        }
+    }
+}

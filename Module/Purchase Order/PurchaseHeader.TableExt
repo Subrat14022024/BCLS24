@@ -1,0 +1,30 @@
+namespace BCLS.BCLS;
+
+using Microsoft.Purchases.Document;
+
+tableextension 50107 "Purchase Header" extends "Purchase Header"
+{
+    fields
+    {
+        field(50010; "LSC Attrib 4 Code"; Text[30])
+        {
+            CaptionClass = '98,27,10001409';
+            Caption = 'Attrib 4 Code';
+            DataClassification = CustomerContent;
+            ToolTip = 'Specifies the value of the fourth attribute for the item on the document.';
+
+            trigger OnLookup()
+            var
+                AttributeSetup: Record "LSC Attribute Setup";
+                gAttributeUtils: Codeunit "LSC Attribute Utils";
+                lAnswer: Text[250];
+                lActionReturned: Action;
+            begin
+                AttributeSetup.Get();
+                lAnswer := gAttributeUtils.LookupOptionValues(0, AttributeSetup."Item Attrib. 4 Code", lActionReturned);
+                if lActionReturned = ACTION::LookupOK then
+                    Validate("LSC Attrib 4 Code", CopyStr(lAnswer, 1, 30));
+            end;
+        }
+    }
+}

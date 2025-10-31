@@ -1,0 +1,17 @@
+namespace BCLS.BCLS;
+
+using Microsoft.Purchases.Vendor;
+using Microsoft.Inventory.Intrastat;
+
+tableextension 50107 Vendor extends Vendor
+{
+    fields
+    {
+        field(50101; "Transaction Specification"; Code[10])
+        {
+            Caption = 'Transaction Specification';
+            TableRelation = "Transaction Specification";
+            ToolTip = 'Specifies a specification of the document''s transaction, for the purpose of reporting to INTRASTAT.';
+        }
+    }
+}

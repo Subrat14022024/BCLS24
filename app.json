@@ -61,8 +61,8 @@
     "application": "24.0.0.0",
     "idRanges": [
         {
-            "from": 50100,
-            "to": 59999
+            "from": 10100,
+            "to": 99999
         }
     ],
     "resourceExposurePolicy": {
@@ -74,5 +74,15 @@
     "runtime": "14.0",
     "features": [
         "NoImplicitWith","TranslationFile","GenerateCaptions"
+    ],
+    "preprocessorSymbols": [
+        "CLEAN18",
+        "CLEAN19",
+        "CLEAN20",
+        "CLEAN21",
+        "CLEAN22",
+        "CLEAN23",
+        "CLEAN24",
+        "CLEAN25"
     ]
 }

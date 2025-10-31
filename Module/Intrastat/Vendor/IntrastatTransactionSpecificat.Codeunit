@@ -1,0 +1,23 @@
+namespace BCLS.BCLS;
+
+using Microsoft.Purchases.Document;
+using Microsoft.Purchases.Vendor;
+
+codeunit 50107 IntrastatTransactionSpecificat
+{
+    local procedure FillTransactionSpecificationFromVendor(var PurchaseHeader: Record "Purchase Header"; Vendor: Record Vendor)
+    begin
+        if Vendor."Transaction Specification" <> '' then
+            PurchaseHeader.Validate("Transaction Specification", Vendor."Transaction Specification");
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", OnAfterCheckBuyFromVendor, '', false, false)]
+    local procedure PurchaseHeaderOnAfterCheckBuyFromVendor(var PurchaseHeader: Record "Purchase Header"; xPurchaseHeader: Record "Purchase Header"; Vendor: Record Vendor)
+    begin
+        if PurchaseHeader.IsTemporary() then
+            exit;
+        FillTransactionSpecificationFromVendor(PurchaseHeader, Vendor)
+    end;
+
+
+}

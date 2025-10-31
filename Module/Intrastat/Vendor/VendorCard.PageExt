@@ -1,0 +1,18 @@
+namespace BCLS.BCLS;
+
+using Microsoft.Purchases.Vendor;
+
+pageextension 50111 VendorCard extends "Vendor Card"
+{
+    layout
+    {
+
+        addlast(Intrastat)
+        {
+            field("Transaction Specification"; Rec."Transaction Specification")
+            {
+                ApplicationArea = BasicEU;
+            }
+        }
+    }
+}
