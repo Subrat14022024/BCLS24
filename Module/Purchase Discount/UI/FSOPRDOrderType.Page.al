@@ -2,7 +2,7 @@ namespace FSO_Purchase.Discount;
 
 using FSO_Purchase.Discount;
 
-page 50301 "FSO PRD Order Type"
+page 50651 "FSO PRD Order Type"
 {
     ApplicationArea = All;
     Caption = 'Order Type';

@@ -2,7 +2,7 @@ namespace FSO_Purchase.Discount;
 
 using Microsoft.Purchases.Document;
 
-tableextension 50302 "FSO PRD Purchase Line" extends "Purchase Line"
+tableextension 50651 "FSO PRD Purchase Line" extends "Purchase Line"
 {
     fields
     {
@@ -10,7 +10,7 @@ tableextension 50302 "FSO PRD Purchase Line" extends "Purchase Line"
         {
             Caption = 'Order Type';
             DataClassification = CustomerContent;
-            TableRelation = "FSO PRD Order Type"."Order Type";
+            TableRelation = "FSO PRD Order Type"."Order Type" where(Blocked = const(false));
             Editable = false;
             ToolTip = 'Specifies the order Type of the Purchase Document';
         }
@@ -33,52 +33,27 @@ tableextension 50302 "FSO PRD Purchase Line" extends "Purchase Line"
     }
     trigger OnInsert()
     begin
-        UpdateToPurchLine()
+        UpdateToPurchLine(Rec);
     end;
 
-    trigger OnModify()
+    // trigger OnModify()
+    // begin
+    //     PurchHeader := this.GetPurchHeader();
+    //     if (PurchHeader."FSO PRD Order Type" <> xRec."FSO PRD Order Type") or (PurchHeader."FSO PRD Sub Order Type" <> xRec."FSO PRD Sub Order Type") then
+    //         UpdateToPurchLine(Rec)
+    // end;
+
+    internal procedure UpdateToPurchLine(var PurchaseLine: Record "Purchase Line")
     begin
         PurchHeader := this.GetPurchHeader();
-        if (PurchHeader."FSO PRD Order Type" <> xRec."FSO PRD Order Type") or (PurchHeader."FSO PRD Sub Order Type" <> xRec."FSO PRD Sub Order Type") then
-            UpdateOrderSubOrderTypeAndBranch()
-    end;
-
-    internal procedure UpdateOrderSubOrderTypeAndBranch()
-    begin
-        if Rec."Document Type" = Rec."Document Type"::Order then begin
-            PurchHeader := this.GetPurchHeader();
-            PurchHeader.TestField("FSO PRD Order Type");
-            PurchHeader.TestField("FSO PRD Sub Order Type");
-            PurchHeader.TestField("FSO PRD Branch");
-            UpdateToPurchLines()
+        if Rec."Document Type" = PurchaseLine."Document Type"::Order then begin
+            if PurchHeader."FSO PRD Order Type" <> '' then
+                Rec."FSO PRD Order Type" := PurchHeader."FSO PRD Order Type";
+            if PurchHeader."FSO PRD Sub Order Type" <> '' then
+                Rec."FSO PRD Sub Order Type" := PurchHeader."FSO PRD Sub Order Type";
+            if PurchHeader."FSO PRD Branch" <> '' then
+                Rec."FSO PRD Branch" := PurchHeader."FSO PRD Branch";
         end;
-    end;
-
-    local procedure UpdateToPurchLine()
-    begin
-        PurchHeader := this.GetPurchHeader();
-        if Rec."Document Type" = Rec."Document Type"::Order then begin
-            Rec."FSO PRD Order Type" := PurchHeader."FSO PRD Order Type";
-            Rec."FSO PRD Sub Order Type" := PurchHeader."FSO PRD Sub Order Type";
-            Rec."FSO PRD Branch" := PurchHeader."FSO PRD Branch";
-        end;
-    end;
-
-    local procedure UpdateToPurchLines()
-    var
-        PurchaseLine: Record "Purchase Line";
-    begin
-        PurchHeader := this.GetPurchHeader();
-        PurchaseLine.SetRange("Document Type", "Document Type"::Order);
-        PurchaseLine.SetRange("Document No.", Rec."Document No.");
-        if not PurchaseLine.IsEmpty() then
-            if PurchaseLine.FindSet() then
-                repeat
-                    PurchaseLine."FSO PRD Order Type" := PurchHeader."FSO PRD Order Type";
-                    PurchaseLine."FSO PRD Sub Order Type" := PurchHeader."FSO PRD Sub Order Type";
-                    PurchaseLine."FSO PRD Branch" := PurchHeader."FSO PRD Branch";
-                    PurchaseLine.Modify(false);
-                until PurchaseLine.Next() = 0;
     end;
 
     var

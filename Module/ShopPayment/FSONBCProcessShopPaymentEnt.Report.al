@@ -512,6 +512,8 @@ report 50100 "FSONBCProcessShopPaymentEnt"
         GenJnlTemplate: Record "Gen. Journal Template";
         GenJnlBatch: Record "Gen. Journal Batch";
         NewGenJnlLine: Record "Gen. Journal Line";
+        Dim1Code: Code[20];
+        Dim2Code: Code[20];
     begin
         GenJnlTemplate.ReadIsolation(IsolationLevel::ReadUncommitted);
         GenJnlTemplate.SetLoadFields("Source Code");
@@ -537,9 +539,34 @@ report 50100 "FSONBCProcessShopPaymentEnt"
         NewGenJnlLine.Validate("Document Type", NewGenJnlLine."Document Type"::" ");
         NewGenJnlLine."Document No." := GetnextGenJnlDocNo(PostingDate);
         NewGenJnlLine.Validate(Amount, DiffAmount);
-        NewGenJnlLine.Validate(NewGenJnlLine."Shortcut Dimension 1 Code", GlobalDim1Code);
-        NewGenJnlLine.Validate(NewGenJnlLine."Shortcut Dimension 2 Code", GlobalDim2Code);
+
+        FindDimensionValueCode(Dim1Code, Dim2Code);
+        if GlobalDim1Code <> '' then
+            NewGenJnlLine.Validate(NewGenJnlLine."Shortcut Dimension 1 Code", GlobalDim1Code)
+        else
+            NewGenJnlLine.Validate(NewGenJnlLine."Shortcut Dimension 1 Code", Dim1Code);
+
+        if GlobalDim2Code <> '' then
+            NewGenJnlLine.Validate(NewGenJnlLine."Shortcut Dimension 2 Code", GlobalDim2Code)
+        else
+            NewGenJnlLine.Validate(NewGenJnlLine."Shortcut Dimension 2 Code", Dim2Code);
+
         NewGenJnlLine.Modify(true);
+    end;
+
+    local procedure FindDimensionValueCode(var Dim1Code: Code[20]; var Dim2Code: Code[20]);
+    var
+        GenJournalLine: Record "Gen. Journal Line";
+    begin
+        GenJournalLine.ReadIsolation(IsolationLevel::ReadUncommitted);
+        GenJournalLine.SetLoadFields("Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
+        GenJournalLine.SetRange("Journal Template Name", GenJnlTemplateName);
+        GenJournalLine.SetRange("Journal Batch Name", GenJnlBatchName);
+        GenJournalLine.SetRange("Account Type", GenJournalLine."Account Type"::Customer);
+        if GenJournalLine.FindFirst() then begin
+            Dim1Code := GenJournalLine."Shortcut Dimension 1 Code";
+            Dim2Code := GenJournalLine."Shortcut Dimension 2 Code";
+        end;
     end;
 
     local procedure GetVaultBatch(var GenJournalBatch: Record "Gen. Journal Batch"; LocationCode: Code[10]): Code[10];

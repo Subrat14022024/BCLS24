@@ -1,6 +1,6 @@
 namespace FSO_Purchase.Discount;
 
-table 50301 "FSO PRD Order Type"
+table 50651 "FSO PRD Order Type"
 {
     Caption = 'Order Type';
     DataClassification = CustomerContent;

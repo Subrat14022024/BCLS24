@@ -1,6 +1,6 @@
 namespace FSO_Purchase.Discount;
 
-page 50505 "FSO PRD Branch"
+page 50650 "FSO PRD Branch"
 {
     ApplicationArea = All;
     Caption = 'Branch';
@@ -12,9 +12,9 @@ page 50505 "FSO PRD Branch"
     {
         area(Content)
         {
-            group(General)
+            repeater(General)
             {
-                field("Code"; Rec."Code")
+                field(Code; Rec."Code")
                 {
                 }
                 field(Description; Rec.Description)

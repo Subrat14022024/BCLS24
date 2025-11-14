@@ -5,7 +5,7 @@ using Microsoft.Inventory.Item;
 using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.FixedAssets.FixedAsset;
 using Microsoft.Utilities;
-pageextension 50303 "FSO PRD LSC Retail PO Subpage" extends "LSC Retail PO Subpage"
+pageextension 50650 "FSO PRD LSC Retail PO Subpage" extends "LSC Retail PO Subpage"
 {
     layout
     {
@@ -65,8 +65,8 @@ pageextension 50303 "FSO PRD LSC Retail PO Subpage" extends "LSC Retail PO Subpa
                                     begin
                                         if Item.Get(Rec."No.") then;
                                         if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then
-                                            if PurchHeader."FSO PRD LSC Attrib 1 Code" <> '' then
-                                                Item.SetRange("LSC Attrib 1 Code", PurchHeader."FSO PRD LSC Attrib 1 Code");
+                                            if PurchHeader."FSO PRD Brand" <> '' then
+                                                Item.SetRange("FSO Brand", PurchHeader."FSO PRD Brand");
                                         if Page.RunModal(LSCBOUtils.getLookupPage(Database::Item), Item) = Action::LookupOK then begin
                                             Text := Item."No.";
                                             exit(true);
@@ -107,4 +107,11 @@ pageextension 50303 "FSO PRD LSC Retail PO Subpage" extends "LSC Retail PO Subpa
             end;
         }
     }
+    trigger OnAfterGetCurrRecord()
+    var
+        PurchaseDiscountHandler: Codeunit "FSO PRD Purchase Discount Mgmt";
+    begin
+        if Rec."Document No." <> '' then
+            PurchaseDiscountHandler.NotifyAboutMissingDiscountonLines(Rec.GetPurchHeader());
+    end;
 }

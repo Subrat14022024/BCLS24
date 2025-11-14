@@ -1,11 +1,11 @@
 namespace FSO_Purchase.Discount;
 
-page 50303 "FSO PRD Vendor Brand Discount"
+page 50652 "FSO PRD Vendor Brand Discount"
 {
     ApplicationArea = All;
-    Caption = 'Vendor Brand Discount';
+    Caption = 'Commercial Discount';
     PageType = List;
-    SourceTable = "FSO PRD Vendor Brand Discount";
+    SourceTable = "FSO PRD Commercial Discount";
     UsageCategory = Tasks;
 
     layout
@@ -17,16 +17,7 @@ page 50303 "FSO PRD Vendor Brand Discount"
                 field("Vendor No."; Rec."Vendor No.")
                 {
                 }
-                field(Branch; Rec.Branch)
-                {
-                }
-                field("Attribute Code"; Rec."Attribute Code")
-                {
-                }
-                field("Attribute Description"; Rec."Attribute Description")
-                {
-                }
-                field("Attribute Code Value"; Rec."Attribute Code Value")
+                field("Brand"; Rec."Brand")
                 {
                 }
                 field("Order Type"; Rec."Order Type")

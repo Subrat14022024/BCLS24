@@ -1,15 +1,15 @@
 {
-    "id": "4362a92c-ed5e-4999-8197-ff362a7a80d2",
-    "name": "BCLS24",
-    "publisher": "HS_SUBRAT",
-    "version": "3.0.0.0",
+    "id": "ee9864ab-015d-448f-b780-15a684ec9545",
+    "name": "FSO customization By Subrat",
+    "publisher": "Subrat",
+    "version": "25.2.0.0",
     "brief": "",
     "description": "",
     "privacyStatement": "",
     "EULA": "",
     "help": "",
     "url": "",
-    "logo": "",
+    "logo": "./logo/FS Logo.png",
     "dependencies": [
         {
             "id": "5ECFC871-5D82-43F1-9C54-59685E82318D",
@@ -71,6 +71,7 @@
         "includeSourceInSymbolFile": true,
         "applyToDevExtension": true
     },
+    
     "runtime": "14.0",
     "features": [
         "NoImplicitWith","TranslationFile","GenerateCaptions"

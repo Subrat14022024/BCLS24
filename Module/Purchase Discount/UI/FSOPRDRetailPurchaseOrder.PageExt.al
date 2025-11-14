@@ -1,6 +1,6 @@
 namespace FSO_Purchase.Discount;
 
-pageextension 50301 "FSO PRD Retail Purchase Order" extends "LSC Retail Purchase Order"
+pageextension 50651 "FSO PRD Retail Purchase Order" extends "LSC Retail Purchase Order"
 {
     layout
     {
@@ -10,7 +10,7 @@ pageextension 50301 "FSO PRD Retail Purchase Order" extends "LSC Retail Purchase
             {
                 ApplicationArea = all;
             }
-            field("FSO PRD LSC Attrib 1 Code"; Rec."FSO PRD LSC Attrib 1 Code")
+            field("FSO PRD Brand"; Rec."FSO PRD Brand")
             {
                 ApplicationArea = all;
             }

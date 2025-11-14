@@ -1,6 +1,6 @@
 namespace FSO_Purchase.Discount;
 
-table 50302 "FSO PRD Branch"
+table 50650 "FSO PRD Branch"
 {
     Caption = 'Branch';
     DataClassification = CustomerContent;
@@ -13,7 +13,7 @@ table 50302 "FSO PRD Branch"
             Caption = 'Code';
             ToolTip = 'Specicies the Branch Code';
         }
-        field(2; Description; Text[50])
+        field(2; Description; Text[100])
         {
             Caption = 'Description';
             ToolTip = 'Specicies the Branch Description';
