@@ -17,7 +17,7 @@ table 50652 "FSO PRD Commercial Discount"
         field(3; Brand; Code[20])
         {
             Caption = 'Brand';
-            TableRelation = "FSO Brand".Code;
+            TableRelation = "FSO PUR Brand".Code;
             ToolTip = 'Specifies the Brand for which the discount is applicable.';
         }
         field(6; "Order Type"; Code[20])

@@ -3,7 +3,7 @@ namespace FSO_Purchase.Discount;
 page 50650 "FSO PRD Branch"
 {
     ApplicationArea = All;
-    Caption = 'Branch';
+    Caption = 'Branches';
     PageType = List;
     SourceTable = "FSO PRD Branch";
     UsageCategory = Lists;

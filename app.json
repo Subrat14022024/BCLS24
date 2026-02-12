@@ -2,7 +2,7 @@
     "id": "ee9864ab-015d-448f-b780-15a684ec9545",
     "name": "FSO customization By Subrat",
     "publisher": "Subrat",
-    "version": "25.2.0.0",
+    "version": "25.2.0.1",
     "brief": "",
     "description": "",
     "privacyStatement": "",
@@ -54,6 +54,12 @@
           "name": "Review General Ledger Entries",
           "publisher": "Microsoft",
           "version": "25.2.27733.27999"
+        },
+        {
+            "id": "388b255c-c8cc-4e80-bb94-5a85e75e6f52",
+            "name": "IMAGE_CDN",
+            "publisher": "HS_SHIVAM",
+            "version": "1.0.0.0"
         }
     ],
     "screenshots": [],

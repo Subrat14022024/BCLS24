@@ -1,0 +1,395 @@
+namespace BlankVAT.CBEImporter;
+using System.RestClient;
+codeunit 54700 "CBE Importer"
+{
+    trigger OnRun()
+    var
+        VatDetailsRec: Record "VAT Details";
+        TotalCount: Integer;
+        i: integer;
+    begin
+        Clear(TotalCount);
+        i := 0;
+        VatDetailsRec.SetRange("Data Fetched", false);
+        if VatDetailsRec.FindSet() then
+            TotalCount := VatDetailsRec.Count();
+        repeat
+            if ImportCBECompanies(VatDetailsRec."Search Name", VatDetailsRec."Search Post Code", VatDetailsRec."Search City", VatDetailsRec."Full Address") then begin
+                VatDetailsRec."Data Fetched" := true;
+                VatDetailsRec.Modify();
+                i += 1;
+            end else begin
+                VatDetailsRec."Data Fetched" := false;
+                VatDetailsRec.Modify();
+            end;
+        until VatDetailsRec.Next() = 0;
+        Message('CBE Import completed. %1 of %2 records processed.', i, TotalCount);
+    end;
+
+    procedure ImportCBECompanies(Name: Text; PostCode: Text; City: Text; FullAddress: Text): Boolean
+    var
+        Client: HttpClient;
+        Request: HttpRequestMessage;
+        Response: HttpResponseMessage;
+        BearerText_Lbl: Label 'Bearer %1', Comment = '%1 for Bearer token in Authorization header';
+        ResponseText: Text;
+        Url: Text;
+        BearerToken: Text;
+        PostCodeInt: Integer;
+    begin
+        Url := 'https://cbeapi.be/api/v1/company/search';
+        BearerToken := '3huXA1EansCmXkIbfLjDPl6VOrknaOqi';
+
+        Client.Clear();
+        Client.DefaultRequestHeaders.Add('Authorization', StrSubstNo(BearerText_Lbl, BearerToken));
+        Client.DefaultRequestHeaders.Add('Accept', 'application/json');
+
+        Request.Method := 'GET';
+        if Evaluate(PostCodeInt, PostCode) and (city <> '') then
+            Request.SetRequestUri(Url + '?name=' + Name + '&post_code=' + PostCode + '&city=' + City)
+        else
+            if City <> '' then
+                Request.SetRequestUri(Url + '?name=' + Name + '&city=' + City)
+            else
+                Request.SetRequestUri(Url + '?name=' + Name);
+
+        if (FullAddress <> '') and (PostCode <> '') and (Name <> '') and (City <> '') then
+            Request.SetRequestUri(Url + '?name=' + Name + '&post_code=' + PostCode + '&city=' + City + '&full_address=' + FullAddress);
+
+
+        if Client.Send(Request, Response) then
+            if Response.IsSuccessStatusCode() then begin
+                Response.Content.ReadAs(ResponseText);
+                if ImportFromJson(ResponseText, Name, PostCode, City) then
+                    exit(true)
+                else
+                    exit(false);
+            end;
+    end;
+
+    procedure EscapeDataString(Value: Text): Text
+    var
+        Encoded: Text;
+        i: Integer;
+        c: Char;
+        code: Integer;
+    begin
+        Encoded := '';
+        Value := DelChr(Value, '=', ',');
+        for i := 1 to StrLen(Value) do begin
+            c := Value[i];
+            case c of
+                'A' .. 'Z', 'a' .. 'z', '0' .. '9', '-', '_', '.', '~':
+                    Encoded += c;
+                ' ':
+                    Encoded += '%20';
+                else
+                    Evaluate(code, Format(c));
+                    Encoded += '%' + Format(code, 0, 2);
+            end;
+        end;
+        exit(Encoded);
+    end;
+
+    procedure ImportFromJson(JsonText: Text; name: Text; postCode: Text; city: Text): Boolean
+    var
+        CompanyRec: Record "FSO CBE Company";
+        EstRec: Record "FSO CBE Establishment";
+        NaceRec: Record "FSO CBE NACE Activity";
+        JsonArray: JsonArray;
+        JsonObj: JsonObject;
+        Establishments: JsonArray;
+        Naces: JsonArray;
+        addr: JsonObject;
+        contact: JsonObject;
+        estObj: JsonObject;
+        nObj: JsonObject;
+        i: Integer;
+        eIndex: Integer;
+        nIndex: Integer;
+        value: JsonToken;
+        dateValue: Text;
+        JsonResponce: JsonObject;
+        JsonTokenValue: JsonToken;
+    begin
+        if JsonResponce.ReadFrom(JsonText) then begin
+            if JsonResponce.Get('data', JsonTokenValue) then
+                JsonArray := JsonTokenValue.AsArray()
+            else
+                Error('Invalid JSON: Missing data array.');
+        end else
+            Error('Invalid JSON.');
+
+        for i := 0 to JsonArray.Count() - 1 do begin
+            JsonArray.Get(i, value);
+            JsonObj := value.AsObject();
+
+            // Upsert company
+            JsonObj.Get('cbe_number', value);
+            CompanyRec.SetRange("CBE No.", value.AsValue().AsText());
+            if not CompanyRec.FindFirst() then begin
+                CompanyRec.Init();
+                CompanyRec."Search Name" := name;
+                CompanyRec."Search Post Code" := postCode;
+                CompanyRec."Search City" := city;
+                JsonObj.Get('cbe_number', value);
+                CompanyRec."CBE No." := value.AsValue().AsText();
+                JsonObj.Get('cbe_number_formatted', value);
+                CompanyRec."CBE No. Formatted" := value.AsValue().AsText();
+                JsonObj.Get('denomination', value);
+                CompanyRec."Denomination" := CopyStr(value.AsValue().AsText(), 1, MaxStrLen(CompanyRec."Denomination"));
+                JsonObj.Get('denomination_with_legal_form', value);
+                CompanyRec."Denomination With Legal Form" := CopyStr(value.AsValue().AsText(), 1, MaxStrLen(CompanyRec."Denomination With Legal Form"));
+                JsonObj.Get('juridical_form', value);
+                if not value.AsValue().IsNull then
+                    CompanyRec."Juridical Form" := CopyStr(value.AsValue().AsText(), 1, MaxStrLen(CompanyRec."Juridical Form"))
+                else
+                    CompanyRec."Juridical Form" := '';
+                JsonObj.Get('juridical_form_code', value);
+                if not value.AsValue().IsNull then
+                    CompanyRec."Juridical Form Code" := value.AsValue().AsText()
+                else
+                    CompanyRec."Juridical Form Code" := '';
+                JsonObj.Get('status', value);
+                if not value.AsValue().IsNull then
+                    CompanyRec."Status" := value.AsValue().AsText()
+                else
+                    CompanyRec."Status" := '';
+                JsonObj.Get('juridical_situation', value);
+                if not value.AsValue().IsNull then
+                    CompanyRec."Juridical Situation" := value.AsValue().AsText()
+                else
+                    CompanyRec."Juridical Situation" := '';
+                JsonObj.Get('type', value);
+                if not value.AsValue().IsNull then
+                    CompanyRec."Type" := value.AsValue().AsText()
+                else
+                    CompanyRec."Type" := '';
+                if JsonObj.Contains('start_date') then begin
+                    JsonObj.Get('start_date', value);
+                    if not value.IsObject then begin
+                        dateValue := value.AsValue().AsText();
+                        Evaluate(CompanyRec."Start Date", dateValue);
+                    end;
+                end;
+
+                // Address object
+                if JsonObj.Contains('address') then begin
+                    JsonObj.Get('address', value);
+                    addr := value.AsObject();
+                    addr.Get('street', value);
+                    if not value.AsValue().IsNull then
+                        CompanyRec."Street" := value.AsValue().AsText()
+                    else
+                        CompanyRec."Street" := '';
+                    addr.Get('street_number', value);
+                    if not value.AsValue().IsNull then
+                        CompanyRec."House No." := value.AsValue().AsText()
+                    else
+                        CompanyRec."House No." := '';
+                    addr.Get('box', value);
+                    if not value.AsValue().IsNull then
+                        CompanyRec."Box" := value.AsValue().AsText()
+                    else
+                        CompanyRec."Box" := '';
+                    addr.Get('post_code', value);
+                    if not value.AsValue().IsNull then
+                        CompanyRec."Post Code" := value.AsValue().AsText()
+                    else
+                        CompanyRec."Post Code" := '';
+                    addr.Get('city', value);
+                    if not value.AsValue().IsNull then
+                        CompanyRec."City" := value.AsValue().AsText()
+                    else
+                        CompanyRec."City" := '';
+                    addr.Get('country_code', value);
+                    if not value.AsValue().IsNull then
+                        CompanyRec."Country Code" := value.AsValue().AsText()
+                    else
+                        CompanyRec."Country Code" := '';
+                    addr.Get('full_address', value);
+                    if not value.AsValue().IsNull then
+                        CompanyRec."Full Address" := value.AsValue().AsText()
+                    else
+                        CompanyRec."Full Address" := '';
+                end;
+
+                // Contact infos
+                if JsonObj.Contains('contact_infos') then begin
+                    JsonObj.Get('contact_infos', value);
+                    contact := value.AsObject();
+                    contact.Get('email', value);
+                    if not value.AsValue().IsNull then
+                        CompanyRec."Email" := value.AsValue.AsText()
+                    else
+                        CompanyRec."Email" := '';
+                    contact.Get('phone', value);
+                    if not value.AsValue().IsNull then
+                        CompanyRec."Phone" := value.AsValue().AsText()
+                    else
+                        CompanyRec."Phone" := '';
+                    contact.Get('web', value);
+                    if not value.AsValue().IsNull then
+                        CompanyRec."Web" := value.AsValue().AsText()
+                    else
+                        CompanyRec."Web" := '';
+                end;
+                if CompanyRec."CBE No." <> '' then
+                    CompanyRec.Insert(true); // insert or modify depending on existence
+
+                // Establishments array
+                if JsonObj.Contains('establishments') then begin
+                    JsonObj.Get('establishments', value);
+                    Establishments := value.AsArray();
+                    for eIndex := 0 to Establishments.Count() - 1 do begin
+                        Establishments.Get(eIndex, value);
+                        estObj := value.AsObject();
+                        EstRec.Init();
+                        EstRec."Company CBE No." := CompanyRec."CBE No.";
+                        estObj.Get('establishment_number', value);
+                        if not value.AsValue().IsNull then
+                            EstRec."Establishment No." := value.AsValue().AsText()
+                        else
+                            EstRec."Establishment No." := '';
+                        estObj.Get('street', value);
+                        if not value.AsValue().IsNull then
+                            EstRec."Street" := value.AsValue().AsText()
+                        else
+                            EstRec."Street" := '';
+                        estObj.Get('house_number', value);
+                        if not value.AsValue().IsNull then
+                            EstRec."House No." := value.AsValue().AsText()
+                        else
+                            EstRec."House No." := '';
+                        estObj.Get('box', value);
+                        if not value.AsValue().IsNull then
+                            EstRec."Box" := value.AsValue().AsText()
+                        else
+                            EstRec."Box" := '';
+                        estObj.Get('post_code', value);
+                        if not value.AsValue().IsNull then
+                            EstRec."Post Code" := value.AsValue().AsText()
+                        else
+                            EstRec."Post Code" := '';
+                        estObj.Get('city', value);
+                        if not value.AsValue().IsNull then
+                            EstRec."City" := value.AsValue().AsText()
+                        else
+                            EstRec."City" := '';
+                        estObj.Get('country_code', value);
+                        if not value.AsValue().IsNull then
+                            EstRec."Country Code" := value.AsValue().AsText()
+                        else
+                            EstRec."Country Code" := '';
+                        estObj.Get('full_address', value);
+                        if not value.AsValue().IsNull then
+                            EstRec."Full Address" := value.AsValue().AsText()
+                        else
+                            EstRec."Full Address" := '';
+                        estObj.Get('type_of_address', value);
+                        if not value.AsValue().IsNull then
+                            EstRec."Type Of Address" := value.AsValue().AsText()
+                        else
+                            EstRec."Type Of Address" := '';
+                        EstRec.Insert(true);
+                    end;
+                end;
+
+                // NACE activities
+                if JsonObj.Contains('nace_activities') then begin
+                    JsonObj.Get('nace_activities', value);
+                    Naces := value.AsArray();
+                    for nIndex := 0 to Naces.Count() - 1 do begin
+                        Naces.Get(nIndex, value);
+                        nObj := value.AsObject();
+                        NaceRec.Init();
+                        NaceRec."Company CBE No." := CompanyRec."CBE No.";
+                        nObj.Get('code', value);
+                        if not value.AsValue().IsNull then
+                            NaceRec."Activity Code" := value.AsValue().AsText()
+                        else
+                            NaceRec."Activity Code" := '';
+                        nObj.Get('description', value);
+                        if not value.AsValue().IsNull then
+                            NaceRec."Description" := value.AsValue().AsText()
+                        else
+                            NaceRec."Description" := '';
+                        nObj.Get('classification', value);
+                        if not value.AsValue().IsNull then
+                            NaceRec."Classification" := value.AsValue().AsText()
+                        else
+                            NaceRec."Classification" := '';
+                        nObj.Get('nace_version', value);
+                        if not value.AsValue().IsNull then
+                            NaceRec."NACE Version" := value.AsValue().AsText()
+                        else
+                            NaceRec."NACE Version" := '';
+                        NaceRec.Insert(true);
+                    end;
+                end;
+            end;
+        end;
+        exit(true);
+    end;
+
+    procedure ImportFromJson(JsonText: Text): Boolean
+    var
+        CustomerData: Record "CustomerData";
+        JsonObj: JsonObject;
+        addr: JsonObject;
+        value: JsonToken;
+        JsonTokenValue: JsonToken;
+    begin
+        if JsonObj.ReadFrom(JsonText) then begin
+            if JsonObj.Get('data', JsonTokenValue) then
+                JsonObj := JsonTokenValue.AsObject();
+            // Upsert company
+            JsonObj.Get('cbe_number', value);
+            CustomerData.SetRange("VAT Number", value.AsValue().AsText());
+            if not CustomerData.FindFirst() then begin
+                CustomerData.Init();
+                JsonObj.Get('cbe_number', value);
+                CustomerData.Validate("VAT Number", value.AsValue().AsText());
+                JsonObj.Get('denomination', value);
+                CustomerData."Name" := CopyStr(value.AsValue().AsText(), 1, MaxStrLen(CustomerData."Name"));
+
+                // Address object
+                if JsonObj.Contains('address') then begin
+                    JsonObj.Get('address', value);
+                    addr := value.AsObject();
+                    addr.Get('street', value);
+                    if not value.AsValue().IsNull then
+                        CustomerData.Validate("Street", value.AsValue().AsText())
+                    else
+                        CustomerData."Street" := '';
+                    addr.Get('street_number', value);
+                    if not value.AsValue().IsNull then
+                        CustomerData."Street No" := CopyStr(value.AsValue().AsCode(), 1, MaxStrLen(CustomerData."Street No"))
+                    else
+                        CustomerData."Street No" := '';
+                    addr.Get('box', value);
+                    if not value.AsValue().IsNull then
+                        CustomerData.Validate("Box", value.AsValue().AsText())
+                    else
+                        CustomerData."Box" := '';
+                    addr.Get('post_code', value);
+                    if not value.AsValue().IsNull then
+                        CustomerData."PostCode" := value.AsValue().AsInteger()
+                    else
+                        CustomerData."PostCode" := 0;
+                    addr.Get('city', value);
+                    if not value.AsValue().IsNull then
+                        CustomerData.Validate("City", value.AsValue().AsText())
+                    else
+                        CustomerData."City" := '';
+                    addr.Get('country_code', value);
+                    if not value.AsValue().IsNull then
+                        CustomerData.Validate("Country", value.AsValue().AsText())
+                    else
+                        CustomerData."Country" := '';
+                end;
+                CustomerData.Insert(true); // insert or modify depending on existence
+            end;
+        end;
+    end;
+}

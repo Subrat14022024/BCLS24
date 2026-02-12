@@ -1,9 +1,9 @@
 namespace FSO_Purchase.Discount;
 
-using Microsoft.Purchases.Document;
-using Microsoft.Inventory.Item;
 using Microsoft.Finance.GeneralLedger.Account;
 using Microsoft.FixedAssets.FixedAsset;
+using Microsoft.Inventory.Item;
+using Microsoft.Purchases.Document;
 using Microsoft.Utilities;
 pageextension 50650 "FSO PRD LSC Retail PO Subpage" extends "LSC Retail PO Subpage"
 {
@@ -66,7 +66,7 @@ pageextension 50650 "FSO PRD LSC Retail PO Subpage" extends "LSC Retail PO Subpa
                                         if Item.Get(Rec."No.") then;
                                         if PurchHeader.Get(Rec."Document Type", Rec."Document No.") then
                                             if PurchHeader."FSO PRD Brand" <> '' then
-                                                Item.SetRange("FSO Brand", PurchHeader."FSO PRD Brand");
+                                                Item.SetRange("FSOPUR Brand", PurchHeader."FSO PRD Brand");
                                         if Page.RunModal(LSCBOUtils.getLookupPage(Database::Item), Item) = Action::LookupOK then begin
                                             Text := Item."No.";
                                             exit(true);

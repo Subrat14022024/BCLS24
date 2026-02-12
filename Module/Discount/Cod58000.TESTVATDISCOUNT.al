@@ -1,11 +1,11 @@
 namespace FINBC.FINBC;
 
-using Microsoft.Purchases.Posting;
-using Microsoft.Foundation.PaymentTerms;
-using Microsoft.Purchases.Document;
+using Microsoft.Finance.Currency;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Finance.VAT.Calculation;
-using Microsoft.Finance.Currency;
+using Microsoft.Foundation.PaymentTerms;
+using Microsoft.Purchases.Document;
+using Microsoft.Purchases.Posting;
 
 #pragma warning disable AA0215
 codeunit 58000 TESTVATDISCOUNT

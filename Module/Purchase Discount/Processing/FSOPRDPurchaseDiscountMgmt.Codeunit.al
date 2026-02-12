@@ -7,11 +7,16 @@ using Microsoft.Inventory.Item;
 codeunit 50650 "FSO PRD Purchase Discount Mgmt"
 {
     // Public entry point: apply brand discount for a purchase header
-    procedure ApplyBrandDiscount(PurchaseHeader: Record "Purchase Header")
+    procedure Public_ApplyCommercialDiscount(PurchaseHeader: Record "Purchase Header")
+    begin
+        this.ApplyCommercialDiscount(PurchaseHeader);
+    end;
+
+    internal procedure ApplyCommercialDiscount(PurchaseHeader: Record "Purchase Header")
     var
         DiscountPercentage: Decimal;
     begin
-        if not this.HeaderEligibleForBrandDiscount(PurchaseHeader) then
+        if not this.HeaderEligibleForCommercialDiscount(PurchaseHeader) then
             exit;
 
         DiscountPercentage := this.CalculateDiscount(PurchaseHeader);
@@ -21,7 +26,7 @@ codeunit 50650 "FSO PRD Purchase Discount Mgmt"
         this.ApplyDiscountToEligibleLines(PurchaseHeader, DiscountPercentage);
     end;
 
-    local procedure HeaderEligibleForBrandDiscount(PurchaseHeader: Record "Purchase Header"): Boolean
+    local procedure HeaderEligibleForCommercialDiscount(PurchaseHeader: Record "Purchase Header"): Boolean
     begin
         if PurchaseHeader."Document Type" <> PurchaseHeader."Document Type"::Order then
             exit(false);
@@ -38,13 +43,14 @@ codeunit 50650 "FSO PRD Purchase Discount Mgmt"
     var
         FSOPRDCommercialDiscount: Record "FSO PRD Commercial Discount";
     begin
-        FSOPRDCommercialDiscount.ReadIsolation(IsolationLevel::ReadUncommitted);
         FSOPRDCommercialDiscount.SetRange("Vendor No.", PurchaseHeader."Buy-from Vendor No.");
         FSOPRDCommercialDiscount.SetRange("Brand", PurchaseHeader."FSO PRD Brand");
         FSOPRDCommercialDiscount.SetRange("Order Type", PurchaseHeader."FSO PRD Order Type");
         FSOPRDCommercialDiscount.SetRange("Sub Order Type", PurchaseHeader."FSO PRD Sub Order Type");
         FSOPRDCommercialDiscount.SetFilter("Starting Date", '%1|<=%2', 0D, PurchaseHeader."Document Date");
         FSOPRDCommercialDiscount.SetFilter("Ending Date", '%1|>=%2', 0D, PurchaseHeader."Document Date");
+        FSOPRDCommercialDiscount.ReadIsolation(IsolationLevel::ReadUncommitted);
+        FSOPRDCommercialDiscount.SetLoadFields("Discount %");
         if FSOPRDCommercialDiscount.IsEmpty() then
             exit(0);
         if FSOPRDCommercialDiscount.FindLast() then
@@ -68,7 +74,16 @@ codeunit 50650 "FSO PRD Purchase Discount Mgmt"
         if this.IsItemEligibleForDiscount(PurchaseHeader, PurchaseLine."No.") then begin
             PurchaseLine.Validate("Line Discount %", DiscountPercentage);
             PurchaseLine.Modify(true);
+            if PurchaseHeader."Vendor Order No." = '' then
+                this.UpdateDiscountTextOnPurchaseHeader(PurchaseHeader, DiscountPercentage);
         end;
+    end;
+
+    local procedure UpdateDiscountTextOnPurchaseHeader(PurchaseHeader: Record "Purchase Header"; DiscountPercentage: Decimal)
+    var
+        CommercialDiscountText_Lbl: Label 'Commercial Discount %1 applied', Locked = true;
+    begin
+        PurchaseHeader."Vendor Order No." := StrSubstNo(CommercialDiscountText_lbl, DiscountPercentage);
     end;
 
     // local procedure IsItemEligibleForDiscount(PurchaseHeader: Record "Purchase Header"; ItemNo: Code[20]): Boolean
@@ -108,16 +123,6 @@ codeunit 50650 "FSO PRD Purchase Discount Mgmt"
         exit(false);
     end;
 
-    // Event subscriber: keep behavior but corrected helper name
-    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", OnRecreatePurchLinesOnBeforeInsertPurchLine, '', false, false)]
-    local procedure PurchaseHeaderOnRecreatePurchLinesOnBeforeInsertPurchLine(var PurchaseLine: Record "Purchase Line"; var TempPurchaseLine: Record "Purchase Line" temporary; ChangedFieldName: Text[100])
-    begin
-        if PurchaseLine.IsTemporary then
-            exit;
-        if PurchaseLine."Document Type" <> PurchaseLine."Document Type"::Order then
-            exit;
-        this.ReAssignPurchaseDiscountField(PurchaseLine);
-    end;
 
     local procedure ReAssignPurchaseDiscountField(var PurchaseLine: Record "Purchase Line")
     var
@@ -198,7 +203,7 @@ codeunit 50650 "FSO PRD Purchase Discount Mgmt"
         if Notification.HasData('DocumentNo') and Notification.HasData('DocumentType') then begin
             Evaluate(PurchaseHeader."Document Type", Notification.GetData('DocumentType'));
             if PurchaseHeader.Get(PurchaseHeader."Document Type", Notification.GetData('DocumentNo')) then
-                this.ApplyBrandDiscount(PurchaseHeader)
+                this.ApplyCommercialDiscount(PurchaseHeader)
         end;
     end;
 
@@ -207,6 +212,17 @@ codeunit 50650 "FSO PRD Purchase Discount Mgmt"
         NotificationLifecycleMgt: Codeunit "Notification Lifecycle Mgt.";
     begin
         NotificationLifecycleMgt.RecallNotificationsForRecord(SetupRecordID, false);
+    end;
+
+    // Event subscriber: keep behavior but corrected helper name
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", OnRecreatePurchLinesOnBeforeInsertPurchLine, '', false, false)]
+    local procedure PurchaseHeaderOnRecreatePurchLinesOnBeforeInsertPurchLine(var PurchaseLine: Record "Purchase Line"; var TempPurchaseLine: Record "Purchase Line" temporary; ChangedFieldName: Text[100])
+    begin
+        if PurchaseLine.IsTemporary then
+            exit;
+        if PurchaseLine."Document Type" <> PurchaseLine."Document Type"::Order then
+            exit;
+        this.ReAssignPurchaseDiscountField(PurchaseLine);
     end;
 
     var

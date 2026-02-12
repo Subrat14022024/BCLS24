@@ -5,9 +5,9 @@ using FSO_Purchase.Discount;
 page 50302 "FSO Brand"
 {
     ApplicationArea = All;
-    Caption = 'Brand';
+    Caption = 'Brands';
     PageType = List;
-    SourceTable = "FSO Brand";
+    SourceTable = "FSO PUR Brand";
     UsageCategory = Lists;
 
     layout
@@ -20,6 +20,9 @@ page 50302 "FSO Brand"
                 {
                 }
                 field(Description; Rec.Description)
+                {
+                }
+                field("eCommerce Active"; Rec."eCommerce Active")
                 {
                 }
             }

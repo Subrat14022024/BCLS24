@@ -11,6 +11,6 @@ permissionset 50650 "FOS PRD Purch Dis"
         tabledata "FSO PRD Branch" = RMID,
         table "FSO PRD Commercial Discount" = X,
         tabledata "FSO PRD Commercial Discount" = RMID,
-        table "FSO Brand" = X,
-        tabledata "FSO Brand" = RMID;
+        table "FSO PUR Brand" = X,
+        tabledata "FSO PUR Brand" = RMID;
 }

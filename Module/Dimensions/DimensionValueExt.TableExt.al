@@ -1,18 +1,24 @@
-namespace BCLS.BCLS;
+namespace FSO.Dimension;
 
 using Microsoft.Finance.Dimension;
 
-tableextension 50106 "DimensionValueExt" extends "Dimension Value"
+tableextension 50158 "FSOFIN DimensionValue" extends "Dimension Value"
 {
     fields
     {
-        field(50100; Entity; Code[20])
+        field(50150; "FSOFIN Enseigne"; Code[20])
         {
-            Caption = 'Entity';
-            ToolTip = 'Specifies entity of the dimension values';
+            Caption = 'Enseigne';
+            ToolTip = 'Specifies the entity associated with this dimension value';
             DataClassification = CustomerContent;
-            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(5),
-                                                          Blocked = const(false));
+            TableRelation = "Dimension Value".Code where("Dimension Code" = field("FSOFIN Link Dimension"), Blocked = const(false));
+        }
+        field(50151; "FSOFIN Link Dimension"; Code[20])
+        {
+            Caption = 'Link Dimension';
+            ToolTip = 'Specifies the dimension to which this value is linked';
+            DataClassification = CustomerContent;
+            TableRelation = Dimension;
         }
     }
 }

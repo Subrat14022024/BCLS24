@@ -1,0 +1,84 @@
+namespace BlankVAT.CBEImporter;
+
+
+/// <summary>
+/// Page CustomerData (ID 54001).
+/// </summary>
+page 54001 CustomerData
+{
+    ApplicationArea = All;
+    Caption = 'CustomerData';
+    PageType = CardPart;
+    SourceTable = CustomerData;
+    Permissions =
+        tabledata CustomerData = RIMD;
+
+    layout
+    {
+        area(Content)
+        {
+            group(General)
+            {
+                Caption = 'General';
+
+                field("VAT Number"; Rec."VAT Number")
+                {
+                    ToolTip = 'Specifies the value of the VAT Number field.';
+                    StyleExpr = StyleText;
+                }
+                field(Name; Rec.Name)
+                {
+                    ToolTip = 'Specifies the value of the Name field.';
+                    StyleExpr = StyleText;
+                }
+                field(Street; Rec.Street)
+                {
+                    ToolTip = 'Specifies the value of the Street field.';
+                    StyleExpr = StyleText;
+                }
+                field("Street No"; Rec."Street No")
+                {
+                    ToolTip = 'Specifies the value of the Street No field.';
+                    StyleExpr = StyleText;
+                }
+                field(PostalCode; Rec."Postal Code")
+                {
+                    ToolTip = 'Specifies the value of the Postal Code field.';
+                    StyleExpr = StyleText;
+                }
+                field(Box; Rec.Box)
+                {
+                    ToolTip = 'Specifies the value of the Box field.';
+                    StyleExpr = StyleText;
+                }
+                field(City; Rec.City)
+                {
+                    ToolTip = 'Specifies the value of the City field.';
+                    StyleExpr = StyleText;
+                }
+                field(Country; Rec.Country)
+                {
+                    ToolTip = 'Specifies the value of the Country field.';
+                    StyleExpr = StyleText;
+                }
+                field(Info; Rec.Info)
+                {
+                    ToolTip = 'Specifies the value of the Info Customer Creation.';
+                    StyleExpr = StyleText;
+                }
+            }
+        }
+    }
+    trigger OnAfterGetRecord()
+    begin
+        Clear(Style);
+        if Rec.Info <> '' then
+            Style := true;
+        if Style then
+            StyleText := Format(PageStyle::Unfavorable);
+    end;
+
+    var
+        Style: Boolean;
+        StyleText: Text;
+}

@@ -1,5 +1,5 @@
 ---
-title: Pages Overview | BCLS24
+title: Pages Overview | FSO customization By Subrat
 ---
 
 # Pages Overview
@@ -25,6 +25,72 @@ title: Pages Overview | BCLS24
 | Type | Caption | Description |
 | ----- | --------- | ------- |
 | Action | TestError | Testing of collection of errors |
+
+### Brands
+
+| Type | Caption | Description |
+| ----- | --------- | ------- |
+| Field | Code | Specifies the brand code. |
+| Field | Description | Specifies the brand description. |
+
+### Field
+
+| Type | Caption | Description |
+| ----- | --------- | ------- |
+| Field | App Package ID | Specifies the value of the App Package ID field. |
+| Field | App Runtime Package ID | Specifies the value of the App Runtime Package ID field. |
+| Field | Class | Specifies the type of class. Normal is data entry, FlowFields calculate and display results immediately, and FlowFilters display results based on user-defined filter values that affect the calculation of a FlowField. |
+| Field | DataClassification | Specifies the data classification. |
+| Field | Enabled | Specifies the value of the Enabled field. |
+| Field | ExternalName | Specifies the value of the ExternalName field. |
+| Field | Field Caption | Specifies the caption of the field, that is, the name that will be shown in the user interface. |
+| Field | FieldName | Specifies the name of the field in the table. |
+| Field | IsPartOfPrimaryKey | Specifies the value of the IsPartOfPrimaryKey field. |
+| Field | Len | Specifies the value of the Len field. |
+| Field | No. | Specifies the ID number of the field in the table. |
+| Field | ObsoleteReason | Specifies the value of the ObsoleteReason field. |
+| Field | ObsoleteState | Specifies the value of the ObsoleteState field. |
+| Field | OptimizeForTextSearch | Specifies the value of the OptimizeForTextSearch field. |
+| Field | OptionString | Specifies the option string. |
+| Field | RelationFieldNo | Specifies the value of the RelationFieldNo field. |
+| Field | RelationTableNo | Specifies the ID number of a table from which the field on the current table gets data. For example, the field can provide a lookup into another table. |
+| Field | SQLDataType | Specifies the value of the SQLDataType field. |
+| Field | SystemCreatedAt | Specifies the value of the SystemCreatedAt field. |
+| Field | SystemCreatedBy | Specifies the value of the SystemCreatedBy field. |
+| Field | SystemId | Specifies the value of the SystemId field. |
+| Field | SystemModifiedAt | Specifies the value of the SystemModifiedAt field. |
+| Field | SystemModifiedBy | Specifies the value of the SystemModifiedBy field. |
+| Field | TableName | Specifies the name of the table. |
+| Field | TableNo | Specifies the table number. |
+| Field | Type | Specifies the type of the field in the table, which indicates the type of data it contains. |
+| Field | Type Name | Specifies the type of data. |
+
+### Branches
+
+| Type | Caption | Description |
+| ----- | --------- | ------- |
+| Field | Code | Specicies the Branch Code |
+| Field | Description | Specicies the Branch Description |
+
+### Order Types
+
+| Type | Caption | Description |
+| ----- | --------- | ------- |
+| Field | Order Type | Specifies the Order Type. |
+| Field | Sub Order Type | Specifies the Sub Order Type. |
+| Field | Blocked | Indicates whether this Order Type is blocked from use. |
+
+### Commercial Discounts
+
+| Type | Caption | Description |
+| ----- | --------- | ------- |
+| Field | Vendor No. | Specifies the vendor to whom the discount applies. |
+| Field | Brand | Specifies the Brand for which the discount is applicable. |
+| Field | Order Type | Specifies the order type for which the discount is applicable. |
+| Field | Sub Order Type | Specifies the sub order type for which the discount is applicable. |
+| Field | Discount % | Specifies the discount percentage to be applied. |
+| Field | Starting Date | Specifies the starting date from which the discount is valid. |
+| Field | Ending Date | Specifies the ending date until which the discount is valid. |
 
 ### Import Gen. Jnl Lines
 
@@ -109,6 +175,12 @@ title: Pages Overview | BCLS24
 | Type | Caption | Description |
 | ----- | --------- | ------- |
 
+### LSC Retail Purchase Order
+
+| Type | Caption | Description |
+| ----- | --------- | ------- |
+| Action | Apply Commercial Discount | Calculate the discount that can ne granted based on all lines in the purchase document |
+
 ### Purchase Invoice
 
 | Type | Caption | Description |
@@ -126,9 +198,3 @@ title: Pages Overview | BCLS24
 | Action | Set selected as not reviewed | This action can only be selected when the G/L Account's Review Policy is either "Review Allowed" or "Review Allowed and Match Balance". For selected G/L Entries, field Reviewer is set to blank, field Review Status is set to Not Reviewed, field Reviewed On is set to blank, field Review Id is to blank |
 | Action | Select/Deselect | Select G/L Entries for further processing. |
 | Action | Deselect All | Deselect G/L Entries. |
-
-### Sales Order
-
-| Type | Caption | Description |
-| ----- | --------- | ------- |
-| Action | Test Dimensions | Auto Insert of Dimension |

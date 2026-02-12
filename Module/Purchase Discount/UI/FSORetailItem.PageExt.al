@@ -6,7 +6,7 @@ pageextension 50301 "FSO Retail Item" extends "LSC Retail Item Card"
     {
         addafter(Description)
         {
-            field("FSO Brand"; Rec."FSO Brand")
+            field("FSOPUR Brand"; Rec."FSOPUR Brand")
             {
                 ApplicationArea = All;
             }

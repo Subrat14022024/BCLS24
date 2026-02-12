@@ -1,0 +1,171 @@
+namespace BlankVAT.CBEImporter;
+
+using BlankVAT.CBEImporter;
+
+page 54701 "VAT Company Details"
+{
+    ApplicationArea = All;
+    Caption = 'VAT Company Details';
+    PageType = List;
+    SourceTable = "FSO CBE Company";
+    UsageCategory = Documents;
+    CardPageId = "VAT Detail";
+    Editable = false;
+
+    layout
+    {
+        area(Content)
+        {
+            repeater(General)
+            {
+                field("Search Name"; Rec."Search Name")
+                {
+                    ToolTip = 'Specifies the value of the Search Name field.', Comment = '%';
+                }
+                field("Search City"; Rec."Search City")
+                {
+                    ToolTip = 'Specifies the value of the Search City field.', Comment = '%';
+                }
+                field("Search Post Code"; Rec."Search Post Code")
+                {
+                    ToolTip = 'Specifies the value of the Search Post Code field.', Comment = '%';
+                }
+                field("CBE No."; Rec."CBE No.")
+                {
+                    ToolTip = 'Specifies the value of the CBE Number field.', Comment = '%';
+                }
+                field("CBE No. Formatted"; Rec."CBE No. Formatted")
+                {
+                    ToolTip = 'Specifies the value of the CBE Number Formatted field.', Comment = '%';
+                }
+                field(City; Rec.City)
+                {
+                    ToolTip = 'Specifies the value of the City field.', Comment = '%';
+                }
+                field("Country Code"; Rec."Country Code")
+                {
+                    ToolTip = 'Specifies the value of the Country Code field.', Comment = '%';
+                }
+                field(Denomination; Rec.Denomination)
+                {
+                    ToolTip = 'Specifies the value of the Denomination field.', Comment = '%';
+                }
+                field("Denomination With Legal Form"; Rec."Denomination With Legal Form")
+                {
+                    ToolTip = 'Specifies the value of the Denomination With Legal Form field.', Comment = '%';
+                }
+                field(Email; Rec.Email)
+                {
+                    ToolTip = 'Specifies the value of the Email field.', Comment = '%';
+                }
+                field("Full Address"; Rec."Full Address")
+                {
+                    ToolTip = 'Specifies the value of the Full Address field.', Comment = '%';
+                }
+                field(Box; Rec.Box)
+                {
+                    ToolTip = 'Specifies the value of the Box field.', Comment = '%';
+                }
+                field("House No."; Rec."House No.")
+                {
+                    ToolTip = 'Specifies the value of the House No. field.', Comment = '%';
+                }
+                field("Juridical Form"; Rec."Juridical Form")
+                {
+                    ToolTip = 'Specifies the value of the Juridical Form field.', Comment = '%';
+                }
+                field("Juridical Form Code"; Rec."Juridical Form Code")
+                {
+                    ToolTip = 'Specifies the value of the Juridical Form Code field.', Comment = '%';
+                }
+                field("Juridical Situation"; Rec."Juridical Situation")
+                {
+                    ToolTip = 'Specifies the value of the Juridical Situation field.', Comment = '%';
+                }
+                field(Phone; Rec.Phone)
+                {
+                    ToolTip = 'Specifies the value of the Phone field.', Comment = '%';
+                }
+                field("Post Code"; Rec."Post Code")
+                {
+                    ToolTip = 'Specifies the value of the Post Code field.', Comment = '%';
+                }
+                field("Guid"; Rec."Guid")
+                {
+                    ToolTip = 'Specifies the value of the GUID field.', Comment = '%';
+                }
+                field("Source JSON"; Rec."Source JSON")
+                {
+                    ToolTip = 'Specifies the value of the Source JSON field.', Comment = '%';
+                }
+                field("Start Date"; Rec."Start Date")
+                {
+                    ToolTip = 'Specifies the value of the Start Date field.', Comment = '%';
+                }
+                field(Status; Rec.Status)
+                {
+                    ToolTip = 'Specifies the value of the Status field.', Comment = '%';
+                }
+                field(Street; Rec.Street)
+                {
+                    ToolTip = 'Specifies the value of the Street field.', Comment = '%';
+                }
+                field("Type"; Rec."Type")
+                {
+                    ToolTip = 'Specifies the value of the Type field.', Comment = '%';
+                }
+                field(Web; Rec.Web)
+                {
+                    ToolTip = 'Specifies the value of the Web field.', Comment = '%';
+                }
+            }
+        }
+    }
+    actions
+    {
+        area(processing)
+        {
+            action(ImportCBECompanies)
+            {
+                Caption = 'Import CBE Companies';
+                ApplicationArea = All;
+                ToolTip = 'Imports companies from the CBE based on the search criteria.';
+                Image = Import;
+                trigger OnAction()
+                var
+                    CBEImporter: Codeunit "CBE Importer";
+                begin
+                    CBEImporter.Run();
+                end;
+            }
+            action(DeteleAllData)
+            {
+                Caption = 'Delete All Data';
+                ApplicationArea = All;
+                ToolTip = 'Deletes all imported CBE company data.';
+                Image = Delete;
+                trigger OnAction()
+                var
+                    FSOCBEEstablishment: Record "FSO CBE Establishment";
+                    FSOCBENACEActivity: Record "FSO CBE NACE Activity";
+                begin
+                    Rec.DeleteAll();
+                    FSOCBEEstablishment.DeleteAll();
+                    FSOCBENACEActivity.DeleteAll();
+                end;
+            }
+        }
+    }
+    trigger OnDeleteRecord(): Boolean
+    var
+        FSOCBEEstablishment: Record "FSO CBE Establishment";
+        FSOCBENACEActivity: Record "FSO CBE NACE Activity";
+    begin
+        FSOCBEEstablishment.SetRange("Company CBE No.", Rec."CBE No.");
+        if FSOCBEEstablishment.FindSet() then
+            FSOCBEEstablishment.DeleteAll();
+        FSOCBENACEActivity.SetRange("Company CBE No.", Rec."CBE No.");
+        if FSOCBENACEActivity.FindSet() then
+            FSOCBENACEActivity.DeleteAll();
+    end;
+}

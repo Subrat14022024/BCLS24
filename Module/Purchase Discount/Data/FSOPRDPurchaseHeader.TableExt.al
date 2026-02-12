@@ -14,21 +14,33 @@ tableextension 50650 "FSO PRD Purchase Header" extends "Purchase Header"
             ToolTip = 'Specifies the order Type of the Purchase Document';
             trigger OnValidate()
             begin
+                xRec := Rec;
                 // Rec.UpdatePurchLinesByFieldNo(FieldNo("FSO PRD Order Type"), CurrFieldNo <> 0);
                 if xRec."FSO PRD Order Type" <> Rec."FSO PRD Order Type" then
                     Rec.RecreatePurchLines(CopyStr(FieldCaption("FSO PRD Order Type"), 1, MaxStrLen("FSO PRD Order Type")));
             end;
+
+            // trigger OnLookup()
+            // var
+            //     FSOPRDOrderTypeRec: Record "FSO PRD Order Type";
+            //     FSOPRDOrderType: Page "FSO PRD Order Type";
+            // begin
+            //     FSOPRDOrderType.LookupMode := true;
+            //     if FSOPRDOrderType.RunModal() = Action::LookupOK then
+            //         FSOPRDOrderType.SetSelection(FSOPRDOrderTypeRec);
+            //     Message('Text:%1\RecOrderType:%2\RecsubOrderType:%3', 'nothing', FSOPRDOrderTypeRec."Order Type", FSOPRDOrderTypeRec."Sub Order Type");
+            //     Message('Text:%1\RecOrderType:%2\RecsubOrderType:%3', FSOPRDOrderType.GetSelectionFilterForOrderType(FSOPRDOrderTypeRec), FSOPRDOrderTypeRec."Order Type", FSOPRDOrderTypeRec."Sub Order Type");
+            // end;
+
         }
         field(50302; "FSO PRD Sub Order Type"; Code[20])
         {
             Caption = 'Sub Order Type';
             DataClassification = CustomerContent;
-            TableRelation = "FSO PRD Order Type"."Sub Order Type" where("Order Type" = field("FSO PRD Order Type"), Blocked = const(false));
-
+            TableRelation = "FSO PRD Order Type"."Sub Order Type" where(Blocked = const(false));
             ToolTip = 'Specifies the Sub order Type of the Purchase Document';
             trigger OnValidate()
             begin
-                // Rec.UpdatePurchLinesByFieldNo(FieldNo("FSO PRD Sub Order Type"), CurrFieldNo <> 0);
                 if xRec."FSO PRD Sub Order Type" <> Rec."FSO PRD Sub Order Type" then
                     Rec.RecreatePurchLines(CopyStr(FieldCaption("FSO PRD Sub Order Type"), 1, MaxStrLen("FSO PRD Sub Order Type")));
             end;
@@ -41,7 +53,6 @@ tableextension 50650 "FSO PRD Purchase Header" extends "Purchase Header"
             ToolTip = 'Specifies the branch of the Purchase Document';
             trigger OnValidate()
             begin
-                // Rec.UpdatePurchLinesByFieldNo(FieldNo("FSO PRD Branch"), CurrFieldNo <> 0);
                 if xRec."FSO PRD Branch" <> Rec."FSO PRD Branch" then
                     Rec.RecreatePurchLines(CopyStr(FieldCaption("FSO PRD Branch"), 1, MaxStrLen("FSO PRD Branch")));
             end;
@@ -50,7 +61,7 @@ tableextension 50650 "FSO PRD Purchase Header" extends "Purchase Header"
         {
             Caption = 'Brand';
             DataClassification = CustomerContent;
-            TableRelation = "FSO Brand".Code;
+            TableRelation = "FSO PUR Brand".Code;
             ToolTip = 'Specifies the Brand of the Purchase Document';
             trigger OnValidate()
             begin

@@ -1,9 +1,9 @@
 namespace Financial.FSOSEPA;
 
-using Microsoft.Foundation.Company;
-using Microsoft.Finance.GeneralLedger.Journal;
-using Microsoft.Bank.Payment;
 using Microsoft.Bank.DirectDebit;
+using Microsoft.Bank.Payment;
+using Microsoft.Finance.GeneralLedger.Journal;
+using Microsoft.Foundation.Company;
 
 xmlport 50100 "FSO SEPA CT pain.001.001.09"
 {

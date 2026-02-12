@@ -13,7 +13,7 @@ table 50650 "FSO PRD Branch"
             Caption = 'Code';
             ToolTip = 'Specicies the Branch Code';
         }
-        field(2; Description; Text[100])
+        field(2; Description; Text[50])
         {
             Caption = 'Description';
             ToolTip = 'Specicies the Branch Description';

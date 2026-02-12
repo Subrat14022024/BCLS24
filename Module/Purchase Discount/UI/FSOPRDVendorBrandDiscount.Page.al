@@ -3,7 +3,7 @@ namespace FSO_Purchase.Discount;
 page 50652 "FSO PRD Vendor Brand Discount"
 {
     ApplicationArea = All;
-    Caption = 'Commercial Discount';
+    Caption = 'Commercial Discounts';
     PageType = List;
     SourceTable = "FSO PRD Commercial Discount";
     UsageCategory = Tasks;

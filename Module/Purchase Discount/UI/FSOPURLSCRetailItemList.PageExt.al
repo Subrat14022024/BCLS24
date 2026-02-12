@@ -6,7 +6,7 @@ pageextension 50302 "FSO PUR LSC Retail Item List" extends "LSC Retail Item List
     {
         addafter(BarcodeNo)
         {
-            field("FSO Brand"; Rec."FSO Brand")
+            field("FSOPUR Brand"; Rec."FSOPUR Brand")
             {
                 ApplicationArea = All;
             }

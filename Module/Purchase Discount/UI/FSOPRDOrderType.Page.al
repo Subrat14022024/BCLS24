@@ -1,11 +1,11 @@
 namespace FSO_Purchase.Discount;
 
-using FSO_Purchase.Discount;
+using System.Text;
 
 page 50651 "FSO PRD Order Type"
 {
     ApplicationArea = All;
-    Caption = 'Order Type';
+    Caption = 'Order Types';
     PageType = List;
     SourceTable = "FSO PRD Order Type";
     UsageCategory = Lists;

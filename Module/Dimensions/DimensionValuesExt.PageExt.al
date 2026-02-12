@@ -1,14 +1,18 @@
-namespace BCLS.BCLS;
+namespace FSO.Dimension;
 
 using Microsoft.Finance.Dimension;
 
-pageextension 50109 DimensionValuesExt extends "Dimension Values"
+pageextension 50158 "FSOFIN DimensionValues" extends "Dimension Values"
 {
     layout
     {
         addafter(Blocked)
         {
-            field(Entity; Rec.Entity)
+            field("FSOFIN Link Dimension"; Rec."FSOFIN Link Dimension")
+            {
+                ApplicationArea = all;
+            }
+            field("FSOFIN Enseigne"; Rec."FSOFIN Enseigne")
             {
                 ApplicationArea = all;
             }

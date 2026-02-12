@@ -1,6 +1,6 @@
 namespace FSO_Purchase.Discount;
 
-table 50304 "FSO Brand"
+table 50309 "FSO PUR Brand"
 {
     Caption = 'Brand';
     DataClassification = CustomerContent;
@@ -20,6 +20,11 @@ table 50304 "FSO Brand"
             Caption = 'Description';
             ToolTip = 'Specifies the brand description.';
             OptimizeForTextSearch = true;
+        }
+        field(3; "eCommerce Active"; Boolean)
+        {
+            Caption = 'eCommerce Active';
+            ToolTip = 'Specifies whether the brand is active for eCommerce.';
         }
     }
     keys
