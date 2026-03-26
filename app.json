@@ -30,13 +30,6 @@
             "version": "25.1.0.573"
         },
         {
-            "id": "10cb69d9-bc8a-4d27-970a-9e110e9db2a5",
-            "name": "_Exclude_APIV2_",
-            "publisher": "Microsoft",
-            "version": "25.2.27733.27999"
-
-        },
-        {
             "id": "e18edded-350e-4a81-b450-5aa1ae137d19",
             "name": "AzureFileService",
             "publisher": "Hansamukh_Subrat",
@@ -44,22 +37,28 @@
 
         },
         {
-          "id": "73df947b-2724-4ae1-8bab-c55d424a4edd",
-          "name": "TCOG BE CODA",
-          "publisher": "TCOG",
-          "version": "24.0.24649.0"
+            "id": "73df947b-2724-4ae1-8bab-c55d424a4edd",
+            "name": "TCOG BE CODA",
+            "publisher": "TCOG",
+            "version": "24.0.24649.0"
         },
         {
-          "id": "87990153-0e35-4e5d-ba61-2e93077d1699",
-          "name": "Review General Ledger Entries",
-          "publisher": "Microsoft",
-          "version": "25.2.27733.27999"
+            "id": "87990153-0e35-4e5d-ba61-2e93077d1699",
+            "name": "Review General Ledger Entries",
+            "publisher": "Microsoft",
+            "version": "25.2.27733.27999"
         },
         {
-            "id": "388b255c-c8cc-4e80-bb94-5a85e75e6f52",
-            "name": "IMAGE_CDN",
-            "publisher": "HS_SHIVAM",
-            "version": "1.0.0.0"
+            "id": "10cb69d9-bc8a-4d27-970a-9e110e9db2a5",
+            "name": "_Exclude_APIV2_",
+            "publisher": "Microsoft",
+            "version": "25.2.0.0"
+        },
+        {
+            "id": "36df96fc-94a3-4c64-b373-d39624a1be4c",
+            "name": "TCOG LS Central Merged Pages",
+            "publisher": "TCOG",
+            "version": "25.0.23237.0"
         }
     ],
     "screenshots": [],
@@ -90,6 +89,7 @@
         "CLEAN22",
         "CLEAN23",
         "CLEAN24",
-        "CLEAN25"
+        "CLEAN25",
+        "FSOCLEAN27"
     ]
 }

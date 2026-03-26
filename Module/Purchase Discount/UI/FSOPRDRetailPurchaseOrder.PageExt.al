@@ -54,6 +54,20 @@ pageextension 50651 "FSO PRD Retail Purchase Order" extends "LSC Retail Purchase
                 ApplicationArea = all;
             }
         }
+        // addafter("Expected Receipt Date")
+        // {
+        //     field("Requested Receipt Date"; Rec."Requested Receipt Date")
+        //     {
+        //         //Caption = 'First Expected Receipt Date';
+        //         ToolTip = 'Requested Receipt Date';
+        //         ApplicationArea = all;
+        //     }
+        //     field("Last Expected Receipt Date"; Rec."Last Expected Receipt Date")
+        //     {
+        //         ApplicationArea = all;
+        //     }
+        // }
+
     }
     actions
     {

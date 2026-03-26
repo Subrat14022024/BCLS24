@@ -6,10 +6,12 @@ using Financial.FSOSEPA;
 using FINBC.FINBC;
 using FSO.Dimension;
 using FSOFIN.PayrollFileImport;
+using FSO_FINBE.CustomerCreation;
 using FSO_NAVBCConnector.PurchaseInv;
 using FSO_NAVBCConnector.SalesInv;
 using FSO_NAVBCConnector.Shoppayment;
 using FSO_Purchase.Discount;
+using FSO_Purchase.VendorItemColor;
 
 permissionset 54700 GeneratedPermission
 {
@@ -28,7 +30,6 @@ permissionset 54700 GeneratedPermission
         tabledata "FSO PUR Brand" = RIMD,
         tabledata "TCOGINGL Intrastat Report Line" = RIMD,
         tabledata "VAT Details" = RIMD,
-        tabledata CustomerData = RIMD,
         table "VAT Details" = X,
         table "Azure File Service Setup TEST" = X,
         table "FSO CBE Company" = X,
@@ -42,8 +43,11 @@ permissionset 54700 GeneratedPermission
         table "FSOINSTBEIntrastat Purchase" = X,
         table FSONBCShopPaymentEntries = X,
         table "FSO PUR Brand" = X,
-        table CustomerData = X,
+        table "FSO BEF Customer Data" = X,
+        tabledata "FSO BEF Customer Data" = RIMD,
         table "TCOGINGL Intrastat Report Line" = X,
+        table "Vendor Item Color" = X,
+        tabledata "Vendor Item Color" = RMID,
         report FSONBCProcessShopPaymentEnt = X,
         codeunit "Azure File Service" = X,
         codeunit EBSuggestPaymentEvents = X,

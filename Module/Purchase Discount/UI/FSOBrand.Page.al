@@ -25,6 +25,15 @@ page 50302 "FSO Brand"
                 field("eCommerce Active"; Rec."eCommerce Active")
                 {
                 }
+                field("No Stock Posting"; Rec."No Stock Posting")
+                {
+                }
+                field("PO First Expected Receipt Date"; Rec."PO First Expected Receipt Date")
+                {
+                }
+                field("PO Last Expected Receipt Date"; Rec."PO Last Expected Receipt Date")
+                {
+                }
             }
         }
     }

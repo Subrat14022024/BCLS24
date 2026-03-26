@@ -13,11 +13,14 @@ tableextension 50650 "FSO PRD Purchase Header" extends "Purchase Header"
             TableRelation = "FSO PRD Order Type"."Order Type" where(Blocked = const(false));
             ToolTip = 'Specifies the order Type of the Purchase Document';
             trigger OnValidate()
+
             begin
                 xRec := Rec;
                 // Rec.UpdatePurchLinesByFieldNo(FieldNo("FSO PRD Order Type"), CurrFieldNo <> 0);
                 if xRec."FSO PRD Order Type" <> Rec."FSO PRD Order Type" then
                     Rec.RecreatePurchLines(CopyStr(FieldCaption("FSO PRD Order Type"), 1, MaxStrLen("FSO PRD Order Type")));
+
+
             end;
 
             // trigger OnLookup()
@@ -69,5 +72,10 @@ tableextension 50650 "FSO PRD Purchase Header" extends "Purchase Header"
                     Rec.RecreatePurchLines(CopyStr(FieldCaption("FSO PRD Brand"), 1, MaxStrLen("FSO PRD Brand")));
             end;
         }
+        // field(50306; "Last Expected Receipt Date"; Date)
+        // {
+        //     Caption = 'Last Expected Receipt Date';
+        //     ToolTip = 'Specifies Last Expected Receipt Date and dates will be calculated automatically in case of reorders';
+        // }
     }
 }

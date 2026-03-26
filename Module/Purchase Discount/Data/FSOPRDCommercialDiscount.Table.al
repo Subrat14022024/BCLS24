@@ -42,6 +42,11 @@ table 50652 "FSO PRD Commercial Discount"
         {
             Caption = 'Starting Date';
             ToolTip = 'Specifies the starting date from which the discount is valid.';
+            trigger OnValidate()
+            begin
+                if "Starting Date" <> 0D then
+                    ValidateDateRange();
+            end;
         }
         field(10; "Ending Date"; Date)
         {
@@ -59,9 +64,35 @@ table 50652 "FSO PRD Commercial Discount"
     }
     keys
     {
-        key(PK; "Vendor No.", Brand, "Order Type", "Sub Order Type")
+        key(PK; "Vendor No.", Brand, "Order Type", "Sub Order Type", "Starting Date", "Ending Date")
         {
             Clustered = true;
         }
     }
+
+    local procedure ValidateDateRange()
+    var
+        FSOPRDCommercialDiscount: Record "FSO PRD Commercial Discount";
+    begin
+        FSOPRDCommercialDiscount.SetRange("Vendor No.", Rec."Vendor No.");
+        FSOPRDCommercialDiscount.SetRange(Brand, Rec.Brand);
+        FSOPRDCommercialDiscount.SetRange("Order Type", Rec."Order Type");
+        FSOPRDCommercialDiscount.SetRange("Sub Order Type", Rec."Sub Order Type");
+        FSOPRDCommercialDiscount.SetFilter(SystemId, '<>%1', Rec.SystemId);
+
+        if FSOPRDCommercialDiscount.FindSet() then
+            repeat
+                // Close overlapping discounts by setting their ending date to one day before new discount starts
+                if (Rec."Starting Date" <> 0D) and (FSOPRDCommercialDiscount."Ending Date" = 0D)
+                 or (FSOPRDCommercialDiscount."Ending Date" >= Rec."Starting Date") then
+                    FSOPRDCommercialDiscount.Rename(
+                        FSOPRDCommercialDiscount."Vendor No.",
+                        FSOPRDCommercialDiscount.Brand,
+                        FSOPRDCommercialDiscount."Order Type",
+                        FSOPRDCommercialDiscount."Sub Order Type",
+                        FSOPRDCommercialDiscount."Starting Date",
+                        Rec."Starting Date" - 1
+                    );
+            until FSOPRDCommercialDiscount.Next() = 0;
+    end;
 }

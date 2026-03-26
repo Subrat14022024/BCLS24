@@ -7,7 +7,7 @@ page 50652 "FSO PRD Vendor Brand Discount"
     PageType = List;
     SourceTable = "FSO PRD Commercial Discount";
     UsageCategory = Tasks;
-
+    DelayedInsert = true;
     layout
     {
         area(Content)
@@ -26,13 +26,13 @@ page 50652 "FSO PRD Vendor Brand Discount"
                 field("Sub Order Type"; Rec."Sub Order Type")
                 {
                 }
-                field("Discount %"; Rec."Discount %")
-                {
-                }
                 field("Starting Date"; Rec."Starting Date")
                 {
                 }
                 field("Ending Date"; Rec."Ending Date")
+                {
+                }
+                field("Discount %"; Rec."Discount %")
                 {
                 }
             }
