@@ -1,0 +1,52 @@
+namespace BCLS.BCLS;
+using Microsoft.Sales.Customer;
+using Microsoft.Sales.Document;
+using Microsoft.Inventory.Item;
+
+xmlport 50101 MyXmlport
+{
+    schema
+    {
+        textelement(items)
+        {
+            tableelement(Item; Item)
+            {
+                fieldattribute(NO; Item."No.")
+                { }
+                fieldelement(Description; Item.Description)
+                { }
+            }
+        }
+    }
+
+    requestpage
+    {
+        layout
+        {
+            area(content)
+            {
+                group(GroupName)
+                {
+                    field(Name; SourceExpression)
+                    {
+
+                    }
+                }
+            }
+        }
+
+        actions
+        {
+            area(processing)
+            {
+                action(ActionName)
+                {
+
+                }
+            }
+        }
+    }
+
+    var
+        myInt: Integer;
+}

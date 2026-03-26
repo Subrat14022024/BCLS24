@@ -1,0 +1,44 @@
+namespace BCLS.BCLS;
+
+using Microsoft.Pricing.PriceList;
+codeunit 50505 "Sales Price Extension"
+{
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Price List Management", OnAfterActivateDraftLines, '', false, false)]
+    local procedure PriceListManagement_OnAfterActivateDraftLines(PriceListLine: Record "Price List Line")
+    begin
+        this.InsertPricesforlinkedCustomerPriceGroup(PriceListLine)
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Price List Line", OnAfterModifyEvent, '', false, false)]
+    local procedure PurchasePriceOnAfterModifyEvent(var Rec: Record "Price List Line"; var xRec: Record "Price List Line"; RunTrigger: Boolean)
+    begin
+        this.InsertPricesforlinkedCustomerPriceGroup(Rec);
+    end;
+
+    local procedure InsertPricesforlinkedCustomerPriceGroup(PriceListLine: Record "Price List Line")
+    var
+        NewPriceListLine: Record "Price List Line";
+        PriceListHeader: Record "Price List Header";
+        PriceListManagement: Codeunit "Price List Management";
+    begin
+        GetPriceHeader(PriceListHeader);
+        NewPriceListLine.Copy(PriceListLine);
+        NewPriceListLine.CopySourceFrom(PriceListHeader);
+        NewPriceListLine.CopyFrom(PriceListHeader);
+        NewPriceListLine."Price List Code" := PriceListHeader.Code;
+        NewPriceListLine.Validate("LSC Unit Price Including VAT", PriceListLine."LSC Unit Price Including VAT");
+        NewPriceListLine.SetNewRecord(true);
+        NewPriceListLine.SetNextLineNo();
+        if NewPriceListLine.Insert(true) then
+            NewPriceListLine.Modify()
+        //NewPriceListLine.Verify();
+        //PriceListManagement.ActivateDraftLines(PriceListHeader, true);
+    end;
+
+    local procedure GetPriceHeader(var PriceListHeader: Record "Price List Header")
+    begin
+        PriceListHeader.Get('FR');
+    end;
+
+
+}
